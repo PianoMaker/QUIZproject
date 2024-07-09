@@ -8,14 +8,17 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Models;
 
 namespace QUIZproject
 {
-
+    public enum Subject { Musichistory, Solfegio }
     public partial class QuizForm : Form
     {
-        private enum Subject { Musichistory, Solfegio }
+        
         Subject subj;
+        List<Quiz> mh_questions;
+        List<SQuiz> s_questions;
         public QuizForm()
         {
             InitializeComponent();
@@ -57,7 +60,7 @@ namespace QUIZproject
         private void exportMenu_Click(object sender, EventArgs e)
         {
             ExportQuiz();
-            
+
         }
 
         private void ExportQuiz()
@@ -67,7 +70,7 @@ namespace QUIZproject
 
         private void importMenu_Click(object sender, EventArgs e)
         {
-            ImportQuiz(); 
+            ImportQuiz();
         }
 
         private void ImportQuiz()
@@ -94,18 +97,24 @@ namespace QUIZproject
             throw new NotImplementedException();
         }
 
-        
+
 
         private void EditQuestion()
         {
-            throw new NotImplementedException();
+            var window = new QuizEditForm(subj);
         }
 
-       
+
 
         private void DeleteQuestion()
         {
             throw new NotImplementedException();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

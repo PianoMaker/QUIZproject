@@ -42,6 +42,7 @@
             importToolStripMenuItem = new ToolStripMenuItem();
             exportToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
+            btnSave = new Button();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -63,9 +64,10 @@
             // 
             // btnAdd
             // 
+            btnAdd.Font = new Font("Segoe UI", 11F);
             btnAdd.Location = new Point(574, 289);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(94, 29);
+            btnAdd.Size = new Size(94, 40);
             btnAdd.TabIndex = 2;
             btnAdd.Text = "Add";
             btnAdd.UseVisualStyleBackColor = true;
@@ -73,9 +75,10 @@
             // 
             // btnDelete
             // 
+            btnDelete.Font = new Font("Segoe UI", 11F);
             btnDelete.Location = new Point(572, 345);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(94, 29);
+            btnDelete.Size = new Size(94, 40);
             btnDelete.TabIndex = 3;
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = true;
@@ -83,9 +86,10 @@
             // 
             // btnEdit
             // 
+            btnEdit.Font = new Font("Segoe UI", 11F);
             btnEdit.Location = new Point(739, 288);
             btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(94, 29);
+            btnEdit.Size = new Size(94, 40);
             btnEdit.TabIndex = 4;
             btnEdit.Text = "Edit";
             btnEdit.UseVisualStyleBackColor = true;
@@ -163,12 +167,24 @@
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += closeMenu_Click;
             // 
+            // btnSave
+            // 
+            btnSave.Font = new Font("Segoe UI", 11F);
+            btnSave.Location = new Point(739, 345);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(94, 40);
+            btnSave.TabIndex = 9;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
+            // 
             // QuizForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1014, 450);
+            Controls.Add(btnSave);
             Controls.Add(rbS);
             Controls.Add(rbMH);
             Controls.Add(lblQ);
@@ -202,5 +218,6 @@
         private ToolStripMenuItem importToolStripMenuItem;
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
+        private Button btnSave;
     }
 }
