@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataBase\DataBase.csproj" />
+    <ProjectReference Include="..\DbLayer\DbLayer.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -34,6 +34,7 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             exportToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
+            adminToolsToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -58,13 +59,12 @@
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
-            // closeToolStripMenuItem
+            // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportToolStripMenuItem, closeToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportToolStripMenuItem, closeToolStripMenuItem, adminToolsToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
-            
             // 
             // exportToolStripMenuItem
             // 
@@ -73,12 +73,19 @@
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += ExportMenu_Click;
             // 
-            // closeToolStripMenuItem1
+            // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             closeToolStripMenuItem.Size = new Size(224, 26);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += CloseMenu_Click;
+            // 
+            // adminToolsToolStripMenuItem
+            // 
+            adminToolsToolStripMenuItem.Name = "adminToolsToolStripMenuItem";
+            adminToolsToolStripMenuItem.Size = new Size(224, 26);
+            adminToolsToolStripMenuItem.Text = "Admin Tools";
+            adminToolsToolStripMenuItem.Click += adminTools_Click;
             // 
             // ResultsForm
             // 
@@ -106,5 +113,6 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
+        private ToolStripMenuItem adminToolsToolStripMenuItem;
     }
 }

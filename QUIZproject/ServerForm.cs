@@ -1,3 +1,5 @@
+using DataBase;
+using DbLayer;
 using System.Net;
 
 namespace QUIZproject
@@ -44,6 +46,7 @@ namespace QUIZproject
         {
             var window = new ResultsForm();
             window.ShowDialog();
+            
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -59,13 +62,20 @@ namespace QUIZproject
                 lbStatus.ForeColor = Color.Red;
                 lbStatus.Text = "Not connected";
             }
-            
-            
+
+
         }
 
         private void StartServer()
         {
             MessageBox.Show("Todo: Connecting server");
+        }
+
+        private void btnAdm_Click(object sender, EventArgs e)
+        {
+            var factory = new StudentsDbContextFactory();
+            var window = new ENFCodeForm(factory);
+            window.ShowDialog();
         }
     }
 }

@@ -37,6 +37,7 @@ namespace QUIZproject
             lbServer = new ListBox();
             button1 = new Button();
             lbStatus = new Label();
+            btnAdm = new Button();
             SuspendLayout();
             // 
             // tbIp
@@ -112,6 +113,17 @@ namespace QUIZproject
             lbStatus.TabIndex = 6;
             lbStatus.Text = "Not connected";
             // 
+            // btnAdm
+            // 
+            btnAdm.Font = new Font("Segoe UI", 12F);
+            btnAdm.Location = new Point(621, 210);
+            btnAdm.Name = "btnAdm";
+            btnAdm.Size = new Size(130, 36);
+            btnAdm.TabIndex = 7;
+            btnAdm.Text = "Admin tools";
+            btnAdm.UseVisualStyleBackColor = true;
+            btnAdm.Click += btnAdm_Click;
+            // 
             // ServerForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -119,6 +131,7 @@ namespace QUIZproject
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnAdm);
             Controls.Add(lbStatus);
             Controls.Add(button1);
             Controls.Add(lbServer);
@@ -142,5 +155,6 @@ namespace QUIZproject
         private ListBox lbServer;
         private Button button1;
         private Label lbStatus;
+        private Button btnAdm;
     }
 }

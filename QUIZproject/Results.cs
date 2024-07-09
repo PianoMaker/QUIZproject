@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace QUIZproject
 {
     internal class Results
     {
+
+        public Results() { }
+
 
 
 

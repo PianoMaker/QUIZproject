@@ -12,7 +12,6 @@ using System.Windows.Forms;
 namespace QUIZproject
 {
 
-
     public partial class QuizForm : Form
     {
         private enum Subject { Musichistory, Solfegio }
