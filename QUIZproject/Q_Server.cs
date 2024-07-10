@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Models;
+using System.Runtime.Serialization;
 
 namespace QUIZproject
 {
@@ -14,8 +16,10 @@ namespace QUIZproject
         public int Port { get; set; }
 
         private Socket socket;
-
         public List<Socket> ClientSocket { get; set; }
+
+        public List<Quiz> Mh_questions { get; set; }
+        public List<SQuiz> S_questions { get; set; }
 
         private string message;
 
@@ -86,7 +90,8 @@ namespace QUIZproject
                     var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
                     if (receivedData == "student")
                     {
-                        Message = $"student - {clientSocket.RemoteEndPoint.ToString()}"; // Адреса клієнта
+                        Message = $"student - {clientSocket.RemoteEndPoint}"; // Адреса клієнта
+                        SendData(clientSocket, PrepareDara());
                     }
                 }
                 else
@@ -107,6 +112,18 @@ namespace QUIZproject
         }
 
         // Метод для відправки даних клієнту
+
+        private byte[] PrepareDara()
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(Quiz));
+                serializer.WriteObject(memoryStream, Mh_questions);
+                byte[] bytes = memoryStream.ToArray();                
+                //MessageBox.Show($"{bytes.Length} bytes are prepared to send");
+                return bytes;
+            }
+        }
 
 
 

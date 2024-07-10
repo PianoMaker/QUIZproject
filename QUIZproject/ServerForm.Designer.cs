@@ -34,7 +34,7 @@ namespace QUIZproject
             btnConnect = new Button();
             tbPort = new TextBox();
             btnEdit = new Button();
-            lbServer = new ListBox();
+            lbClients = new ListBox();
             button1 = new Button();
             lbStatus = new Label();
             btnAdm = new Button();
@@ -82,13 +82,13 @@ namespace QUIZproject
             btnEdit.UseVisualStyleBackColor = true;
             btnEdit.Click += btnEdit_Click;
             // 
-            // lbServer
+            // lbCLients
             // 
-            lbServer.FormattingEnabled = true;
-            lbServer.Location = new Point(49, 103);
-            lbServer.Name = "lbServer";
-            lbServer.Size = new Size(485, 284);
-            lbServer.TabIndex = 4;
+            lbClients.FormattingEnabled = true;
+            lbClients.Location = new Point(49, 103);
+            lbClients.Name = "lbClients";
+            lbClients.Size = new Size(485, 284);
+            lbClients.TabIndex = 4;
             // 
             // button1
             // 
@@ -134,7 +134,7 @@ namespace QUIZproject
             Controls.Add(btnAdm);
             Controls.Add(lbStatus);
             Controls.Add(button1);
-            Controls.Add(lbServer);
+            Controls.Add(lbClients);
             Controls.Add(btnEdit);
             Controls.Add(tbPort);
             Controls.Add(btnConnect);
@@ -152,7 +152,7 @@ namespace QUIZproject
         private Button btnConnect;
         private TextBox tbPort;
         private Button btnEdit;
-        private ListBox lbServer;
+        private ListBox lbClients;
         private Button button1;
         private Label lbStatus;
         private Button btnAdm;

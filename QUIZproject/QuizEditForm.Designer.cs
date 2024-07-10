@@ -40,8 +40,12 @@
             cb3 = new ComboBox();
             cb2 = new ComboBox();
             cb1 = new ComboBox();
-            button1 = new Button();
+            brnSave = new Button();
+            btnCancel = new Button();
+            num = new NumericUpDown();
+            label1 = new Label();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)num).BeginInit();
             SuspendLayout();
             // 
             // textBox1
@@ -69,18 +73,20 @@
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(54, 307);
+            btnAdd.Font = new Font("Segoe UI", 11F);
+            btnAdd.Location = new Point(220, 255);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(94, 29);
+            btnAdd.Size = new Size(94, 40);
             btnAdd.TabIndex = 3;
             btnAdd.Text = "Add";
             btnAdd.UseVisualStyleBackColor = true;
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(589, 307);
+            btnDelete.Font = new Font("Segoe UI", 11F);
+            btnDelete.Location = new Point(390, 255);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(94, 29);
+            btnDelete.Size = new Size(94, 40);
             btnDelete.TabIndex = 4;
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = true;
@@ -139,16 +145,45 @@
             cb1.TabIndex = 10;
             cb1.SelectedIndexChanged += cb1_SelectedIndexChanged;
             // 
-            // button1
+            // brnSave
             // 
-            button1.Font = new Font("Segoe UI", 12F);
-            button1.Location = new Point(291, 394);
-            button1.Name = "button1";
-            button1.Size = new Size(153, 44);
-            button1.TabIndex = 6;
-            button1.Text = "save";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += btnSave_Click;
+            brnSave.Font = new Font("Segoe UI", 12F);
+            brnSave.Location = new Point(164, 387);
+            brnSave.Name = "brnSave";
+            brnSave.Size = new Size(150, 45);
+            brnSave.TabIndex = 6;
+            brnSave.Text = "Save";
+            brnSave.UseVisualStyleBackColor = true;
+            brnSave.Click += btnSave_Click;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Font = new Font("Segoe UI", 12F);
+            btnCancel.Location = new Point(390, 388);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(150, 45);
+            btnCancel.TabIndex = 7;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // numericUpDown1
+            // 
+            num.Location = new Point(390, 309);
+            num.Name = "num";
+            num.Size = new Size(94, 27);
+            num.TabIndex = 8;
+            num.ValueChanged += numericUpDown1_ValueChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Location = new Point(181, 316);
+            label1.Name = "label1";
+            label1.Size = new Size(133, 20);
+            label1.TabIndex = 9;
+            label1.Text = "Set correct answer:";
             // 
             // QuizEditForm
             // 
@@ -157,7 +192,10 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(755, 450);
-            Controls.Add(button1);
+            Controls.Add(label1);
+            Controls.Add(num);
+            Controls.Add(btnCancel);
+            Controls.Add(brnSave);
             Controls.Add(panel1);
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);
@@ -167,6 +205,7 @@
             Name = "QuizEditForm";
             Text = "QuizEditForm";
             panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)num).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -184,6 +223,9 @@
         private ComboBox cb3;
         private ComboBox cb2;
         private ComboBox cb1;
-        private Button button1;
+        private Button brnSave;
+        private Button btnCancel;
+        private NumericUpDown num;
+        private Label label1;
     }
 }

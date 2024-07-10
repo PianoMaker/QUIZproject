@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models   
 {
+    public enum Subject { Musichistory, Solfegio }
     public class Quiz
     {
         private string question;
@@ -17,20 +18,20 @@ namespace Models
         private int? studentanswer;
         public Quiz() { }
 
-        public Quiz(string question, string answer1, string answer2, string answer3, string answer4, int correctanswer)
+        public Quiz(string question, List<string> answers, int correctanswer)
         {
             Question = question;
-            Answers = new List<string>()
-            { answer1, answer2, answer3, answer4};
-            this.correctanswer = correctanswer;
+            Answers = answers;
+            Correctanswer = correctanswer;
         }
 
         public string Question { get => question; set => question = value; }
         public List<string> Answers { get => answers; set => answers = value; }
+        public int Correctanswer { get => correctanswer; set => correctanswer = value; }
 
         public bool IfCorrect()
         {
-            return studentanswer == correctanswer;
+            return studentanswer == Correctanswer;
         }
 
     }

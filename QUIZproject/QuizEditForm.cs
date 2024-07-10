@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Models;
 
 namespace QUIZproject
 {
@@ -38,9 +39,40 @@ namespace QUIZproject
 
         private List<int?> pitches;
 
+        public int Correctanswer { get; set; }
+
         public QuizEditForm(Subject subj)
         {
             InitializeComponent();
+            Answers = new List<string>();
+            num.Maximum = Answers.Count;
+            InitialaizeSolfegio(subj);
+        }
+        public QuizEditForm(Subject subj, Quiz quiz)
+        {
+            InitializeComponent();
+            Question = quiz.Question;
+            Answers = quiz.Answers;
+            Correctanswer = quiz.Correctanswer;
+            num.Maximum = Answers.Count;
+            InitialaizeSolfegio(subj);
+        }
+
+        public QuizEditForm(Subject subj, SQuiz quiz)
+        {
+            InitializeComponent();
+            Question = quiz.Question;
+            Answers = quiz.Answers;
+            Chord = quiz.Chord;
+            Correctanswer = quiz.Correctanswer;
+            num.Maximum = Answers.Count;
+            InitialaizeSolfegio(subj);
+        }
+
+
+
+        private void InitialaizeSolfegio(Subject subj)
+        {
             if (subj == Subject.Musichistory) panel1.Visible = false;
 
             foreach (string s in notes)
@@ -54,8 +86,6 @@ namespace QUIZproject
             pitches = new List<int?>()
             { null, null, null, null, null };
         }
-
-   
 
         private void cb1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -95,6 +125,11 @@ namespace QUIZproject
             }
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            Question = textBox1.Text;
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveChord();
@@ -102,9 +137,15 @@ namespace QUIZproject
             Close();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            Question = textBox1.Text;
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            Correctanswer = (int)num.Value;
         }
     }
 }

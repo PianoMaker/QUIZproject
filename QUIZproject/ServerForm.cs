@@ -68,7 +68,28 @@ namespace QUIZproject
 
         private void StartServer()
         {
-            MessageBox.Show("Todo: Connecting server");
+            try
+            {
+                server = new Q_Server(Ip, port);
+                server.MessageChanged += OnServerMessage;
+                if (server != null)
+                {
+                    server.StartServer();
+                    lbStatus.Text = "server launched";
+                    lbStatus.ForeColor = Color.DarkGreen;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                lbStatus.Text = $"Impossible to launch socket!\n{ex}";
+            }
+        }
+
+        private void OnServerMessage(object? sender, EventArgs e)
+        {
+
+            lbClients.Items.Add(server.Message);            
         }
 
         private void btnAdm_Click(object sender, EventArgs e)
