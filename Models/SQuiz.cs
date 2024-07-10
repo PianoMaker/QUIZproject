@@ -11,7 +11,7 @@ namespace Models
 {
     public class SQuiz : Quiz
     {
-        public string[] Chord { get; set; }
+        public List<int?> Chord { get; set; }
 
         private List<WaveOutEvent> woe;
         private List<SignalGenerator> sg;

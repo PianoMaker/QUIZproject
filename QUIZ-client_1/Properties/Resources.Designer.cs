@@ -8,8 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-//namespace QUIZproject-server.Properties {
-//    using System;
+namespace QUIZ_client_1.Properties {
+    using System;
     
     
     /// <summary>
@@ -39,7 +39,7 @@
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("QUIZproject-server.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("QUIZ_client_1.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,4 +60,4 @@
             }
         }
     }
-
+}

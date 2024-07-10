@@ -12,10 +12,9 @@ using Models;
 
 namespace QUIZproject
 {
-    public enum Subject { Musichistory, Solfegio }
+ 
     public partial class QuizForm : Form
-    {
-        
+    {       
         Subject subj;
         List<Quiz> mh_questions;
         List<SQuiz> s_questions;
@@ -94,7 +93,18 @@ namespace QUIZproject
 
         private void AddQuestion()
         {
-            throw new NotImplementedException();
+            var w = new QuizEditForm(subj);
+            w.ShowDialog();
+            if(w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
+            {
+                var question = new Quiz(w.Question, w.Answers, w.Correctanswer);
+                
+            }
+            if (w.DialogResult == DialogResult.OK && subj == Subject.Solfegio)
+            {
+                var question = new SQuiz();
+
+            }
         }
 
 
