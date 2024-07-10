@@ -153,12 +153,14 @@
             importToolStripMenuItem.Name = "importToolStripMenuItem";
             importToolStripMenuItem.Size = new Size(137, 26);
             importToolStripMenuItem.Text = "Import";
+            importToolStripMenuItem.Click += importMenu_Click;
             // 
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             exportToolStripMenuItem.Size = new Size(137, 26);
             exportToolStripMenuItem.Text = "Export";
+            exportToolStripMenuItem.Click += exportMenu_Click;
             // 
             // closeToolStripMenuItem
             // 
