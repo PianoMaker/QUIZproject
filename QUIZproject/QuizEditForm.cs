@@ -15,14 +15,15 @@ namespace QUIZproject
     {
         //private enum Subject { Musichistory, Solfegio }
 
+        //private readonly int camerton = 220;//HZ
         public string Question { get; set; }
-
+                
         public List<string> Answers { get; set; }
-        public List<int?> Chord { get; set; }
+        public List<int> Pitches { get; set; }
 
         string[] notes =
         {
-            "",
+            " ",
             "a",
             "ais/b",
             "h",
@@ -37,7 +38,7 @@ namespace QUIZproject
             "gis/as"
         };
 
-        private List<int?> pitches;
+        
 
         public int Correctanswer { get; set; }
 
@@ -47,6 +48,8 @@ namespace QUIZproject
             Answers = new List<string>();
             num.Maximum = Answers.Count;
             InitialaizeSolfegio(subj);
+            Pitches = new List<int>()
+            { -1, -1, -1, -1, -1 };
         }
         public QuizEditForm(Subject subj, Quiz quiz)
         {
@@ -56,6 +59,8 @@ namespace QUIZproject
             Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
             InitialaizeSolfegio(subj);
+            Pitches = new List<int>()
+            { -1, -1, -1, -1, -1 };
         }
 
         public QuizEditForm(Subject subj, SQuiz quiz)
@@ -63,13 +68,11 @@ namespace QUIZproject
             InitializeComponent();
             Question = quiz.Question;
             Answers = quiz.Answers;
-            Chord = quiz.Chord;
+            Pitches = quiz.Pitches;
             Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
             InitialaizeSolfegio(subj);
         }
-
-
 
         private void InitialaizeSolfegio(Subject subj)
         {
@@ -83,47 +86,33 @@ namespace QUIZproject
                 cb4.Items.Add(s);
                 cb5.Items.Add(s);
             }
-            pitches = new List<int?>()
-            { null, null, null, null, null };
+            Pitches = new List<int>()
+            { -1, -1, -1, -1, -1 };
+            
         }
 
         private void cb1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            pitches[0] = cb1.SelectedIndex;
+        {            
+            Pitches[0] = cb1.SelectedIndex - 1;
         }
         private void cb2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitches[1] = cb2.SelectedIndex;
+            Pitches[1] = cb2.SelectedIndex - 1;
         }
         private void cb3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitches[2] = cb3.SelectedIndex;
+            Pitches[2] = cb3.SelectedIndex - 1;
         }
         private void cb4_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitches[3] = cb4.SelectedIndex;
+            Pitches[3] = cb4.SelectedIndex - 1;
         }
         private void cb5_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitches[4] = cb5.SelectedIndex;
+            Pitches[4] = cb5.SelectedIndex - 1;
         }
 
-        private void SaveChord()
-        {
-            double temp, prevfreq = 0, freq;
-            foreach (var n in pitches)
-            {
-
-                if (n != null)
-                {
-                    temp = n.Value;
-                    freq = Math.Pow(2, temp / 12);
-                    while (freq < prevfreq) freq *= 2;
-                    Chord.Add((int)freq);
-                    prevfreq = freq;
-                }
-            }
-        }
+        
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -132,7 +121,7 @@ namespace QUIZproject
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveChord();
+            
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -146,6 +135,19 @@ namespace QUIZproject
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             Correctanswer = (int)num.Value;
+        }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            /*string txt = "";
+            foreach (int i in Pitches)
+            {
+                txt += i.ToString() + " ";
+            }
+            MessageBox.Show(txt);*/
+            var quiz = new SQuiz(Pitches);
+            /*MessageBox.Show(quiz.GetFrequences());*/
+            quiz.Play();
         }
     }
 }

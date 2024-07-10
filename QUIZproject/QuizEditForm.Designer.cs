@@ -44,6 +44,7 @@
             btnCancel = new Button();
             num = new NumericUpDown();
             label1 = new Label();
+            btnPlay = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)num).BeginInit();
             SuspendLayout();
@@ -94,14 +95,15 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(202, 255, 212);
+            panel1.Controls.Add(btnPlay);
             panel1.Controls.Add(cb5);
             panel1.Controls.Add(cb4);
             panel1.Controls.Add(cb3);
             panel1.Controls.Add(cb2);
             panel1.Controls.Add(cb1);
-            panel1.Location = new Point(98, 62);
+            panel1.Location = new Point(54, 64);
             panel1.Name = "panel1";
-            panel1.Size = new Size(522, 45);
+            panel1.Size = new Size(629, 45);
             panel1.TabIndex = 5;
             // 
             // cb5
@@ -111,6 +113,7 @@
             cb5.Name = "cb5";
             cb5.Size = new Size(87, 28);
             cb5.TabIndex = 14;
+            cb5.SelectedIndexChanged += cb5_SelectedIndexChanged;
             // 
             // cb4
             // 
@@ -119,6 +122,7 @@
             cb4.Name = "cb4";
             cb4.Size = new Size(87, 28);
             cb4.TabIndex = 13;
+            cb4.SelectedIndexChanged += cb4_SelectedIndexChanged;
             // 
             // cb3
             // 
@@ -127,6 +131,7 @@
             cb3.Name = "cb3";
             cb3.Size = new Size(87, 28);
             cb3.TabIndex = 12;
+            cb3.SelectedIndexChanged += cb3_SelectedIndexChanged;
             // 
             // cb2
             // 
@@ -135,6 +140,7 @@
             cb2.Name = "cb2";
             cb2.Size = new Size(87, 28);
             cb2.TabIndex = 11;
+            cb2.SelectedIndexChanged += cb2_SelectedIndexChanged;
             // 
             // cb1
             // 
@@ -167,7 +173,7 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
-            // numericUpDown1
+            // num
             // 
             num.Location = new Point(390, 309);
             num.Name = "num";
@@ -184,6 +190,16 @@
             label1.Size = new Size(133, 20);
             label1.TabIndex = 9;
             label1.Text = "Set correct answer:";
+            // 
+            // btnPlay
+            // 
+            btnPlay.Location = new Point(520, 5);
+            btnPlay.Name = "btnPlay";
+            btnPlay.Size = new Size(87, 28);
+            btnPlay.TabIndex = 15;
+            btnPlay.Text = "Play";
+            btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.Click += btnPlay_Click;
             // 
             // QuizEditForm
             // 
@@ -227,5 +243,6 @@
         private Button btnCancel;
         private NumericUpDown num;
         private Label label1;
+        private Button btnPlay;
     }
 }

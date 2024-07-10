@@ -14,7 +14,7 @@ namespace Models
     public class SQuiz : Quiz
     {
         readonly int camerton = 220; // hz
-        [DataMember] public List<int> Pitches { get; set; }
+        [DataMember] public List<int?> Pitches { get; set; }
         [DataMember] private List<WaveOutEvent> woe = new();
         [DataMember] private List<SignalGenerator> sg = new();
 
@@ -25,20 +25,35 @@ namespace Models
             woe = new();
         }
 
-        public SQuiz(List<int> pitch)
+        public SQuiz(List<int?> pitch)
         {
             Question = "Який акорд звучить?";
             Pitches = pitch;
             sg = new();
             woe = new();
-            //   SynthChord();
+            SynthChord();
         }
 
         private void SynthChord()
         {
-            var frequences = Frequences();
+            var Frequences = new List<int>();
 
-            foreach (int i in frequences)
+            double temp, prevfreq = 0, freq;
+            foreach (var n in Pitches)
+            {
+                
+                if (n != null)
+                {
+                    temp = n.Value;
+                    freq = camerton * Math.Pow(2, temp / 12);
+                    while (freq < prevfreq) freq *= 2;
+                    Frequences.Add((int)freq);
+                    prevfreq = freq;
+                }
+            }
+
+
+            foreach (int i in Frequences)
             {
                 try
                 {
@@ -55,52 +70,25 @@ namespace Models
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show("impossible ");
+                    MessageBox.Show("impossible ");
                 }
             }
         }
 
-        private List<int> Frequences()
-        {
-            List<int> freqlist = new();
-            var prevfreq = 220;
-            foreach (var n in Pitches)
-            {
-                if (n >= 0)
-                {
-                    var freq = camerton * Math.Pow(2, (double)n / 12);
-                    while (freq < prevfreq) freq *= 2;
-                    freqlist.Add((int)freq);
-                    prevfreq = (int)freq;
-                }
-            }
-            return freqlist;
-        }
-
-        public string GetFrequences()
-        {
-            string txt = "";
-            List<int> temp = Frequences();
-            foreach (var n in temp)
-                txt += n.ToString() + " ";
-            return txt;
-        }
 
         public void Play()
         {
-            SynthChord();
             if (woe.Count > 0)
             {
                 foreach (var woe in woe)
+                {
                     woe.Play();
-
-                Thread.Sleep(1000);
-
-                foreach (var woe in woe)
+                    Thread.Sleep(1000);
                     woe.Stop();
-
+                }
             }
         }
+
 
     }
 

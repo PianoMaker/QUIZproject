@@ -15,10 +15,11 @@ using Models;
 namespace QUIZproject
 {
     public partial class QuizForm : Form
-    {       
+    {
         Subject subj;
         List<Quiz> mh_questions = new();
         List<SQuiz> s_questions = new();
+        string FilePath;
         public QuizForm()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace QUIZproject
             rbMH.BackColor = Color.LightGreen;
             subj = Subject.Musichistory;
             Load_mh_questions();
+            FilePath = Path.GetDirectoryName(Application.ExecutablePath)!;
         }
 
         private void Load_mh_questions()
@@ -50,60 +52,14 @@ namespace QUIZproject
             ChooseSubject();
         }
 
-        private void ChooseSubject()
-        {
-            if (rbS.Checked)
-            {
-                subj = Subject.Solfegio;
-                rbMH.BackColor = Color.Transparent;
-                rbS.BackColor = Color.LightGreen;
-                Load_s_questions();
-            }
-            else if (rbMH.Checked)
-            {
-                subj = Subject.Musichistory;
-                rbMH.BackColor = Color.LightGreen;
-                rbS.BackColor = Color.Transparent;
-                Load_mh_questions();
-            }
-        }
-
         private void closeMenu_Click(object sender, EventArgs e)
         {
             this.Close();
         }
         private void exportMenu_Click(object sender, EventArgs e)
         {
-            ExportQuiz();
+            ExportQuizBase();
 
-        }
-
-        private void ExportQuiz()
-        {
-            //MessageBox.Show("Todo: export quiz");
-            byte[] mh_questions = SerializeQuiz();
-            var sfd = new SaveFileDialog();
-            sfd.Title = "Зберегти файл";
-            sfd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*"; // Фільтр для типів файлів
-            sfd.FileName = "Quiz.bin";
-            //sfd.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                var path = sfd.FileName;
-                try { File.WriteAllBytes(path, SerializeQuiz()); 
-                }
-                catch { MessageBox.Show("Error saving file"); }
-            };
-        }
-
-        private byte[] SerializeQuiz()
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                serializer.WriteObject(memoryStream, mh_questions);
-                return memoryStream.ToArray();
-            }
         }
 
         private void importMenu_Click(object sender, EventArgs e)
@@ -130,11 +86,35 @@ namespace QUIZproject
             DeleteQuestion();
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveQuizBase("MusicHistory.bin");
+            SaveSQuizBase("SolfegioQuiz.bin");
+        }
+
+        private void ChooseSubject()
+        {
+            if (rbS.Checked)
+            {
+                subj = Subject.Solfegio;
+                rbMH.BackColor = Color.Transparent;
+                rbS.BackColor = Color.LightGreen;
+                Load_s_questions();
+            }
+            else if (rbMH.Checked)
+            {
+                subj = Subject.Musichistory;
+                rbMH.BackColor = Color.LightGreen;
+                rbS.BackColor = Color.Transparent;
+                Load_mh_questions();
+            }
+        }
+
         private void AddQuestion()
         {
             var w = new QuizEditForm(subj);
             w.ShowDialog();
-            SaveQuiz(w);
+            SaveQuestion(w);
         }
 
         private void EditQuestion()
@@ -144,16 +124,16 @@ namespace QUIZproject
             {
                 var window = new QuizEditForm(subj, s_questions[index]);
                 window.ShowDialog();
-                SaveQuiz(window);
+                SaveQuestion(window);
             }
             else if (subj == Subject.Musichistory)
             {
                 var window = new QuizEditForm(subj, mh_questions[index]);
                 window.ShowDialog();
-                SaveQuiz(window);
+                SaveQuestion(window);
             }
         }
-        private void SaveQuiz(QuizEditForm w)
+        private void SaveQuestion(QuizEditForm w)
         {
             if (w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
             {
@@ -168,17 +148,92 @@ namespace QUIZproject
             }
         }
 
-
         private void DeleteQuestion()
         {
+            var index = llbQuestions.SelectedIndex;
             throw new NotImplementedException();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            ExportQuiz();
-            DialogResult = DialogResult.OK;
-            Close();
+
+        private void ExportQuizBase()
+        {            
+            var sfd = new SaveFileDialog();
+            sfd.Title = "Зберегти файл";
+            sfd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+
+            if (subj == Subject.Musichistory)
+            {
+                sfd.FileName = "MusicHistoryQuiz.bin";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    SaveQuizBase(sfd.FileName);
+            }
+            else if (subj == Subject.Solfegio)
+            {
+                sfd.FileName = "Solfegio.bin";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    SaveSQuizBase(sfd.FileName);
+            }
+            else MessageBox.Show("Не визначено дисципліну");
         }
-    }
+
+        private void SaveQuizBase(string path)
+        {
+            try
+            {
+                File.WriteAllBytes(path, SerializeQuizBase());
+            }
+            catch { MessageBox.Show("Error saving file"); }
+        }
+
+        private void SaveSQuizBase(string path)
+        {
+            try
+            {
+                File.WriteAllBytes(path, SerializeSQuizBase());
+            }
+            catch { MessageBox.Show("Error saving file"); }
+        }
+
+        private byte[] SerializeQuizBase()
+        {
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
+                serializer.WriteObject(memoryStream, mh_questions);
+                return memoryStream.ToArray();
+            }
+        }
+
+        private byte[] SerializeSQuizBase()
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
+                serializer.WriteObject(memoryStream, s_questions);
+                return memoryStream.ToArray();
+            }
+        }
+
+
+        private void DeserializeQuizBase(byte[] data)
+        {
+            
+            using (MemoryStream memoryStream = new MemoryStream(data))
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));                
+                mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
+            }
+        }
+
+        private void DeserializeSQuizBase(byte[] data)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(data))
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
+                s_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
+            }
+        }
+
+    }    
 }
