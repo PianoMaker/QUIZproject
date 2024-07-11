@@ -46,6 +46,7 @@ namespace QUIZ_client_1
             panel1 = new Panel();
             label1 = new Label();
             Authorize = new Button();
+            btnQuiz = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -157,10 +158,10 @@ namespace QUIZ_client_1
             // lbMessages
             // 
             lbMessages.FormattingEnabled = true;
-            lbMessages.Location = new Point(742, 144);
+            lbMessages.Location = new Point(742, 184);
             lbMessages.MultiColumn = true;
             lbMessages.Name = "lbMessages";
-            lbMessages.Size = new Size(150, 404);
+            lbMessages.Size = new Size(150, 364);
             lbMessages.TabIndex = 10;
             // 
             // radioButton1
@@ -222,6 +223,17 @@ namespace QUIZ_client_1
             Authorize.UseVisualStyleBackColor = true;
             Authorize.Click += Authorize_Click;
             // 
+            // btnQuiz
+            // 
+            btnQuiz.Font = new Font("Segoe UI", 12F);
+            btnQuiz.Location = new Point(742, 119);
+            btnQuiz.Name = "btnQuiz";
+            btnQuiz.Size = new Size(150, 48);
+            btnQuiz.TabIndex = 16;
+            btnQuiz.Text = "Get Quiz";
+            btnQuiz.UseVisualStyleBackColor = true;
+            btnQuiz.Click += btnQuiz_Click;
+            // 
             // ClientForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -229,6 +241,7 @@ namespace QUIZ_client_1
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(911, 650);
+            Controls.Add(btnQuiz);
             Controls.Add(Authorize);
             Controls.Add(lbMessages);
             Controls.Add(lbStatus);
@@ -270,5 +283,6 @@ namespace QUIZ_client_1
         private Panel panel1;
         private Label label1;
         private Button Authorize;
+        private Button btnQuiz;
     }
 }

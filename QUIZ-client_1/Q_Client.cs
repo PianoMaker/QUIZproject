@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QUIZ_client_1
 {
@@ -120,6 +121,31 @@ namespace QUIZ_client_1
             }
 
             return responseList.ToArray();
+        }
+        public void SendMessage(byte[] data)
+        {
+            try
+            {
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
+            }
+            catch
+            {
+                MessageBox.Show("Error sending data");
+            }
+        }
+
+        private void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                Socket clientSocket = (Socket)ar.AsyncState;
+                int bytesSent = clientSocket.EndSend(ar);
+            }
+            catch (Exception ex)
+            {
+                // Обробка помилок, якщо такі є
+                MessageBox.Show($"Error in SendCallback: {ex.Message}");
+            }
         }
     }
 }

@@ -89,7 +89,7 @@ namespace QUIZproject_server
         private void OnServerMessage(object? sender, EventArgs e)
         {
 
-            lbClients.Items.Add(server.Message);            
+            Invoke(() => lbClients.Items.Add(server.Message));            
         }
 
         private void btnAdm_Click(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using DataBase;
 using Models;
 
@@ -19,6 +20,7 @@ namespace QUIZ_client_1
             tbIp.Text = ip.ToString();
             port = 1234;
             tbPort.Text = port.ToString();
+            btnQuiz.Enabled = false;
         }
 
         private void tbPort_TextChanged(object sender, EventArgs e)
@@ -33,13 +35,14 @@ namespace QUIZ_client_1
 
         private async void btnConnect_Click(object sender, EventArgs e)
         {
-            if (student == null)
-            {
-                MessageBox.Show("You need to create Profile first");
-                CreateProfile();
-            }
-            if (student != null)
-                await Connect();
+            /* if (student == null)
+             {
+                 MessageBox.Show("You need to create Profile first");
+                 CreateProfile();
+             }
+             if (student != null)*/
+            await Connect();
+            btnQuiz.Enabled = true;
         }
 
         private async Task Connect()
@@ -47,8 +50,11 @@ namespace QUIZ_client_1
             client = new Q_Client(ip, port);
             client.MessageChanged += OnMessageChanged;
             //client.NumbersChanged += OnNumbersChanged;
-            lbStatus.Text = $"connecting as {student.Name} {student.SurName}";
             await client.StartClientAsync();
+            if (student != null)
+                lbStatus.Text = $"connected as {student.Name} {student.SurName}";
+            else
+                lbStatus.Text = $"connected anonymously";
         }
 
         private void OnMessageChanged(object? sender, EventArgs e)
@@ -93,7 +99,7 @@ namespace QUIZ_client_1
             if (window.DialogResult == DialogResult.OK)
                 student = new Student()
                 {
-                    Name = window.Name,
+                    Name = window.FirstName,
                     SurName = window.SurName
                 };
         }
@@ -101,6 +107,12 @@ namespace QUIZ_client_1
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnQuiz_Click(object sender, EventArgs e)
+        {
+            byte[] msg = Encoding.UTF8.GetBytes(subj.ToString());
+            client.SendMessage(msg);
         }
     }
 }

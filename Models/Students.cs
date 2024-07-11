@@ -14,6 +14,10 @@ namespace Models
         [Column("id")]
         public int Id { get; set; }
 
+        [Column("e-mail")]
+        [MaxLength(100)]
+        public string Email { get; set; } = null!;
+
         [Column("Name")]
         [MaxLength(100)]
         public string Name { get; set; } = null!;

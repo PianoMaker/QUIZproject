@@ -72,27 +72,40 @@ namespace DataBase
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var window = new StudentForm();            
-            if(window.ShowDialog() == DialogResult.OK)
-            AddStudent(window.Name, window.SurName, window.S, window.MH);
+            if(window.ShowDialog() == DialogResult.OK)                
+            AddStudent(window.FirstName, window.SurName, window.Email, window.S, window.MH);
+
         }
 
 
-        private void AddStudent(string name, string surname, int s, int mh)
+        private void AddStudent(string name, string surname, string email, int s, int mh)
         {
             using (var db = factory.CreateDbContext(args))
             {
 
-                var student = new Student()
+                var existingStudent = db.Students.FirstOrDefault(s => s.Email == email);
+
+                if (existingStudent != null)
                 {
-                    Name = name,
-                    SurName = surname,
-                    S_mark = s,
-                    MH_mark = mh
-                };
-                MessageBox.Show("name = " + student.Name);
-                db.Students.Add(student);
-                db.SaveChanges();
-                ShowDatabase();
+                    MessageBox.Show("Студент з таким email вже існує.");
+                    return;
+                }
+                else
+                {
+                    var student = new Student()
+                    {
+                        Name = name,
+                        SurName = surname,
+                        Email = email,
+                        S_mark = s,
+                        MH_mark = mh
+                    };
+
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    ShowDatabase();
+                }
+
             }
         }
 

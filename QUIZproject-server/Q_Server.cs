@@ -93,6 +93,7 @@ namespace QUIZproject_server
                         Message = $"student - {clientSocket.RemoteEndPoint}"; // Адреса клієнта
                         SendData(clientSocket, PrepareDara());
                     }
+                    else Message = $"unknown message from {clientSocket.RemoteEndPoint} : {receivedData}"; // Адреса клієнта
                 }
                 else
                 {
