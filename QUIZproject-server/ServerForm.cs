@@ -2,7 +2,7 @@ using DataBase;
 using DbLayer;
 using System.Net;
 
-namespace QUIZproject
+namespace QUIZproject_server
 {
     public partial class ServerForm : Form
     {

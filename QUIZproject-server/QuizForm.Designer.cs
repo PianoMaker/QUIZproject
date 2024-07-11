@@ -1,4 +1,6 @@
-﻿namespace QUIZproject
+﻿using System.Windows.Forms;
+
+namespace QUIZproject_server
 {
     partial class QuizForm
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QuizForm));
-            llbQuestions = new ListBox();
+            lbQuestions = new ListBox();
             lbAnswers = new ListBox();
             btnAdd = new Button();
             btnDelete = new Button();
@@ -46,13 +48,14 @@
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // llbQuestions
+            // lbQuestions
             // 
-            llbQuestions.FormattingEnabled = true;
-            llbQuestions.Location = new Point(46, 66);
-            llbQuestions.Name = "llbQuestions";
-            llbQuestions.Size = new Size(485, 364);
-            llbQuestions.TabIndex = 0;
+            lbQuestions.FormattingEnabled = true;
+            lbQuestions.Location = new Point(46, 66);
+            lbQuestions.Name = "lbQuestions";
+            lbQuestions.Size = new Size(485, 364);
+            lbQuestions.TabIndex = 0;
+            lbQuestions.SelectedIndexChanged += lbQuestions_SelectedIndexChanged;
             // 
             // lbAnswers
             // 
@@ -61,6 +64,8 @@
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(396, 184);
             lbAnswers.TabIndex = 1;
+            //lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
+            
             // 
             // btnAdd
             // 
@@ -194,7 +199,7 @@
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);
             Controls.Add(lbAnswers);
-            Controls.Add(llbQuestions);
+            Controls.Add(lbQuestions);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "QuizForm";
@@ -205,9 +210,11 @@
             PerformLayout();
         }
 
+        
+
         #endregion
 
-        private ListBox llbQuestions;
+        private ListBox lbQuestions;
         private ListBox lbAnswers;
         private Button btnAdd;
         private Button btnDelete;

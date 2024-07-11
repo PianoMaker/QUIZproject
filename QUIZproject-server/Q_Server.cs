@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Models;
 using System.Runtime.Serialization;
 
-namespace QUIZproject
+namespace QUIZproject_server
 {
     internal class Q_Server
     {

@@ -88,6 +88,7 @@ namespace QUIZ_client_1
             textBox1.PlaceholderText = "Question";
             textBox1.Size = new Size(608, 34);
             textBox1.TabIndex = 3;
+            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // button1
             // 

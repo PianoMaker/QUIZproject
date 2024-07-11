@@ -33,11 +33,12 @@ namespace QUIZ_client_1
 
         private async void btnConnect_Click(object sender, EventArgs e)
         {
-            if(student == null) {
+            if (student == null)
+            {
                 MessageBox.Show("You need to create Profile first");
                 CreateProfile();
             }
-            if(student != null) 
+            if (student != null)
                 await Connect();
         }
 
@@ -95,6 +96,11 @@ namespace QUIZ_client_1
                     Name = window.Name,
                     SurName = window.SurName
                 };
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

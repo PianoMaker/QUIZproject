@@ -12,7 +12,7 @@ using DbLayer;
 using Models;
 using System.Diagnostics;
 
-namespace QUIZproject
+namespace QUIZproject_server
 {
     public partial class ResultsForm : Form
     {

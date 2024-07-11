@@ -9,16 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Models;
 
-namespace QUIZproject
+namespace QUIZproject_server
 {
-    public partial class QuizEditForm : Form
+    public partial class EditQuestionForm : Form
     {
         //private enum Subject { Musichistory, Solfegio }
 
         //private readonly int camerton = 220;//HZ
         public string Question { get; set; }
-                
+
         public List<string> Answers { get; set; }
+
         public List<int> Pitches { get; set; }
 
         string[] notes =
@@ -38,41 +39,64 @@ namespace QUIZproject
             "gis/as"
         };
 
-        
+
 
         public int Correctanswer { get; set; }
 
-        public QuizEditForm(Subject subj)
+        public EditQuestionForm(Subject subj)
         {
             InitializeComponent();
             Answers = new List<string>();
             num.Maximum = Answers.Count;
+            num.Minimum = 0;    
             InitialaizeSolfegio(subj);
-            Pitches = new List<int>()
-            { -1, -1, -1, -1, -1 };
+            Pitches = null!;
         }
-        public QuizEditForm(Subject subj, Quiz quiz)
+        public EditQuestionForm(Subject subj, Quiz quiz)
         {
             InitializeComponent();
             Question = quiz.Question;
             Answers = quiz.Answers;
-            Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
+            num.Minimum = 0;
+            Correctanswer = quiz.Correctanswer;            
+            num.Value = quiz.Correctanswer;
             InitialaizeSolfegio(subj);
-            Pitches = new List<int>()
-            { -1, -1, -1, -1, -1 };
+            Pitches = null!;
+            tbQuestion.Text = Question;
+            RenewAnswerList();
+
         }
 
-        public QuizEditForm(Subject subj, SQuiz quiz)
+        public EditQuestionForm(Subject subj, SQuiz quiz)
         {
             InitializeComponent();
             Question = quiz.Question;
             Answers = quiz.Answers;
             Pitches = quiz.Pitches;
+            InitialaizeSolfegio(subj);
+            //MessageBox.Show($"count = {quiz.Pitches.Count}, 1={quiz.Pitches[0]}, 2={quiz.Pitches[3]}");
+            try
+            {
+                cb1.SelectedIndex = quiz.Pitches[0] + 1;
+                cb2.SelectedIndex = quiz.Pitches[1] + 1;
+                cb3.SelectedIndex = quiz.Pitches[2] + 1;
+                cb4.SelectedIndex = quiz.Pitches[3] + 1;
+                cb5.SelectedIndex = quiz.Pitches[4] + 1;
+            }  
+            catch (Exception Ex)
+            {
+                MessageBox.Show("Impossible to proceed voicing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }   
             Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
-            InitialaizeSolfegio(subj);
+            num.Minimum = 0;         
+            
+            tbQuestion.Text = Question;
+            RenewAnswerList();
         }
+
+
 
         private void InitialaizeSolfegio(Subject subj)
         {
@@ -88,11 +112,11 @@ namespace QUIZproject
             }
             Pitches = new List<int>()
             { -1, -1, -1, -1, -1 };
-            
+
         }
 
         private void cb1_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
             Pitches[0] = cb1.SelectedIndex - 1;
         }
         private void cb2_SelectedIndexChanged(object sender, EventArgs e)
@@ -112,16 +136,16 @@ namespace QUIZproject
             Pitches[4] = cb5.SelectedIndex - 1;
         }
 
-        
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+
+        private void tbQuestion_TextChanged(object sender, EventArgs e)
         {
-            Question = textBox1.Text;
+            Question = tbQuestion.Text;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            
+
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -135,6 +159,15 @@ namespace QUIZproject
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             Correctanswer = (int)num.Value;
+            DisplayCorrectAnswer();
+        }
+
+        private void DisplayCorrectAnswer()
+        {
+            if (Correctanswer > 0)
+                tbCorrectAnswer.Text = Answers[Correctanswer - 1];
+            else
+                tbCorrectAnswer.Text = "NO ANSWER SET!";
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -148,6 +181,57 @@ namespace QUIZproject
             var quiz = new SQuiz(Pitches);
             /*MessageBox.Show(quiz.GetFrequences());*/
             quiz.Play();
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var w = new AddAnswerForm(Question);
+            w.ShowDialog();
+            if (w.DialogResult == DialogResult.OK)
+            {
+                Answers.Add(w.Answer);
+                RenewAnswerList();
+            }
+
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var index = lbAnswers.SelectedIndex;
+            try
+            {
+                Answers.RemoveAt(index);
+                RenewAnswerList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void RenewAnswerList()
+        {
+            int i = 1;
+            num.Maximum = Answers.Count;
+            DisplayCorrectAnswerNumber();
+
+            lbAnswers.Items.Clear();
+            foreach (var answer in Answers)
+            {
+                string temp = $"{i}. {answer}";
+                lbAnswers.Items.Add(temp);
+                i++;
+            }
+            DisplayCorrectAnswer();
+        }
+
+        private void DisplayCorrectAnswerNumber()
+        {
+            try
+            {
+                num.Value = Correctanswer;
+            }
+            catch { Correctanswer = 0; num.Value = 0; }
         }
     }
 }

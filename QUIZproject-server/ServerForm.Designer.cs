@@ -1,5 +1,5 @@
 ﻿
-namespace QUIZproject
+namespace QUIZproject_server
 {
     partial class ServerForm
     {

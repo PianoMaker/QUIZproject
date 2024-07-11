@@ -10,13 +10,13 @@ using NAudio.Wave.SampleProviders;
 
 namespace Models
 {
-    [DataContract]
+    
     public class SQuiz : Quiz
     {
         readonly int camerton = 220; // hz
-        [DataMember] public List<int> Pitches { get; set; }
-        [DataMember] private List<WaveOutEvent> woe = new();
-        [DataMember] private List<SignalGenerator> sg = new();
+    public List<int> Pitches { get; set; }
+    private List<WaveOutEvent> woe = new();
+    private List<SignalGenerator> sg = new();
 
         public SQuiz()
         {
@@ -25,10 +25,22 @@ namespace Models
             woe = new();
         }
 
-        public SQuiz(List<int> pitch)
+        public SQuiz(List<int> pitches)
         {
             Question = "Який акорд звучить?";
-            Pitches = pitch;
+            Pitches = pitches;
+            sg = new();
+            woe = new();
+
+        }
+
+        public SQuiz(string question, List<string> answers, int correctanswer, List<int> pitches) 
+            : base(question, answers, correctanswer)
+        {
+            Question = "Який акорд звучить?";
+            Answers = answers;
+            Correctanswer = correctanswer;
+            Pitches = pitches;
             sg = new();
             woe = new();
             //   SynthChord();
@@ -98,7 +110,6 @@ namespace Models
 
                 foreach (var woe in woe)
                     woe.Stop();
-
             }
         }
 

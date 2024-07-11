@@ -1,4 +1,4 @@
-namespace QUIZproject
+namespace QUIZproject_server
 {
     internal static class Program
     {
