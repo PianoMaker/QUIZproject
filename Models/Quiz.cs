@@ -13,9 +13,9 @@ namespace Models
 
         private List<string> answers;
 
-        private int correctanswer;
+        public int Correctanswer { get; set; }
 
-        private int? studentanswer;
+        public int? Studentanswer { get; set; }
         public Quiz() { }
 
         public Quiz(string question, List<string> answers, int correctanswer)
@@ -26,12 +26,11 @@ namespace Models
         }
 
         public string Question { get => question; set => question = value; }
-        public List<string> Answers { get => answers; set => answers = value; }
-        public int Correctanswer { get => correctanswer; set => correctanswer = value; }
+        public List<string> Answers { get => answers; set => answers = value; }        
 
         public bool IfCorrect()
         {
-            return studentanswer == Correctanswer;
+            return Studentanswer == Correctanswer;
         }
 
     }

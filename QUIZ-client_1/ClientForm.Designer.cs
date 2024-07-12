@@ -33,21 +33,21 @@ namespace QUIZ_client_1
             tbIp = new TextBox();
             tbPort = new TextBox();
             btnConnect = new Button();
-            textBox1 = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
-            button5 = new Button();
+            btnSend = new Button();
             lbStatus = new Label();
             lbMessages = new ListBox();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
+            rb_hm = new RadioButton();
+            rb_s = new RadioButton();
             panel1 = new Panel();
             label1 = new Label();
-            Authorize = new Button();
+            btnProfile = new Button();
             btnQuiz = new Button();
+            lblQuestion = new Label();
+            lbAnswers = new ListBox();
+            lblAnswer = new Label();
+            num = new NumericUpDown();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)num).BeginInit();
             SuspendLayout();
             // 
             // tbIp
@@ -81,69 +81,16 @@ namespace QUIZ_client_1
             btnConnect.UseVisualStyleBackColor = true;
             btnConnect.Click += btnConnect_Click;
             // 
-            // textBox1
+            // btnSend
             // 
-            textBox1.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            textBox1.Location = new Point(83, 186);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Question";
-            textBox1.Size = new Size(608, 34);
-            textBox1.TabIndex = 3;
-            textBox1.TextChanged += textBox1_TextChanged;
-            // 
-            // button1
-            // 
-            button1.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(83, 257);
-            button1.Name = "button1";
-            button1.Size = new Size(265, 96);
-            button1.TabIndex = 4;
-            button1.Text = "A.";
-            button1.TextAlign = ContentAlignment.MiddleLeft;
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            button2.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(432, 257);
-            button2.Name = "button2";
-            button2.Size = new Size(259, 96);
-            button2.TabIndex = 5;
-            button2.Text = "B. ";
-            button2.TextAlign = ContentAlignment.MiddleLeft;
-            button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            button3.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button3.Location = new Point(83, 386);
-            button3.Name = "button3";
-            button3.Size = new Size(264, 96);
-            button3.TabIndex = 6;
-            button3.Text = "C.";
-            button3.TextAlign = ContentAlignment.MiddleLeft;
-            button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            button4.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button4.Location = new Point(432, 386);
-            button4.Name = "button4";
-            button4.Size = new Size(259, 96);
-            button4.TabIndex = 7;
-            button4.Text = "D.";
-            button4.TextAlign = ContentAlignment.MiddleLeft;
-            button4.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            button5.Font = new Font("Segoe UI", 14F);
-            button5.Location = new Point(83, 506);
-            button5.Name = "button5";
-            button5.Size = new Size(608, 48);
-            button5.TabIndex = 8;
-            button5.Text = "Send";
-            button5.UseVisualStyleBackColor = true;
+            btnSend.Font = new Font("Segoe UI", 14F);
+            btnSend.Location = new Point(83, 506);
+            btnSend.Name = "btnSend";
+            btnSend.Size = new Size(608, 48);
+            btnSend.TabIndex = 8;
+            btnSend.Text = "Send";
+            btnSend.UseVisualStyleBackColor = true;
+            btnSend.Click += btnSend_Click;
             // 
             // lbStatus
             // 
@@ -161,40 +108,40 @@ namespace QUIZ_client_1
             lbMessages.Location = new Point(742, 184);
             lbMessages.MultiColumn = true;
             lbMessages.Name = "lbMessages";
-            lbMessages.Size = new Size(150, 364);
+            lbMessages.Size = new Size(208, 364);
             lbMessages.TabIndex = 10;
             // 
-            // radioButton1
+            // rb_hm
             // 
-            radioButton1.BackColor = Color.Transparent;
-            radioButton1.Font = new Font("Times New Roman", 12F);
-            radioButton1.Location = new Point(226, 10);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(166, 32);
-            radioButton1.TabIndex = 12;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Історія музики";
-            radioButton1.UseVisualStyleBackColor = false;
-            radioButton1.CheckedChanged += radioButton1_CheckedChanged;
+            rb_hm.BackColor = Color.Transparent;
+            rb_hm.Font = new Font("Times New Roman", 12F);
+            rb_hm.Location = new Point(226, 10);
+            rb_hm.Name = "rb_hm";
+            rb_hm.Size = new Size(166, 32);
+            rb_hm.TabIndex = 12;
+            rb_hm.TabStop = true;
+            rb_hm.Text = "Історія музики";
+            rb_hm.UseVisualStyleBackColor = false;
+            rb_hm.CheckedChanged += rb_hm_CheckedChanged;
             // 
-            // radioButton2
+            // rb_s
             // 
-            radioButton2.BackColor = Color.Transparent;
-            radioButton2.Font = new Font("Times New Roman", 12F);
-            radioButton2.Location = new Point(392, 13);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(210, 26);
-            radioButton2.TabIndex = 13;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "Сольфеджіо";
-            radioButton2.UseVisualStyleBackColor = false;
+            rb_s.BackColor = Color.Transparent;
+            rb_s.Font = new Font("Times New Roman", 12F);
+            rb_s.Location = new Point(392, 13);
+            rb_s.Name = "rb_s";
+            rb_s.Size = new Size(210, 26);
+            rb_s.TabIndex = 13;
+            rb_s.TabStop = true;
+            rb_s.Text = "Сольфеджіо";
+            rb_s.UseVisualStyleBackColor = false;
             // 
             // panel1
             // 
             panel1.BackColor = Color.LemonChiffon;
             panel1.Controls.Add(label1);
-            panel1.Controls.Add(radioButton1);
-            panel1.Controls.Add(radioButton2);
+            panel1.Controls.Add(rb_hm);
+            panel1.Controls.Add(rb_s);
             panel1.Location = new Point(83, 119);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(5);
@@ -212,27 +159,65 @@ namespace QUIZ_client_1
             label1.TabIndex = 14;
             label1.Text = "Оберіть дисципліну";
             // 
-            // Authorize
+            // btnProfile
             // 
-            Authorize.Font = new Font("Segoe UI", 12F);
-            Authorize.Location = new Point(487, 18);
-            Authorize.Name = "Authorize";
-            Authorize.Size = new Size(168, 48);
-            Authorize.TabIndex = 15;
-            Authorize.Text = "Profile";
-            Authorize.UseVisualStyleBackColor = true;
-            Authorize.Click += Authorize_Click;
+            btnProfile.Font = new Font("Segoe UI", 12F);
+            btnProfile.Location = new Point(487, 18);
+            btnProfile.Name = "btnProfile";
+            btnProfile.Size = new Size(168, 48);
+            btnProfile.TabIndex = 15;
+            btnProfile.Text = "Profile";
+            btnProfile.UseVisualStyleBackColor = true;
+            btnProfile.Click += btnProfile_Click;
             // 
             // btnQuiz
             // 
             btnQuiz.Font = new Font("Segoe UI", 12F);
             btnQuiz.Location = new Point(742, 119);
             btnQuiz.Name = "btnQuiz";
-            btnQuiz.Size = new Size(150, 48);
+            btnQuiz.Size = new Size(208, 48);
             btnQuiz.TabIndex = 16;
             btnQuiz.Text = "Get Quiz";
             btnQuiz.UseVisualStyleBackColor = true;
             btnQuiz.Click += btnQuiz_Click;
+            // 
+            // lblQuestion
+            // 
+            lblQuestion.BackColor = Color.Ivory;
+            lblQuestion.Font = new Font("Times New Roman", 12F);
+            lblQuestion.Location = new Point(83, 198);
+            lblQuestion.Name = "lblQuestion";
+            lblQuestion.Size = new Size(606, 40);
+            lblQuestion.TabIndex = 17;
+            // 
+            // lbAnswers
+            // 
+            lbAnswers.Font = new Font("Times New Roman", 11F);
+            lbAnswers.FormattingEnabled = true;
+            lbAnswers.Location = new Point(83, 260);
+            lbAnswers.Name = "lbAnswers";
+            lbAnswers.Size = new Size(608, 164);
+            lbAnswers.TabIndex = 18;
+            lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
+            // 
+            // lblAnswer
+            // 
+            lblAnswer.BackColor = Color.Ivory;
+            lblAnswer.Font = new Font("Times New Roman", 12F);
+            lblAnswer.Location = new Point(83, 447);
+            lblAnswer.Name = "lblAnswer";
+            lblAnswer.Size = new Size(484, 40);
+            lblAnswer.TabIndex = 19;
+            lblAnswer.Click += lblAnswer_Click;
+            // 
+            // num
+            // 
+            num.Font = new Font("Segoe UI", 12F);
+            num.Location = new Point(598, 453);
+            num.Name = "num";
+            num.Size = new Size(93, 34);
+            num.TabIndex = 20;
+            num.ValueChanged += num_ValueChanged;
             // 
             // ClientForm
             // 
@@ -240,17 +225,16 @@ namespace QUIZ_client_1
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(911, 650);
+            ClientSize = new Size(962, 650);
+            Controls.Add(num);
+            Controls.Add(lblAnswer);
+            Controls.Add(lbAnswers);
+            Controls.Add(lblQuestion);
             Controls.Add(btnQuiz);
-            Controls.Add(Authorize);
+            Controls.Add(btnProfile);
             Controls.Add(lbMessages);
             Controls.Add(lbStatus);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(textBox1);
+            Controls.Add(btnSend);
             Controls.Add(btnConnect);
             Controls.Add(tbPort);
             Controls.Add(tbIp);
@@ -259,6 +243,7 @@ namespace QUIZ_client_1
             Text = "ClientForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)num).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -270,19 +255,18 @@ namespace QUIZ_client_1
         private TextBox tbIp;
         private TextBox tbPort;
         private Button btnConnect;
-        private TextBox textBox1;
-        private Button button1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
-        private Button button5;
+        private Button btnSend;
         private Label lbStatus;
         private ListBox lbMessages;
-        private RadioButton radioButton1;
-        private RadioButton radioButton2;
+        private RadioButton rb_hm;
+        private RadioButton rb_s;
         private Panel panel1;
         private Label label1;
-        private Button Authorize;
+        private Button btnProfile;
         private Button btnQuiz;
+        private Label lblQuestion;
+        private ListBox lbAnswers;
+        private Label lblAnswer;
+        private NumericUpDown num;
     }
 }

@@ -1,6 +1,7 @@
 using DataBase;
 using DbLayer;
 using System.Net;
+using static Models.Serializers;
 
 namespace QUIZproject_server
 {
@@ -88,7 +89,6 @@ namespace QUIZproject_server
 
         private void OnServerMessage(object? sender, EventArgs e)
         {
-
             Invoke(() => lbClients.Items.Add(server.Message));            
         }
 

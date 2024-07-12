@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using static Models.Serializers;
 using System.Runtime.Serialization;
 
 namespace QUIZproject_server
@@ -20,6 +21,8 @@ namespace QUIZproject_server
 
         public List<Quiz> Mh_questions { get; set; }
         public List<SQuiz> S_questions { get; set; }
+
+        public List<Student> Students { get; set; }
 
         private string message;
 
@@ -81,22 +84,38 @@ namespace QUIZproject_server
         {
             var state = (StateObject)result.AsyncState;
             var clientSocket = state.WorkSocket;
-
             try
             {
                 int receivedBytes = clientSocket.EndReceive(result);
+                var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
+
                 if (receivedBytes > 0)
                 {
-                    var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
-                    if (receivedData == "student")
+                    if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentLogin st) == true)
                     {
-                        Message = $"student - {clientSocket.RemoteEndPoint}"; // Адреса клієнта
-                        SendData(clientSocket, PrepareDara());
+                        Message = $"{st.Name} {st.SurName} have connected";
+
                     }
-                    else Message = $"unknown message from {clientSocket.RemoteEndPoint} : {receivedData}"; // Адреса клієнта
+                    else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
+                    {
+                        Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
+                    }
+                    else if (receivedData == "Musichistory")
+                    {
+                        Message = $"student - {clientSocket.RemoteEndPoint} reauested MusicHistory quiz"; // Адреса клієнта
+                        SendData(clientSocket, PrepareDara(Subject.Musichistory));
+                    }
+                    else if (receivedData == "Solfegio")
+                    {
+                        Message = $"student - {clientSocket.RemoteEndPoint} reauested Solfegio quiz";
+                        SendData(clientSocket, PrepareDara(Subject.Solfegio));
+
+                    }
+                    else Message = $"uknonw type message: {receivedData}";
                 }
                 else
                 {
+                    Message = $"unknown message from {clientSocket.RemoteEndPoint} ";
                     clientSocket.Shutdown(SocketShutdown.Both);
                     clientSocket.Close();
                 }
@@ -114,19 +133,27 @@ namespace QUIZproject_server
 
         // Метод для відправки даних клієнту
 
-        private byte[] PrepareDara()
+        private byte[] PrepareDara(Subject subj)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(Quiz));
-                serializer.WriteObject(memoryStream, Mh_questions);
-                byte[] bytes = memoryStream.ToArray();                
+                if (subj == Subject.Musichistory)
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(Quiz));
+                    serializer.WriteObject(memoryStream, Mh_questions);
+                }
+                if (subj == Subject.Solfegio)
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(SQuiz));
+                    serializer.WriteObject(memoryStream, S_questions);
+                }
+                byte[] endOfFileMarker = Encoding.UTF8.GetBytes("EndOfFile");
+                memoryStream.Write(endOfFileMarker, 0, endOfFileMarker.Length);
+                byte[] bytes = memoryStream.ToArray();
                 //MessageBox.Show($"{bytes.Length} bytes are prepared to send");
                 return bytes;
             }
         }
-
-
 
 
         public void SendData(Socket clientSocket, byte[] data)
@@ -136,6 +163,7 @@ namespace QUIZproject_server
             try
             {
                 clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallbackMethod, clientSocket);
+
             }
             catch (Exception ex)
             {

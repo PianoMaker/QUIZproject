@@ -19,6 +19,8 @@ namespace DataBase
         public string SurName { get; set; }
 
         public string Email { get; set; }
+
+        public string Password { get; set; }
         public StudentForm(bool admin = true)
         {
             InitializeComponent();
@@ -69,7 +71,7 @@ namespace DataBase
         {
             string txt; bool ok = true;
             if (string.IsNullOrEmpty(Email))
-            { tbEmail.BackColor = Color.Pink; ok = false; } 
+            { tbEmail.BackColor = Color.Pink; ok = false; }
             if (string.IsNullOrEmpty(FirstName))
             { tbName.BackColor = Color.Pink; ok = false; }
             if (string.IsNullOrEmpty(SurName))
@@ -82,7 +84,7 @@ namespace DataBase
             }
             if (ok == true)
             {
-                
+
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -92,10 +94,11 @@ namespace DataBase
         {
             bool ok = true;
             txt = "";
-            if (!Email.Contains("@")) 
+            if (!Email.Contains("@"))
             {
-                txt += "\nEmail needs to contain @"; 
-                ok = false; }
+                txt += "\nEmail needs to contain @";
+                ok = false;
+            }
 
             int atIndex = Email.IndexOf("@");
             if (atIndex == -1 || Email.Substring(atIndex).IndexOf(".") == -1)
@@ -142,6 +145,9 @@ namespace DataBase
             tbEmail.BackColor = Color.White;
         }
 
-
+        private void tbPassword_TextChanged(object sender, EventArgs e)
+        {
+            Password = tbPassword.Text;
+        }
     }
 }

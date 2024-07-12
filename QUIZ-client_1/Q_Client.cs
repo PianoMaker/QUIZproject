@@ -4,20 +4,23 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
+using Models;
+using static Models.Serializers;
 namespace QUIZ_client_1
 {
     public class Q_Client
     {
         private string? message;
         private Socket socket;
+        public bool Ifconnected { get; set; }
         public byte[] Bin { get; set; }
 
+        public List<Quiz> ReceivedQuizzes { get; } = new ();
+        public List<SQuiz> ReceivedSQuizzes { get; } = new ();
 
         public event EventHandler? MessageChanged;
-        public event EventHandler? NumbersChanged;
+        public event EventHandler? Connected;
+        public event EventHandler<List<Quiz>>? QuizzesReceived;
 
         public IPAddress Ip { get; set; }
         public int Port { get; set; }
@@ -35,9 +38,14 @@ namespace QUIZ_client_1
             MessageChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnNumbersChanged()
+        protected virtual void OnConnected()
         {
-            NumbersChanged?.Invoke(this, EventArgs.Empty);
+            Connected?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnQuizzesReceived(List<Quiz> quizzes)
+        {
+            QuizzesReceived?.Invoke(this, quizzes);
         }
 
         public Q_Client(IPAddress ip, int port)
@@ -53,25 +61,25 @@ namespace QUIZ_client_1
             {
                 await socket.ConnectAsync(Ip, Port);
                 Message = $"{DateTime.Now.ToLongTimeString()} session started";
+                Ifconnected = true;
+                OnConnected();
 
                 var receiveTask = Task.Run(async () =>
                 {
                     while (true)
                     {
-
                         byte[] _response = await ReceiveMessageAsync(socket);
                         if (_response.Length > 0)
                         {
                             Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
-                            try
+
+                            if (TryDeserializeObject(_response, _response.Length, out List<Quiz> quizzes))
                             {
-                                Bin = _response;
-                                OnNumbersChanged();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"{DateTime.Now.ToLongTimeString()} error serializing data\n: {ex.Message}");
-                            }
+                                ReceivedQuizzes.AddRange(quizzes);
+                                OnQuizzesReceived(quizzes);
+                                Message = $"{DateTime.Now.ToLongTimeString()} received quizz";
+                            }                           
+                            
                         }
 
                     }
@@ -80,6 +88,8 @@ namespace QUIZ_client_1
             catch (Exception ex)
             {
                 Message = $"{DateTime.Now.ToLongTimeString()} impossible to connect to server";
+                Ifconnected = false;
+                OnConnected();
             }
         }
 
@@ -87,36 +97,23 @@ namespace QUIZ_client_1
         {
             byte[] buf = new byte[1024];
             List<byte> responseList = new List<byte>();
-            Message = "waiting";
-            Console.Beep(440, 200);
 
             while (true)
             {
                 int len = await socket.ReceiveAsync(buf, SocketFlags.None);
 
                 if (len <= 0)
-                {
-                    Console.Beep(770, 200);
                     break;
-                }
-
-                //Message = $"{DateTime.Now.ToLongTimeString()} received {len} bytes";
 
                 byte[] receivedBytes = new byte[len];
                 Array.Copy(buf, receivedBytes, len);
-
                 responseList.AddRange(receivedBytes);
 
-                // Порівняння з "EndOfFile"
+                // Check for end of file marker
                 if (responseList.Count >= 9 && Encoding.UTF8.GetString(responseList.TakeLast(9).ToArray()) == "EndOfFile")
                 {
-                    Console.Beep(660, 200);
-                    responseList.RemoveRange(responseList.Count - 9, 9); // Видалення "EndOfFile" з результату
+                    responseList.RemoveRange(responseList.Count - 9, 9); // Remove "EndOfFile" from result
                     break;
-                }
-                else
-                {
-                    Console.Beep(880, 200);
                 }
             }
 
@@ -127,12 +124,27 @@ namespace QUIZ_client_1
             try
             {
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
+                Message = "msg sent";
             }
             catch
             {
                 MessageBox.Show("Error sending data");
             }
         }
+
+        public void SendMessage(byte[] data, string txt)
+        {
+            try
+            {
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
+                Message = $"{txt} sent";
+            }
+            catch
+            {
+                MessageBox.Show("Error sending data");
+            }
+        }
+
 
         private void SendCallback(IAsyncResult ar)
         {
