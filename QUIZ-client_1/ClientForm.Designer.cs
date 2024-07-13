@@ -108,7 +108,7 @@ namespace QUIZ_client_1
             lbMessages.Location = new Point(742, 184);
             lbMessages.MultiColumn = true;
             lbMessages.Name = "lbMessages";
-            lbMessages.Size = new Size(208, 364);
+            lbMessages.Size = new Size(251, 364);
             lbMessages.TabIndex = 10;
             // 
             // rb_hm
@@ -175,7 +175,7 @@ namespace QUIZ_client_1
             btnQuiz.Font = new Font("Segoe UI", 12F);
             btnQuiz.Location = new Point(742, 119);
             btnQuiz.Name = "btnQuiz";
-            btnQuiz.Size = new Size(208, 48);
+            btnQuiz.Size = new Size(251, 48);
             btnQuiz.TabIndex = 16;
             btnQuiz.Text = "Get Quiz";
             btnQuiz.UseVisualStyleBackColor = true;
@@ -225,7 +225,7 @@ namespace QUIZ_client_1
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(962, 650);
+            ClientSize = new Size(1005, 650);
             Controls.Add(num);
             Controls.Add(lblAnswer);
             Controls.Add(lbAnswers);

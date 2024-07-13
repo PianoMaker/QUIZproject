@@ -102,12 +102,12 @@ namespace QUIZproject_server
                     }
                     else if (receivedData == "Musichistory")
                     {
-                        Message = $"student - {clientSocket.RemoteEndPoint} reauested MusicHistory quiz"; // Адреса клієнта
+                        Message = $"student - {clientSocket.RemoteEndPoint} requested MusicHistory quiz"; // Адреса клієнта
                         SendData(clientSocket, PrepareDara(Subject.Musichistory));
                     }
                     else if (receivedData == "Solfegio")
                     {
-                        Message = $"student - {clientSocket.RemoteEndPoint} reauested Solfegio quiz";
+                        Message = $"student - {clientSocket.RemoteEndPoint} requested Solfegio quiz";
                         SendData(clientSocket, PrepareDara(Subject.Solfegio));
 
                     }
@@ -120,6 +120,7 @@ namespace QUIZproject_server
                     clientSocket.Close();
                 }
 
+                Message = "ready to receive new messages";
                 // Продовжуємо очікувати нові повідомлення
                 clientSocket.BeginReceive(state.Buffer, 0, state.Buffer.Length, SocketFlags.None, ReceiveCallbackMethod, state);
             }
@@ -139,13 +140,15 @@ namespace QUIZproject_server
             {
                 if (subj == Subject.Musichistory)
                 {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(Quiz));
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
                     serializer.WriteObject(memoryStream, Mh_questions);
+                    Message = "Preparing Data for Music History";
                 }
                 if (subj == Subject.Solfegio)
                 {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(SQuiz));
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
                     serializer.WriteObject(memoryStream, S_questions);
+                    Message = "Preparing Data for Solfegio";
                 }
                 byte[] endOfFileMarker = Encoding.UTF8.GetBytes("EndOfFile");
                 memoryStream.Write(endOfFileMarker, 0, endOfFileMarker.Length);
@@ -159,7 +162,7 @@ namespace QUIZproject_server
         public void SendData(Socket clientSocket, byte[] data)
         {
 
-            Message = $"Trying to send data";
+           // Message = $"Trying to send data";
             try
             {
                 clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallbackMethod, clientSocket);

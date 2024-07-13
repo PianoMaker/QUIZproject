@@ -56,6 +56,8 @@ namespace QUIZ_client_1
         {
             await Connect();
             client.Connected += Client_Connected;
+            client.QuizzesReceived += QuizzesReceived;
+            client.SQuizzesReceived += SQuizzesReceived;
             if (Ifconnected == true)
             {
                 btnQuiz.Enabled = true;
@@ -65,9 +67,7 @@ namespace QUIZ_client_1
                 else
                     lbStatus.Text = $"connected anonymously";
             }
-
         }
-
 
         private void rb_hm_CheckedChanged(object sender, EventArgs e)
         {
@@ -84,8 +84,35 @@ namespace QUIZ_client_1
             {
                 subj = Subject.Musichistory;
             }
-            else subj = Subject.Solfegio;
+            if (rb_s.Checked)
+            {
+                subj = Subject.Musichistory;
+            }
         }
+
+
+        private void QuizzesReceived(object? sender, List<Quiz> e)
+        {
+            lbAnswers.Items.Clear();
+            mh_quiz = e.ToList();
+            current_mh_question = mh_quiz[0];
+            lblQuestion.Text = current_mh_question.ToString();
+            foreach(var qeustion in current_mh_question.Question)
+                lbAnswers.Items.Add(qeustion);
+
+        }
+
+        private void SQuizzesReceived(object? sender, List<SQuiz> e)
+        {
+            lbAnswers.Items.Clear();
+            s_quiz = e.ToList();
+            current_s_question = s_quiz[0];
+            lblQuestion.Text = current_s_question.ToString();
+            foreach (var qeustion in current_s_question.Question)
+                lbAnswers.Items.Add(qeustion);
+        }
+
+       
 
         private void btnProfile_Click(object sender, EventArgs e)
         {
@@ -107,6 +134,7 @@ namespace QUIZ_client_1
         private void btnQuiz_Click(object sender, EventArgs e)
         {
             byte[] msg = Encoding.UTF8.GetBytes(subj.ToString());
+            lbMessages.Items.Add(subj.ToString() + " requested");
             client.SendMessage(msg);
         }
 
@@ -236,6 +264,10 @@ namespace QUIZ_client_1
                 {
                     s_index++;
                     current_s_question = s_quiz[s_index];
+                    lblQuestion.Text = current_s_question.Question;
+                    lbAnswers.Items.Clear();
+                    foreach (var answer in current_s_question.Answers)
+                        lbAnswers.Items.Add(answer);
                 }
             }
             if (subj == Subject.Musichistory && mh_quiz is not null)
@@ -244,6 +276,10 @@ namespace QUIZ_client_1
                 {
                     mh_index++;
                     current_mh_question = mh_quiz[mh_index];
+                    lblQuestion.Text = current_mh_question.Question;
+                    lbAnswers.Items.Clear();
+                    foreach (var answer in current_mh_question.Answers)
+                        lbAnswers.Items.Add(answer);
                 }
             }
 

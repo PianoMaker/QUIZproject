@@ -31,21 +31,53 @@ namespace Models
 
         public static bool TryDeserializeObject<T>(byte[] data, int dataLength, out T obj)
         {
-            obj = default(T);
-            try
+            using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))
             {
-                using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))
+                try
                 {
                     DataContractSerializer serializer = new DataContractSerializer(typeof(T));
                     obj = (T)serializer.ReadObject(memoryStream);
+                    Console.Beep(880, 100);
                     return true;
                 }
+                catch (Exception ex)
+                {
+                    // Логування або обробка виключення за потреби
+                    Console.WriteLine($"Deserialization failed: {ex.Message}");
+                    Console.Beep(660, 100);
+                    obj = default;
+                    return false;
+                }
             }
-            catch (Exception ex)
+        }
+
+
+        public static bool TryDeserializeList<T>(byte[] data, int dataLength, out List<T> obj)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))
             {
-                // Логування або обробка виключення за потреби
-                Console.WriteLine($"Deserialization failed: {ex.Message}");
-                return false;
+                try
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<T>));
+                    obj = (List<T>)serializer.ReadObject(memoryStream);
+                    if (typeof(T) == typeof(Quiz)) 
+                    {
+                        Console.Beep(1000, 100);
+                    }
+                    if (typeof(T) == typeof(SQuiz))
+                    {
+                        Console.Beep(1200, 100);
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle the exception as needed                    
+                    Console.Beep(500, 200);
+                    obj = default;
+                    return false;
+                }
             }
         }
 

@@ -21,6 +21,7 @@ namespace QUIZ_client_1
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
         public event EventHandler<List<Quiz>>? QuizzesReceived;
+        public event EventHandler<List<SQuiz>>? SQuizzesReceived;
 
         public IPAddress Ip { get; set; }
         public int Port { get; set; }
@@ -48,6 +49,11 @@ namespace QUIZ_client_1
             QuizzesReceived?.Invoke(this, quizzes);
         }
 
+        protected virtual void OnSQuizzesReceived(List<SQuiz> quizzes)
+        {
+            SQuizzesReceived?.Invoke(this, quizzes);
+        }
+
         public Q_Client(IPAddress ip, int port)
         {
             Ip = ip;
@@ -69,19 +75,33 @@ namespace QUIZ_client_1
                     while (true)
                     {
                         byte[] _response = await ReceiveMessageAsync(socket);
+                        //"start receiving"; "len=...bytes"; "EndOfFile"
+                        
                         if (_response.Length > 0)
                         {
-                            Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
-
-                            if (TryDeserializeObject(_response, _response.Length, out List<Quiz> quizzes))
-                            {
-                                ReceivedQuizzes.AddRange(quizzes);
-                                OnQuizzesReceived(quizzes);
-                                Message = $"{DateTime.Now.ToLongTimeString()} received quizz";
-                            }                           
+                            Message = $"processing {_response.Length} bytes";
                             
-                        }
+                            if (TryDeserializeList<Quiz>(_response, _response.Length, out List<Quiz> quizzes))
+                            {
+                                Message = $"q...{quizzes.Count}";
+                                
+                                ReceivedQuizzes.AddRange(quizzes);
+                                Message = $"q2...";
+                                OnQuizzesReceived(quizzes);
+                                Message = $"{DateTime.Now.ToLongTimeString()} received Music history quizz";
+                            }
+                            else if (TryDeserializeList<SQuiz>(_response, _response.Length, out List<SQuiz> squizzes))
+                            {
+                                Message = $"sq...{squizzes.Count}";
+                                ReceivedSQuizzes.AddRange(squizzes);
+                                Message = $"sq2....";
+                                OnSQuizzesReceived(squizzes);
+                                Message = $"{DateTime.Now.ToLongTimeString()} received Solfegio quizz"; 
+                            }
+                            else Message = $"{DateTime.Now.ToLongTimeString()} received unknown {_response.Length} bytes";
 
+                        }
+                        else Message = $"{DateTime.Now.ToLongTimeString()} received empty message";
                     }
                 });
             }
@@ -95,12 +115,15 @@ namespace QUIZ_client_1
 
         private async Task<byte[]> ReceiveMessageAsync(Socket socket)
         {
+            Message = "start receiving...";
             byte[] buf = new byte[1024];
             List<byte> responseList = new List<byte>();
 
             while (true)
             {
                 int len = await socket.ReceiveAsync(buf, SocketFlags.None);
+
+                Message = $"len = {len}";
 
                 if (len <= 0)
                     break;
@@ -112,6 +135,7 @@ namespace QUIZ_client_1
                 // Check for end of file marker
                 if (responseList.Count >= 9 && Encoding.UTF8.GetString(responseList.TakeLast(9).ToArray()) == "EndOfFile")
                 {
+                    Message = $"End Of File";
                     responseList.RemoveRange(responseList.Count - 9, 9); // Remove "EndOfFile" from result
                     break;
                 }
@@ -123,8 +147,9 @@ namespace QUIZ_client_1
         {
             try
             {
+                string msg = Encoding.UTF8.GetString(data);
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
-                Message = "msg sent";
+                Message = $"msg sent: {msg}";
             }
             catch
             {
