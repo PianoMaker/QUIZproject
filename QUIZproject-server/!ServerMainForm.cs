@@ -1,11 +1,12 @@
 using DataBase;
 using DbLayer;
+using Models;
 using System.Net;
 using static Models.Serializers;
 
 namespace QUIZproject_server
 {
-    public partial class ServerForm : Form
+    public partial class ServerMainForm : Form
     {
 
         private Q_Server server;
@@ -15,15 +16,17 @@ namespace QUIZproject_server
         private int[] numbers;
         private IPAddress Ip;
         private int port;
+        private QuizForm Q; 
+        
 
-        public ServerForm()
+        public ServerMainForm()
         {
             InitializeComponent();
             Ip = IPAddress.Loopback;
             tbIp.Text = Ip.ToString();
             port = 1234;
             tbPort.Text = port.ToString();
-
+            Q = new QuizForm();            
         }
 
 
@@ -71,7 +74,8 @@ namespace QUIZproject_server
         {
             try
             {
-                server = new Q_Server(Ip, port);
+                server = new Q_Server(Ip, port, Q.Mh_questions, Q.S_questions);
+                lbQ.Text = $"({server.Mh_questions.Count} Music History questions and {server.S_questions.Count} solfegio questions"; 
                 server.MessageChanged += OnServerMessage;
                 if (server != null)
                 {

@@ -13,18 +13,15 @@ namespace QUIZproject_server
 {
     internal class Q_Server
     {
-        public IPAddress Host { get; set; }
-        public int Port { get; set; }
-
+        private IPAddress host;
+        private int port;
         private Socket socket;
-        public List<Socket> ClientSocket { get; set; }
+        private List<Socket> clientSocket;
+        private List<Quiz> mh_questions;
+        private List<SQuiz> s_questions;
+        
 
-        public List<Quiz> Mh_questions { get; set; }
-        public List<SQuiz> S_questions { get; set; }
-
-        public List<Student> Students { get; set; }
-
-        private string message;
+        private string message = "";
 
         public string Message
         {
@@ -36,27 +33,41 @@ namespace QUIZproject_server
             }
         }// повідомлення
 
-        public event EventHandler MessageChanged;
+        public List<Quiz> Mh_questions { get => mh_questions; set => mh_questions = value; }
+        public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
+
+        public event EventHandler? MessageChanged;
 
         protected virtual void OnMessageChanged()
         {
             MessageChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public byte[] BinData { get; set; }
 
         public Q_Server(IPAddress ip, int port)
         {
-            Host = ip;
-            Port = port;
+            host = ip;
+            this.port = port;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Message = "test";
-            ClientSocket = new List<Socket>();
+            clientSocket = new List<Socket>();
+        }
+
+        public Q_Server(IPAddress ip, int port, List<Quiz> mhq, List<SQuiz> sq)
+        {
+            host = ip;
+            this.port = port;
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Message = "test";
+            clientSocket = new List<Socket>();
+            Mh_questions = mhq;
+            S_questions = sq;         
+            
         }
 
         public void StartServer()
         {
-            socket.Bind(new IPEndPoint(Host, Port));
+            socket.Bind(new IPEndPoint(host, port));
             socket.Listen(10);
             Message = $"{DateTime.Now.ToLongTimeString()} Server started. Waiting for connections...";
             socket.BeginAccept(AcceptCallbackMethod, null);
@@ -64,19 +75,19 @@ namespace QUIZproject_server
 
         private void AcceptCallbackMethod(IAsyncResult result)
         {
-            ClientSocket.Add(socket.EndAccept(result));
+            this.clientSocket.Add(socket.EndAccept(result));
             var clientSocket = socket.EndAccept(result);
             Message = $"{DateTime.Now.ToLongTimeString()} Client {clientSocket.RemoteEndPoint} connected.";
 
             var state = new StateObject { WorkSocket = clientSocket };
             clientSocket.BeginReceive(state.Buffer, 0, state.Buffer.Length, SocketFlags.None, ReceiveCallbackMethod, state);
 
-            // Відправка даних клієнту
+            /*
             if (BinData != null && BinData.Length > 0)
             {
                 SendData(clientSocket, BinData);
             }
-
+            */
             socket.BeginAccept(AcceptCallbackMethod, null);
         }
 
@@ -89,29 +100,36 @@ namespace QUIZproject_server
                 int receivedBytes = clientSocket.EndReceive(result);
                 var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
 
+
                 if (receivedBytes > 0)
                 {
-                    if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentLogin st) == true)
+                    try
                     {
-                        Message = $"{st.Name} {st.SurName} have connected";
+                        if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentLogin st) == true)
+                        {
+                            Message = $"{st.Name} {st.SurName} have connected";
 
-                    }
-                    else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
-                    {
-                        Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
-                    }
-                    else if (receivedData == "Musichistory")
-                    {
-                        Message = $"student - {clientSocket.RemoteEndPoint} reauested MusicHistory quiz"; // Адреса клієнта
-                        SendData(clientSocket, PrepareDara(Subject.Musichistory));
-                    }
-                    else if (receivedData == "Solfegio")
-                    {
-                        Message = $"student - {clientSocket.RemoteEndPoint} reauested Solfegio quiz";
-                        SendData(clientSocket, PrepareDara(Subject.Solfegio));
+                        }
+                        else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
+                        {
+                            Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
+                        }
+                        else if (receivedData == "Musichistory")
+                        {
+                            Message = $"student - {clientSocket.RemoteEndPoint} requested MusicHistory quiz"; // Адреса клієнта
+                            SendData(clientSocket, PrepareDara(Subject.Musichistory));
+                        }
+                        else if (receivedData == "Solfegio")
+                        {
+                            Message = $"student - {clientSocket.RemoteEndPoint} requested Solfegio quiz";
+                            SendData(clientSocket, PrepareDara(Subject.Solfegio));
 
+                        }
+                        else Message = $"uknonw type message: {receivedData}";
                     }
-                    else Message = $"uknonw type message: {receivedData}";
+                    catch {
+                        Message = $"unknown prepare failure";
+                    }
                 }
                 else
                 {
@@ -139,31 +157,35 @@ namespace QUIZproject_server
             {
                 if (subj == Subject.Musichistory)
                 {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(Quiz));
+                    // Serialize Music History quizzes
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
                     serializer.WriteObject(memoryStream, Mh_questions);
+                    Message = $"{Mh_questions.Count} mh_questions are prepared";
                 }
-                if (subj == Subject.Solfegio)
+                else if (subj == Subject.Solfegio)
                 {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(SQuiz));
+                    // Serialize Solfegio quizzes
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
                     serializer.WriteObject(memoryStream, S_questions);
-                }
+                    Message = $"{S_questions.Count} s_questions are prepared";
+                }                
+                // Write end-of-file marker
                 byte[] endOfFileMarker = Encoding.UTF8.GetBytes("EndOfFile");
                 memoryStream.Write(endOfFileMarker, 0, endOfFileMarker.Length);
+                                
                 byte[] bytes = memoryStream.ToArray();
-                //MessageBox.Show($"{bytes.Length} bytes are prepared to send");
+                
                 return bytes;
             }
         }
 
-
         public void SendData(Socket clientSocket, byte[] data)
         {
-
-            Message = $"Trying to send data";
+                        
             try
             {
                 clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallbackMethod, clientSocket);
-
+                Message = $"data {data.Length} is sent";
             }
             catch (Exception ex)
             {

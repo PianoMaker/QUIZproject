@@ -1,7 +1,7 @@
 ﻿
 namespace QUIZ_client_1
 {
-    partial class ClientForm
+    partial class ClientMainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@ namespace QUIZ_client_1
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientMainForm));
             tbIp = new TextBox();
             tbPort = new TextBox();
             btnConnect = new Button();
@@ -46,6 +46,7 @@ namespace QUIZ_client_1
             lbAnswers = new ListBox();
             lblAnswer = new Label();
             num = new NumericUpDown();
+            btnPlay = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)num).BeginInit();
             SuspendLayout();
@@ -187,7 +188,7 @@ namespace QUIZ_client_1
             lblQuestion.Font = new Font("Times New Roman", 12F);
             lblQuestion.Location = new Point(83, 198);
             lblQuestion.Name = "lblQuestion";
-            lblQuestion.Size = new Size(606, 40);
+            lblQuestion.Size = new Size(508, 40);
             lblQuestion.TabIndex = 17;
             // 
             // lbAnswers
@@ -219,13 +220,25 @@ namespace QUIZ_client_1
             num.TabIndex = 20;
             num.ValueChanged += num_ValueChanged;
             // 
-            // ClientForm
+            // btnPlay
+            // 
+            btnPlay.Font = new Font("Segoe UI", 12F);
+            btnPlay.Location = new Point(575, 198);
+            btnPlay.Name = "btnPlay";
+            btnPlay.Size = new Size(116, 40);
+            btnPlay.TabIndex = 21;
+            btnPlay.Text = "Play";
+            btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.Click += btnPlay_Click;
+            // 
+            // ClientMainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(962, 650);
+            Controls.Add(btnPlay);
             Controls.Add(num);
             Controls.Add(lblAnswer);
             Controls.Add(lbAnswers);
@@ -239,7 +252,7 @@ namespace QUIZ_client_1
             Controls.Add(tbPort);
             Controls.Add(tbIp);
             Controls.Add(panel1);
-            Name = "ClientForm";
+            Name = "ClientMainForm";
             Text = "ClientForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -268,5 +281,6 @@ namespace QUIZ_client_1
         private ListBox lbAnswers;
         private Label lblAnswer;
         private NumericUpDown num;
+        private Button btnPlay;
     }
 }

@@ -12,7 +12,7 @@ using static Models.Serializers;
 
 namespace QUIZ_client_1
 {
-    public partial class ClientForm : Form
+    public partial class ClientMainForm : Form
     {
         public Subject subj { get; set; }
         private int port;
@@ -27,8 +27,9 @@ namespace QUIZ_client_1
         private List<SQuiz>? s_quiz;
         private int mh_index;
         private int s_index;
-        
-        public ClientForm()
+
+
+        public ClientMainForm()
         {
             InitializeComponent();
             ip = IPAddress.Loopback;
@@ -38,8 +39,12 @@ namespace QUIZ_client_1
             Ifconnected = false;
             btnQuiz.Enabled = false;
             btnProfile.Enabled = false;
-
-
+            rb_hm.Checked = true;
+            num.Value = 1;
+            num.Enabled = false;
+            btnPlay.Enabled = false;
+            s_index = 0;
+            mh_index = 0;   
         }
 
         private void tbPort_TextChanged(object sender, EventArgs e)
@@ -58,7 +63,7 @@ namespace QUIZ_client_1
             client.Connected += Client_Connected;
             if (Ifconnected == true)
             {
-                btnQuiz.Enabled = true;
+                //btnQuiz.Enabled = true;
                 btnProfile.Enabled = true;
                 if (student != null)
                     lbStatus.Text = $"connected as {student.Name} {student.SurName}";
@@ -97,33 +102,43 @@ namespace QUIZ_client_1
                     var ifnew = window.ifnew;
                     var slogin = new StudentLogin(student, ifnew);
                     Login(slogin);
+                    btnQuiz.Enabled = true;
                 }
                 else /*MessageBox.Show("cancel pressed");*/
                     return;
-            }           
+            }
 
         }
 
         private void btnQuiz_Click(object sender, EventArgs e)
         {
+            
             byte[] msg = Encoding.UTF8.GetBytes(subj.ToString());
-            client.SendMessage(msg);
+            client.SendMessage(msg, subj.ToString());
         }
 
         private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
         {
             var index = lbAnswers.SelectedIndex;
             selectedanswer = index;
-            num.Value = (int)selectedanswer;
+            try { num.Value = (int)selectedanswer + 1; }
+            catch { MessageBox.Show("Error with Numbering questions"); }
             lblAnswer.Text = (string)lbAnswers.Items[index];
         }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            PlayChord();
+        }
+
 
         private void num_ValueChanged(object sender, EventArgs e)
         {
             if (num.Value > 0 && num.Value < lbAnswers.Items.Count)
             {
-                selectedanswer = (int)num.Value;
-                lblAnswer.Text = (string)lbAnswers.Items[(int)num.Value];
+                selectedanswer = (int)num.Value + 1;
+                try { lblAnswer.Text = (string)lbAnswers.Items[(int)num.Value - 1]; }
+                catch { MessageBox.Show("index is out of range"); }
             }
         }
 
@@ -170,10 +185,58 @@ namespace QUIZ_client_1
         {
             client = new Q_Client(ip, port);
             client.MessageChanged += OnMessageChanged;
+            client.Mh_questions_Received += On_Mh_questions_Received;
+            client.S_questions_Received += On_S_questions_Received;
             await client.StartClientAsync();
 
         }
 
+        private void On_Mh_questions_Received(object? sender, List<Quiz> e)
+        {
+            btnPlay.Enabled = false;
+            mh_quiz = e;
+            if (mh_quiz.Count > 0)
+            {
+                current_mh_question = mh_quiz[mh_index];
+                SetQuizInterface(current_mh_question);
+            }
+            else
+            {
+                lblQuestion.Text = "No questions received";
+                return;
+            }
+
+
+        }
+
+        private void On_S_questions_Received(object? sender, List<SQuiz> e)
+        {
+            
+            s_quiz = e;
+            if (s_quiz.Count > 0)
+            {
+             
+                current_s_question = s_quiz[s_index];
+                lblQuestion.Text = current_s_question.Question;
+                SetQuizInterface(current_s_question);
+                Console.Beep(440, 200);
+                btnPlay.Enabled = true;
+            }
+            else
+            {
+                lblQuestion.Text = "No questions received";
+                return;
+            }
+        }
+
+        private void SetQuizInterface<T>(T quiz) where T : Quiz
+        {
+            num.Enabled = true;
+            num.Minimum = 1;
+            num.Maximum = quiz.Answers.Count;
+            foreach (var answer in quiz.Answers)
+                lbAnswers.Items.Add(answer);
+        }
 
         private bool CreateProfile()
         {
@@ -229,10 +292,10 @@ namespace QUIZ_client_1
 
         private void RefreshQuiz()
         {
-            if(subj == Subject.Solfegio && s_quiz is not null)
+            if (subj == Subject.Solfegio && s_quiz is not null)
             {
-                
-                if (s_quiz.Count > s_index) 
+
+                if (s_quiz.Count > s_index)
                 {
                     s_index++;
                     current_s_question = s_quiz[s_index];
@@ -253,6 +316,16 @@ namespace QUIZ_client_1
         private void lblAnswer_Click(object sender, EventArgs e)
         {
 
+        }
+
+       
+        private void PlayChord()
+        {
+            if (current_s_question is not null)
+            {
+                try { current_s_question.Play(); }
+                catch { MessageBox.Show("Inmpossible to play chord"); }
+            }
         }
     }
 

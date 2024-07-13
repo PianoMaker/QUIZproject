@@ -26,6 +26,9 @@ namespace QUIZproject_server
         private readonly string MusicHistoryPath = "MusicHistory.bin";
         private readonly string SolfegioPath = "SolfegioQuiz.bin";
 
+        public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
+        public List<Quiz> Mh_questions { get => mh_questions; set => mh_questions = value; }
+
         public QuizForm()
         {
             InitializeComponent();
@@ -41,14 +44,14 @@ namespace QUIZproject_server
         private void Load_mh_questions()
         {
             lbQuestions.Items.Clear();
-            foreach (var q in mh_questions)
+            foreach (var q in Mh_questions)
                 lbQuestions.Items.Add(q.Question);
         }
 
         private void Load_s_questions()
         {
             lbQuestions.Items.Clear();
-            foreach (var q in s_questions)
+            foreach (var q in S_questions)
                 lbQuestions.Items.Add(q.Question);
         }
 
@@ -142,16 +145,16 @@ namespace QUIZproject_server
             }
             if (subj == Subject.Solfegio)
             {
-                var window = new EditQuestionForm(subj, s_questions[index]);
+                var window = new EditQuestionForm(subj, S_questions[index]);
                 window.ShowDialog();
-                SaveEditedQuestion(window, s_questions[index]);
+                SaveEditedQuestion(window, S_questions[index]);
                 Load_s_questions();
             }
             else if (subj == Subject.Musichistory)
             {
-                var window = new EditQuestionForm(subj, mh_questions[index]);
+                var window = new EditQuestionForm(subj, Mh_questions[index]);
                 window.ShowDialog();
-                SaveEditedQuestion(window, mh_questions[index]);
+                SaveEditedQuestion(window, Mh_questions[index]);
                 Load_mh_questions();
             }
             
@@ -161,14 +164,14 @@ namespace QUIZproject_server
             if (w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
             {
                 var question = new Quiz(w.Question, w.Answers, w.Correctanswer);
-                mh_questions.Add(question);
+                Mh_questions.Add(question);
                 btnSave.Text = "Save*";
 
             }
             if (w.DialogResult == DialogResult.OK && subj == Subject.Solfegio)
             {
                 var question = new SQuiz(w.Question, w.Answers, w.Correctanswer, w.Pitches);
-                s_questions.Add(question);
+                S_questions.Add(question);
                 btnSave.Text = "Save*";
             }
         }
@@ -205,12 +208,12 @@ namespace QUIZproject_server
             }
             if (subj == Subject.Musichistory)
             {
-                mh_questions.RemoveAt(index);
+                Mh_questions.RemoveAt(index);
                 Load_mh_questions();
             }
             else if (subj == Subject.Solfegio)
             {
-                s_questions.RemoveAt(index);
+                S_questions.RemoveAt(index);
                 Load_s_questions();
             }
             else MessageBox.Show("Error while choosing a subject");
@@ -266,7 +269,7 @@ namespace QUIZproject_server
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                serializer.WriteObject(memoryStream, mh_questions);
+                serializer.WriteObject(memoryStream, Mh_questions);
                 return memoryStream.ToArray();
             }
         }
@@ -276,7 +279,7 @@ namespace QUIZproject_server
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                serializer.WriteObject(memoryStream, s_questions);
+                serializer.WriteObject(memoryStream, S_questions);
                 return memoryStream.ToArray();
             }
         }
@@ -288,7 +291,7 @@ namespace QUIZproject_server
             using (MemoryStream memoryStream = new MemoryStream(data))
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
+                Mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
             }
         }
 
@@ -297,7 +300,8 @@ namespace QUIZproject_server
             using (MemoryStream memoryStream = new MemoryStream(data))
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                s_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
+                S_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
+               // MessageBox.Show("deserializing s_base is running");
             }
         }
 
@@ -322,7 +326,7 @@ namespace QUIZproject_server
             {
              
                 var index = lbQuestions.SelectedIndex;
-                foreach (var item in mh_questions[index].Answers)
+                foreach (var item in Mh_questions[index].Answers)
                 {
                     lbAnswers.Items.Add($"{i}. {item}");                    
                     i++;
@@ -331,7 +335,7 @@ namespace QUIZproject_server
             else if (subj == Subject.Solfegio)
             {
                 var index = lbQuestions.SelectedIndex;
-                foreach (var item in s_questions[index].Answers)
+                foreach (var item in S_questions[index].Answers)
                 {
                     lbAnswers.Items.Add(item);
                     i++;

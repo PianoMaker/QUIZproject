@@ -1,7 +1,7 @@
 ﻿
 namespace QUIZproject_server
 {
-    partial class ServerForm
+    partial class ServerMainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@ namespace QUIZproject_server
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerMainForm));
             tbIp = new TextBox();
             btnConnect = new Button();
             tbPort = new TextBox();
@@ -38,6 +38,7 @@ namespace QUIZproject_server
             button1 = new Button();
             lbStatus = new Label();
             btnAdm = new Button();
+            lbQ = new Label();
             SuspendLayout();
             // 
             // tbIp
@@ -82,7 +83,7 @@ namespace QUIZproject_server
             btnEdit.UseVisualStyleBackColor = true;
             btnEdit.Click += btnEdit_Click;
             // 
-            // lbCLients
+            // lbClients
             // 
             lbClients.FormattingEnabled = true;
             lbClients.Location = new Point(49, 103);
@@ -124,13 +125,23 @@ namespace QUIZproject_server
             btnAdm.UseVisualStyleBackColor = true;
             btnAdm.Click += btnAdm_Click;
             // 
-            // ServerForm
+            // lbQ
+            // 
+            lbQ.AutoSize = true;
+            lbQ.Location = new Point(46, 408);
+            lbQ.Name = "lbQ";
+            lbQ.Size = new Size(180, 20);
+            lbQ.TabIndex = 8;
+            lbQ.Text = "No questnions are loaded";
+            // 
+            // ServerMainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
+            Controls.Add(lbQ);
             Controls.Add(btnAdm);
             Controls.Add(lbStatus);
             Controls.Add(button1);
@@ -139,7 +150,7 @@ namespace QUIZproject_server
             Controls.Add(tbPort);
             Controls.Add(btnConnect);
             Controls.Add(tbIp);
-            Name = "ServerForm";
+            Name = "ServerMainForm";
             Text = "Quiz-Server";
             ResumeLayout(false);
             PerformLayout();
@@ -156,5 +167,6 @@ namespace QUIZproject_server
         private Button button1;
         private Label lbStatus;
         private Button btnAdm;
+        private Label lbQ;
     }
 }

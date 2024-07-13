@@ -16,12 +16,13 @@ namespace QUIZ_client_1
         public bool Ifconnected { get; set; }
         public byte[] Bin { get; set; }
 
-        public List<Quiz> mh_questions { get; set;  } = new ();
-        public List<SQuiz> s_questions { get; set;  } = new ();
+       // public List<Quiz> mh_questions { get; set;  } = new ();
+//        public List<SQuiz> s_questions { get; set;  } = new ();
 
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
-        public event EventHandler<List<Quiz>>? QuizzesReceived;
+        public event EventHandler<List<Quiz>>? Mh_questions_Received;
+        public event EventHandler<List<SQuiz>>? S_questions_Received;
 
         public IPAddress Ip { get; set; }
         public int Port { get; set; }
@@ -44,9 +45,14 @@ namespace QUIZ_client_1
             Connected?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnQuizzesReceived(List<Quiz> quizzes)
+        protected virtual void On_Mh_questions_Received(List<Quiz> quizzes)
         {
-            QuizzesReceived?.Invoke(this, quizzes);
+            Mh_questions_Received?.Invoke(this, quizzes);
+        }
+
+        protected virtual void On_S_questions_Received(List<SQuiz> squizzes)
+        {
+            S_questions_Received?.Invoke(this, squizzes);
         }
 
         public Q_Client(IPAddress ip, int port)
@@ -72,9 +78,26 @@ namespace QUIZ_client_1
                         byte[] _response = await ReceiveMessageAsync(socket);
                         if (_response.Length > 0)
                         {
-                            Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
+                            //Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
+                            if (TryDeserializeObject(_response, _response.Length, out List<Quiz> mh_questions))
+                            {
+                                Message = $"{mh_questions.Count} m_questions";
+                                On_Mh_questions_Received(mh_questions);
+                            }
 
-                            
+                            else if (TryDeserializeObject(_response, _response.Length, out List<SQuiz> s_questions))
+                            {
+                                Message = $"{s_questions.Count} s_questions";
+                                On_S_questions_Received(s_questions);
+                            }
+                            else Message = "unknown message received";
+
+                            /*
+
+
+                            DeserializeQuizBase(_response);
+                            DeserializeSQuizBase(_response);
+                            */
                         }
 
                     }
@@ -107,7 +130,8 @@ namespace QUIZ_client_1
                 // Check for end of file marker
                 if (responseList.Count >= 9 && Encoding.UTF8.GetString(responseList.TakeLast(9).ToArray()) == "EndOfFile")
                 {
-                    responseList.RemoveRange(responseList.Count - 9, 9); // Remove "EndOfFile" from result
+                    Message = "EndOfFile";
+                    responseList.RemoveRange(responseList.Count - 9, 9); 
                     break;
                 }
             }
@@ -132,7 +156,7 @@ namespace QUIZ_client_1
             try
             {
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
-                Message = $"{txt} sent";
+                Message = $"message \"{txt}\" is sent to server";
             }
             catch
             {
@@ -155,15 +179,39 @@ namespace QUIZ_client_1
             }
         }
 
-
+        /*
         private void DeserializeQuizBase(byte[] data)
         {
-
-            using (MemoryStream memoryStream = new MemoryStream(data))
+            try
             {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
+                using (MemoryStream memoryStream = new MemoryStream(data))
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
+                    mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
+                    Message = $"got {mh_questions.Count} mh_questions";
+                }
+            }
+            catch
+            {
+                //Message = $"failed to get mh_questions";
             }
         }
+        private void DeserializeSQuizBase(byte[] data)
+        {
+            try
+            {
+                using (MemoryStream memoryStream = new MemoryStream(data))
+                {
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
+                    s_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
+                    Message = $"got {s_questions.Count} s_questions";
+                }
+            }
+            catch
+            {
+                //Message = $"failed to get s_questions";
+            }
+        }
+        */
     }
 }
