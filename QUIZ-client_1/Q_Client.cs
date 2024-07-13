@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using Models;
 using static Models.Serializers;
+using System.Runtime.Serialization;
 namespace QUIZ_client_1
 {
     public class Q_Client
@@ -15,8 +16,8 @@ namespace QUIZ_client_1
         public bool Ifconnected { get; set; }
         public byte[] Bin { get; set; }
 
-        public List<Quiz> ReceivedQuizzes { get; } = new ();
-        public List<SQuiz> ReceivedSQuizzes { get; } = new ();
+        public List<Quiz> mh_questions { get; set;  } = new ();
+        public List<SQuiz> s_questions { get; set;  } = new ();
 
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
@@ -73,12 +74,6 @@ namespace QUIZ_client_1
                         {
                             Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
 
-                            if (TryDeserializeObject(_response, _response.Length, out List<Quiz> quizzes))
-                            {
-                                ReceivedQuizzes.AddRange(quizzes);
-                                OnQuizzesReceived(quizzes);
-                                Message = $"{DateTime.Now.ToLongTimeString()} received quizz";
-                            }                           
                             
                         }
 
@@ -157,6 +152,17 @@ namespace QUIZ_client_1
             {
                 // Обробка помилок, якщо такі є
                 MessageBox.Show($"Error in SendCallback: {ex.Message}");
+            }
+        }
+
+
+        private void DeserializeQuizBase(byte[] data)
+        {
+
+            using (MemoryStream memoryStream = new MemoryStream(data))
+            {
+                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
+                mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
             }
         }
     }
