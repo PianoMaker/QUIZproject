@@ -109,15 +109,16 @@ namespace QUIZ_client_1
         private void btnProfile_Click(object sender, EventArgs e)
         {
             var window = new LogInForm();
-            window.ShowDialog();
-            var ifnew = window.ifnew;
-            var login = CreateProfile(ifnew);
-            if (login is null) return;
-            lbStatus.Text = $"trying to connect as {login.Name} {login.SurName}";
-            Login(login);
-            
-            btnQuiz.Enabled = true;                     
-
+            if (window.ShowDialog() == DialogResult.OK)
+            {
+                var login = window.Login;                
+                if (login is null) return;
+                lbStatus.Text = $"trying to connect as {login.Name} {login.SurName}";
+                //MessageBox.Show($"{login.Password} : {login.Email} : {login.Ifnew}");
+                Login(login);
+                
+            }
+            else return;
         }
 
         private void btnQuiz_Click(object sender, EventArgs e)
@@ -221,7 +222,7 @@ namespace QUIZ_client_1
             {
                 var msg = SerializeObject(st);
                 client.SendMessage(msg);
-                student = st;
+                //student = st;
             }
             catch (Exception ex)
             {
@@ -229,13 +230,14 @@ namespace QUIZ_client_1
             }
         }
 
-        private void Client_LoggedIn(object? sender, EventArgs e)
+        private void Client_LoggedIn(object? sender, Student e)
         {
             try
             {
-                
+                student = e;
                 lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
                 lbStatus.Text= $"Logged as {student.Name} {student.SurName}";
+                btnQuiz.Enabled = true;
             }
             catch (Exception ex)
             {

@@ -21,7 +21,7 @@ namespace QUIZ_client_1
 
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
-        public event EventHandler? LoggedIn;
+        public event EventHandler<Student>? LoggedIn;
         public event EventHandler<List<Quiz>>? Mh_questions_Received;
         public event EventHandler<List<SQuiz>>? S_questions_Received;
 
@@ -46,9 +46,9 @@ namespace QUIZ_client_1
             Connected?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnLoggedIn()
+        protected virtual void OnLoggedIn(Student st)
         {
-            LoggedIn?.Invoke(this, EventArgs.Empty);
+            LoggedIn?.Invoke(this, st);
         }
 
         protected virtual void On_Mh_questions_Received(List<Quiz> quizzes)
@@ -98,10 +98,16 @@ namespace QUIZ_client_1
                                 Message = $"{s_questions.Count} s_questions";
                                 On_S_questions_Received(s_questions);
                             }
+                            else if (TryDeserializeObject(_response, _response.Length, out Student student))
+                            {
+                                Message = $"{student.Name} {student.SurName} confirmed";
+                                OnLoggedIn(student);
+                            }
+
                             else if (Encoding.UTF8.GetString(_response) == "RegisterSuccess")
                             {
                                 Message = $"registration succes";
-                                OnLoggedIn();
+                                //OnLoggedIn();
                             }
 
                             else if (Encoding.UTF8.GetString(_response) == "RegisterUnSuccess")
@@ -113,12 +119,12 @@ namespace QUIZ_client_1
                             else if (Encoding.UTF8.GetString(_response) == "LoginSuccess")
                             {
                                 Message = $"login success!";
-                                OnLoggedIn();
+                                //OnLoggedIn();
                             }
                             else if (Encoding.UTF8.GetString(_response) == "LoginUnSuccess")
                             {
-                                Message = $"login failure";
-                                MessageBox.Show($"Wrong login or password", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                Message = $"login failed!";
+                                
                             }
 
                             else if (Encoding.UTF8.GetString(_response) == "AlreadyRegistered")

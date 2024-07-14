@@ -10,6 +10,7 @@ using static Models.Serializers;
 using System.Runtime.Serialization;
 using DbLayer;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.VisualBasic.Logging;
 
 namespace QUIZproject_server
 {
@@ -106,18 +107,21 @@ namespace QUIZproject_server
                     try
                     {
                         // ЛОГІН
+                        
                         if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentLogin st) == true)
                         {
-                            Message = $"{st.Name} {st.SurName} connected";
+                            Message = $"{st.Name} {st.SurName} connected";                            
                             bool ifregistered = CheckIfRegistered(st);
                             if (ifregistered && st.Ifnew)
-                            { 
+                            {
+                                //MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
                                 byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
                                 SendTextMessage(clientSocket, msg);
                             }
                             else if (ifregistered && !st.Ifnew)
                             {
-                                string loginsuccess = TryLogin(st);
+                                //MessageBox.Show($"registered !new {st.Password} : {st.Email} : {st.Ifnew}");
+                                string loginsuccess = TryLogin(st, clientSocket);
                                 
                                 byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
 
@@ -126,15 +130,18 @@ namespace QUIZproject_server
                             }
                             else if (!ifregistered && st.Ifnew)
                             {
-                                string registerresult = TryRegister(st);
+                                //MessageBox.Show($"!registered new {st.Password} : {st.Email} : {st.Ifnew}");
+                                string registerresult = TryRegister(st, clientSocket);
                                 byte[] msg = Encoding.UTF8.GetBytes(registerresult);
+                                
 
                                 SendTextMessage(clientSocket, msg);
+                                
                             }
                             else if (!ifregistered && !st.Ifnew)
                             {
+                                //MessageBox.Show($"!registered !new {st.Password} : {st.Email} : {st.Ifnew}");
                                 byte[] msg = Encoding.UTF8.GetBytes("LoginUnSuccess");
-
                                 SendTextMessage(clientSocket, msg);
                             }
                         }
@@ -158,6 +165,7 @@ namespace QUIZproject_server
                         else if (TryDeserializeObject(state.Buffer, receivedBytes, out ShortAnswer sha) == true)
                         {
                             Message = $"{sha.Email} answered question # {sha.Questionid}";
+
                         }
                         else Message = $"uknonw type message: {receivedData}";
                     }
@@ -189,7 +197,7 @@ namespace QUIZproject_server
             SendData(clientSocket, marker);
         }
 
-        private string TryRegister(StudentLogin st)
+        private string TryRegister(StudentLogin st, Socket clientSocket)
         {
             using (var db = factory.CreateDbContext(args))
             {
@@ -197,18 +205,19 @@ namespace QUIZproject_server
                 {
                     db.Students.Add(st);
                     db.SaveChanges();
-                    Message = $"New student {st.Name} {st.SurName} just have registered";
+                    Message = $"New student {st.Name} {st.SurName} just have registered";                                  
+                    ExtractAndSend(st, clientSocket);
                     return "RegisterSuccess";
                 }
                 catch
                 {
                     Message = $"Unsuccesful atempt to register {st.Name} {st.SurName}";
-                    return "RegisterUnSuccess";
-                    
+                    return "RegisterUnSuccess";                    
                 }
             }
         }
 
+        
         private bool CheckIfRegistered(StudentLogin st)
         {
             
@@ -221,21 +230,43 @@ namespace QUIZproject_server
             return false;
         }
 
-        private string TryLogin(StudentLogin st)
+        private string TryLogin(StudentLogin st, Socket clientSocket)
         {
-            string result = "";
-            
+
+            //MessageBox.Show($"login attempt {st.Email}");
             using (var db = factory.CreateDbContext(args))
                 foreach (var student in db.Students)
                 {
                     if (st.Email == student.Email
                         && st.Password == student.Password)
+                    {
+                        SendLogin(student, clientSocket);
                         return "LoginSuccess";
+                    }
                 }
             return "LoginUnSuccess";
         }
 
+        private void SendLogin(Student student, Socket clientSocket)
+        {
+            byte[] data = SerializeObject(student);
+            SendData(clientSocket, data);
+            SendData(clientSocket, marker);
+            Message = "Student info sent";
+        }
 
+        private void ExtractAndSend(StudentLogin st, Socket clientSocket)
+        {
+            using (var db = factory.CreateDbContext(args))
+                foreach (var student in db.Students)
+                {
+                    if (st.Email == student.Email
+                        && st.Password == student.Password)
+                    {
+                        SendLogin(student, clientSocket);                        
+                    }
+                }
+        }
 
         // Метод для відправки даних клієнту
 

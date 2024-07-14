@@ -43,6 +43,10 @@ namespace Models
         [DataMember]
         public int MH_answered { get; set; }
 
+        [Column("MusicHistory_correct_answers")]
+        [DataMember]
+        public int MH_correctAnswers { get; set; }
+
         [Column("MusicHistory_mark")]        
         [DataMember]
         public int MH_mark { get; set; }
@@ -50,6 +54,10 @@ namespace Models
         [Column("Solfegio_answered")]
         [DataMember]
         public int S_answered { get; set; }
+
+        [Column("Solfegio_correct_answers")]
+        [DataMember]
+        public int S_correctAnswers { get; set; }
 
         [Column("Solfegio_mark")]
         [DataMember]
