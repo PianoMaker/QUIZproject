@@ -149,5 +149,18 @@ namespace DataBase
         {
             Password = tbPassword.Text;
         }
+
+        private void bTest_Click(object sender, EventArgs e)
+        {
+            Name = "test";
+            tbName.Text = Name;
+            SurName = "test";
+            tbSurName.Text = SurName;
+            Email = "test@test.com";
+            tbEmail.Text = Email;
+            Password = "testpassword";
+            tbPassword.Text = Password;
+            
+        }
     }
 }

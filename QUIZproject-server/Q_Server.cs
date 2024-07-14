@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Models;
 using static Models.Serializers;
 using System.Runtime.Serialization;
+using DbLayer;
+using System.Diagnostics.Eventing.Reader;
 
 namespace QUIZproject_server
 {
@@ -19,7 +21,8 @@ namespace QUIZproject_server
         private List<Socket> clientSocket;
         private List<Quiz> mh_questions;
         private List<SQuiz> s_questions;
-        
+        private StudentsDbContextFactory factory;
+
 
         private string message = "";
 
@@ -53,7 +56,7 @@ namespace QUIZproject_server
             clientSocket = new List<Socket>();
         }
 
-        public Q_Server(IPAddress ip, int port, List<Quiz> mhq, List<SQuiz> sq)
+        public Q_Server(IPAddress ip, int port, List<Quiz> mhq, List<SQuiz> sq, StudentsDbContextFactory _factory)
         {
             host = ip;
             this.port = port;
@@ -61,8 +64,8 @@ namespace QUIZproject_server
             Message = "test";
             clientSocket = new List<Socket>();
             Mh_questions = mhq;
-            S_questions = sq;         
-            
+            S_questions = sq;
+            factory = _factory;            
         }
 
         public void StartServer()
@@ -82,12 +85,6 @@ namespace QUIZproject_server
             var state = new StateObject { WorkSocket = clientSocket };
             clientSocket.BeginReceive(state.Buffer, 0, state.Buffer.Length, SocketFlags.None, ReceiveCallbackMethod, state);
 
-            /*
-            if (BinData != null && BinData.Length > 0)
-            {
-                SendData(clientSocket, BinData);
-            }
-            */
             socket.BeginAccept(AcceptCallbackMethod, null);
         }
 
@@ -99,21 +96,31 @@ namespace QUIZproject_server
             {
                 int receivedBytes = clientSocket.EndReceive(result);
                 var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
-
+                
+                // РЕАГУВАННЯ НА ПОВІДОМЛЕННЯ
 
                 if (receivedBytes > 0)
                 {
                     try
                     {
+                        // ЛОГІН
                         if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentLogin st) == true)
                         {
-                            Message = $"{st.Name} {st.SurName} have connected";
+                            Message = $"{st.Name} {st.SurName} connected";
+                            bool ifregistered = CheckIfRegistered(st);
+                            if (ifregistered && st.Ifnew)
+                            { 
+                                byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
+                                SendData(clientSocket, msg);
+                            }
+                            else if (!ifregistered && st.Ifnew)
+                            {
+                                byte[] msg = Encoding.UTF8.GetBytes("LoginSuccess");
+                                SendData(clientSocket, msg);
+                            }
 
                         }
-                        else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
-                        {
-                            Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
-                        }
+                        // ВИБІР ДИСЦИПЛІНИ
                         else if (receivedData == "Musichistory")
                         {
                             Message = $"student - {clientSocket.RemoteEndPoint} requested MusicHistory quiz"; // Адреса клієнта
@@ -124,6 +131,11 @@ namespace QUIZproject_server
                             Message = $"student - {clientSocket.RemoteEndPoint} requested Solfegio quiz";
                             SendData(clientSocket, PrepareDara(Subject.Solfegio));
 
+                        }
+                        // ВІДПОВІДЬ НА ПИТАННЯ
+                        else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
+                        {
+                            Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
                         }
                         else Message = $"uknonw type message: {receivedData}";
                     }
@@ -149,6 +161,18 @@ namespace QUIZproject_server
             }
         }
 
+        private bool CheckIfRegistered(StudentLogin st)
+        {
+            string[] args = null;
+            using (var db = factory.CreateDbContext(args))
+                foreach( var student in  db.Students) 
+                { 
+                    if(st.Email == student.Email)
+                        return true;
+                }
+            return false;
+        }
+
         // Метод для відправки даних клієнту
 
         private byte[] PrepareDara(Subject subj)
@@ -160,14 +184,14 @@ namespace QUIZproject_server
                     // Serialize Music History quizzes
                     DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
                     serializer.WriteObject(memoryStream, Mh_questions);
-                    Message = $"{Mh_questions.Count} mh_questions are prepared";
+                    //Message = $"{Mh_questions.Count} mh_questions are prepared";
                 }
                 else if (subj == Subject.Solfegio)
                 {
                     // Serialize Solfegio quizzes
                     DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
                     serializer.WriteObject(memoryStream, S_questions);
-                    Message = $"{S_questions.Count} s_questions are prepared";
+                    //Message = $"{S_questions.Count} s_questions are prepared";
                 }                
                 // Write end-of-file marker
                 byte[] endOfFileMarker = Encoding.UTF8.GetBytes("EndOfFile");

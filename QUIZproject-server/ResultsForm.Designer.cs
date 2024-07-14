@@ -46,7 +46,7 @@
             dgv.Location = new Point(0, 28);
             dgv.Name = "dgv";
             dgv.RowHeadersWidth = 51;
-            dgv.Size = new Size(800, 422);
+            dgv.Size = new Size(1071, 422);
             dgv.TabIndex = 0;
             // 
             // menuStrip1
@@ -55,7 +55,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 28);
+            menuStrip1.Size = new Size(1071, 28);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -69,21 +69,21 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(224, 26);
+            exportToolStripMenuItem.Size = new Size(175, 26);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += ExportMenu_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(224, 26);
+            closeToolStripMenuItem.Size = new Size(175, 26);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += CloseMenu_Click;
             // 
             // adminToolsToolStripMenuItem
             // 
             adminToolsToolStripMenuItem.Name = "adminToolsToolStripMenuItem";
-            adminToolsToolStripMenuItem.Size = new Size(224, 26);
+            adminToolsToolStripMenuItem.Size = new Size(175, 26);
             adminToolsToolStripMenuItem.Text = "Admin Tools";
             adminToolsToolStripMenuItem.Click += adminTools_Click;
             // 
@@ -93,7 +93,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1071, 450);
             Controls.Add(dgv);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;

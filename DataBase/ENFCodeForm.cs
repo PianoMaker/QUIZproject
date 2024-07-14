@@ -1,6 +1,7 @@
 using DbLayer;
 using Models;
 using System.Diagnostics;
+using System.DirectoryServices;
 
 namespace DataBase
 {
@@ -73,12 +74,12 @@ namespace DataBase
         {
             var window = new StudentForm();            
             if(window.ShowDialog() == DialogResult.OK)                
-            AddStudent(window.FirstName, window.SurName, window.Email, window.S, window.MH);
+            AddStudent(window.FirstName, window.SurName, window.Email, window.Password, window.S, window.MH);
 
         }
 
 
-        private void AddStudent(string name, string surname, string email, int s, int mh)
+        private void AddStudent(string name, string surname, string email, string password, int s, int mh)
         {
             using (var db = factory.CreateDbContext(args))
             {
@@ -97,6 +98,7 @@ namespace DataBase
                         Name = name,
                         SurName = surname,
                         Email = email,
+                        Password = password,
                         S_mark = s,
                         MH_mark = mh
                     };

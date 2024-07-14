@@ -39,9 +39,17 @@ namespace Models
         [DataMember]
         public string SurName { get; set; } = null!;
 
+        [Column("MusicHistory_question_answered")]
+        [DataMember]
+        public int MH_answered { get; set; }
+
         [Column("MusicHistory_mark")]        
         [DataMember]
-        public int MH_mark { get; set; } 
+        public int MH_mark { get; set; }
+
+        [Column("Solfegio_answered")]
+        [DataMember]
+        public int S_answered { get; set; }
 
         [Column("Solfegio_mark")]
         [DataMember]

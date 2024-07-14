@@ -38,6 +38,7 @@
             label1 = new Label();
             label2 = new Label();
             tbPassword = new TextBox();
+            bTest = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             SuspendLayout();
@@ -142,11 +143,23 @@
             tbPassword.TabIndex = 5;
             tbPassword.TextChanged += tbPassword_TextChanged;
             // 
+            // bTest
+            // 
+            bTest.BackColor = Color.IndianRed;
+            bTest.Location = new Point(56, 171);
+            bTest.Name = "bTest";
+            bTest.Size = new Size(94, 29);
+            bTest.TabIndex = 10;
+            bTest.Text = "test";
+            bTest.UseVisualStyleBackColor = false;
+            bTest.Click += bTest_Click;
+            // 
             // StudentForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(710, 249);
+            Controls.Add(bTest);
             Controls.Add(tbPassword);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -177,5 +190,6 @@
         private Label label1;
         private Label label2;
         private TextBox tbPassword;
+        private Button bTest;
     }
 }

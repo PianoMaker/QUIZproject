@@ -18,6 +18,7 @@ namespace Models
             Name = student.Name;
             SurName = student.SurName;
             Email = student.Email;
+            Password = student.Password;
             MH_mark = student.MH_mark;
             S_mark = student.S_mark;
         }

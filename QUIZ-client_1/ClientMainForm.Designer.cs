@@ -47,6 +47,7 @@ namespace QUIZ_client_1
             lblAnswer = new Label();
             num = new NumericUpDown();
             btnPlay = new Button();
+            lbQ = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)num).BeginInit();
             SuspendLayout();
@@ -85,9 +86,9 @@ namespace QUIZ_client_1
             // btnSend
             // 
             btnSend.Font = new Font("Segoe UI", 14F);
-            btnSend.Location = new Point(83, 506);
+            btnSend.Location = new Point(358, 506);
             btnSend.Name = "btnSend";
-            btnSend.Size = new Size(608, 48);
+            btnSend.Size = new Size(333, 48);
             btnSend.TabIndex = 8;
             btnSend.Text = "Send";
             btnSend.UseVisualStyleBackColor = true;
@@ -231,6 +232,17 @@ namespace QUIZ_client_1
             btnPlay.UseVisualStyleBackColor = true;
             btnPlay.Click += btnPlay_Click;
             // 
+            // lbQ
+            // 
+            lbQ.AutoSize = true;
+            lbQ.BackColor = Color.Transparent;
+            lbQ.Font = new Font("Segoe UI", 11F);
+            lbQ.Location = new Point(88, 510);
+            lbQ.Name = "lbQ";
+            lbQ.Size = new Size(218, 25);
+            lbQ.TabIndex = 22;
+            lbQ.Text = "No questions are loaded";
+            // 
             // ClientMainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -238,6 +250,7 @@ namespace QUIZ_client_1
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(962, 650);
+            Controls.Add(lbQ);
             Controls.Add(btnPlay);
             Controls.Add(num);
             Controls.Add(lblAnswer);
@@ -282,5 +295,6 @@ namespace QUIZ_client_1
         private Label lblAnswer;
         private NumericUpDown num;
         private Button btnPlay;
+        private Label lbQ;
     }
 }

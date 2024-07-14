@@ -31,7 +31,7 @@ namespace Models
 
         public static bool TryDeserializeObject<T>(byte[] data, int dataLength, out T obj)
         {
-            obj = default(T);
+            obj = default;
             try
             {
                 using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))

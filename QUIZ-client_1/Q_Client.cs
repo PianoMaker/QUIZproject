@@ -91,13 +91,6 @@ namespace QUIZ_client_1
                                 On_S_questions_Received(s_questions);
                             }
                             else Message = "unknown message received";
-
-                            /*
-
-
-                            DeserializeQuizBase(_response);
-                            DeserializeSQuizBase(_response);
-                            */
                         }
 
                     }

@@ -16,8 +16,9 @@ namespace QUIZproject_server
         private int[] numbers;
         private IPAddress Ip;
         private int port;
-        private QuizForm Q; 
-        
+        private QuizForm Q;
+        private StudentsDbContextFactory factory;
+
 
         public ServerMainForm()
         {
@@ -26,7 +27,8 @@ namespace QUIZproject_server
             tbIp.Text = Ip.ToString();
             port = 1234;
             tbPort.Text = port.ToString();
-            Q = new QuizForm();            
+            Q = new QuizForm();
+            factory = new StudentsDbContextFactory();
         }
 
 
@@ -74,7 +76,7 @@ namespace QUIZproject_server
         {
             try
             {
-                server = new Q_Server(Ip, port, Q.Mh_questions, Q.S_questions);
+                server = new Q_Server(Ip, port, Q.Mh_questions, Q.S_questions, factory);
                 lbQ.Text = $"({server.Mh_questions.Count} Music History questions and {server.S_questions.Count} solfegio questions"; 
                 server.MessageChanged += OnServerMessage;
                 if (server != null)
@@ -98,9 +100,10 @@ namespace QUIZproject_server
 
         private void btnAdm_Click(object sender, EventArgs e)
         {
-            var factory = new StudentsDbContextFactory();
+            
             var window = new ENFCodeForm(factory);
             window.ShowDialog();
+            
         }
     }
 }
