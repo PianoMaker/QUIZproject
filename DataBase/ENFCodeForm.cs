@@ -1,5 +1,6 @@
 using DbLayer;
 using Models;
+using System.Data;
 using System.Diagnostics;
 using System.DirectoryServices;
 
@@ -18,9 +19,10 @@ namespace DataBase
             this.factory = factory;
             args = new string[] { };
             CheckDataBase();
+            dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
         }
 
-        
+
         private void btnShow_Click(object sender, EventArgs e)
         {
             ShowDatabase();
@@ -52,7 +54,7 @@ namespace DataBase
         {
             using (var db = factory.CreateDbContext(args))
             {
-             
+
                 db.Delete();
                 CheckDataBase();
             }
@@ -69,14 +71,16 @@ namespace DataBase
 
         }
 
-        
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            var window = new StudentForm();            
-            if(window.ShowDialog() == DialogResult.OK)                
-            AddStudent(window.FirstName, window.SurName, window.Email, window.Password, window.S, window.MH);
+            var window = new StudentForm();
+            if (window.ShowDialog() == DialogResult.OK)
+                AddStudent(window.FirstName, window.SurName, window.Email, window.Password, window.S, window.MH);
 
         }
+
+
 
 
         private void AddStudent(string name, string surname, string email, string password, int s, int mh)
@@ -139,8 +143,9 @@ namespace DataBase
             {
                 int selectedStudentId = Convert.ToInt32(dgv.SelectedRows[0].Cells["Id"].Value);
                 var studentToRemove = db.Students.FirstOrDefault(s => s.Id == selectedStudentId);
-                if (studentToRemove != null)                {
-                    
+                if (studentToRemove != null)
+                {
+
                     db.Students.Remove(studentToRemove);
                     db.SaveChanges();
                     MessageBox.Show("Student removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -209,5 +214,58 @@ namespace DataBase
                 }
             }
         }
+
+        private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            // Переконайтеся, що редагування було по дійсній клітинці
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                DataGridView dgv = sender as DataGridView;
+                if (dgv != null)
+                {
+                    // Отримуємо нове значення з клітинки
+                    var newValue = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                    using (var db = factory.CreateDbContext(args))
+                    {
+                        
+                        int studentId = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["Id"].Value);
+                        var student = db.Students.FirstOrDefault(s => s.Id == studentId);
+                        if (student != null)
+                        {                            
+                            string columnName = dgv.Columns[e.ColumnIndex].Name;
+                                                        
+                            var property = typeof(Student).GetProperty(columnName);
+                            if (property != null)
+                            {
+                                var convertedValue = Convert.ChangeType(newValue, property.PropertyType);
+                                property.SetValue(student, convertedValue);
+                                db.SaveChanges(); // Зберігаємо зміни в базі даних
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            string info;
+
+            using (var db = factory.CreateDbContext(args))
+            {
+                int totalStudents = db.Students.Count();
+                double averageMH = db.Students.Average(s => s.MH_mark);
+                double averageS = db.Students.Average(s => s.S_mark);
+
+                info = $"Загальна кількість студентів: {totalStudents}\n" +
+                       $"Середній бал з Історії музики: {averageMH:F2}\n" +
+                       $"Середній бал з Сольфеджіо: {averageS:F2}";
+            }
+
+            MessageBox.Show(info, "Statistics", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
+

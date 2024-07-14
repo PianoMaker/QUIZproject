@@ -11,6 +11,7 @@ namespace Models
     {
         public static byte[] SerializeObject<T>(T obj)
         {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(T));
@@ -20,7 +21,7 @@ namespace Models
         }
 
         public static T DeserializeObject<T>(byte[] data)
-        {
+        {            
             using (MemoryStream memoryStream = new MemoryStream(data))
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(T));
@@ -31,7 +32,8 @@ namespace Models
 
         public static bool TryDeserializeObject<T>(byte[] data, int dataLength, out T obj)
         {
-            obj = default;
+            
+            obj = default;            
             try
             {
                 using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))
@@ -41,10 +43,8 @@ namespace Models
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                // Логування або обробка виключення за потреби
-                Console.WriteLine($"Deserialization failed: {ex.Message}");
                 return false;
             }
         }

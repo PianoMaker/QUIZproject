@@ -21,6 +21,7 @@ namespace QUIZ_client_1
 
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
+        public event EventHandler? LoggedIn;
         public event EventHandler<List<Quiz>>? Mh_questions_Received;
         public event EventHandler<List<SQuiz>>? S_questions_Received;
 
@@ -43,6 +44,11 @@ namespace QUIZ_client_1
         protected virtual void OnConnected()
         {
             Connected?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnLoggedIn()
+        {
+            LoggedIn?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void On_Mh_questions_Received(List<Quiz> quizzes)
@@ -71,6 +77,8 @@ namespace QUIZ_client_1
                 Ifconnected = true;
                 OnConnected();
 
+                // ОБРОБКА ВХІДНИХ ПОВІДОМЛЕНЬ (КЛІЄНТ)
+                
                 var receiveTask = Task.Run(async () =>
                 {
                     while (true)
@@ -90,7 +98,37 @@ namespace QUIZ_client_1
                                 Message = $"{s_questions.Count} s_questions";
                                 On_S_questions_Received(s_questions);
                             }
-                            else Message = "unknown message received";
+                            else if (Encoding.UTF8.GetString(_response) == "RegisterSuccess")
+                            {
+                                Message = $"registration succes";
+                                OnLoggedIn();
+                            }
+
+                            else if (Encoding.UTF8.GetString(_response) == "RegisterUnSuccess")
+                            {
+                                Message = $"register error!";
+                                MessageBox.Show($"Registration failed", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+
+                            else if (Encoding.UTF8.GetString(_response) == "LoginSuccess")
+                            {
+                                Message = $"login success!";
+                                OnLoggedIn();
+                            }
+                            else if (Encoding.UTF8.GetString(_response) == "LoginUnSuccess")
+                            {
+                                Message = $"login failure";
+                                MessageBox.Show($"Wrong login or password", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+
+                            else if (Encoding.UTF8.GetString(_response) == "AlreadyRegistered")
+                            {
+                                Message = $"User is already registered";
+                                MessageBox.Show($"User with this email is already registered", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+
+
+                            else Message = $"unknown message: {Encoding.UTF8.GetString(_response)}";
                         }
 
                     }
@@ -131,6 +169,8 @@ namespace QUIZ_client_1
 
             return responseList.ToArray();
         }
+
+        // ВІДПРАВЛЕННЯ ПОВІДОМЛЕНЬ
         public void SendMessage(byte[] data)
         {
             try
@@ -172,39 +212,5 @@ namespace QUIZ_client_1
             }
         }
 
-        /*
-        private void DeserializeQuizBase(byte[] data)
-        {
-            try
-            {
-                using (MemoryStream memoryStream = new MemoryStream(data))
-                {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                    mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
-                    Message = $"got {mh_questions.Count} mh_questions";
-                }
-            }
-            catch
-            {
-                //Message = $"failed to get mh_questions";
-            }
-        }
-        private void DeserializeSQuizBase(byte[] data)
-        {
-            try
-            {
-                using (MemoryStream memoryStream = new MemoryStream(data))
-                {
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                    s_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
-                    Message = $"got {s_questions.Count} s_questions";
-                }
-            }
-            catch
-            {
-                //Message = $"failed to get s_questions";
-            }
-        }
-        */
     }
 }

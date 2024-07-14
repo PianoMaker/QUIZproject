@@ -107,8 +107,8 @@ namespace QUIZ_client_1
             // lbMessages
             // 
             lbMessages.FormattingEnabled = true;
+            lbMessages.HorizontalScrollbar = true;
             lbMessages.Location = new Point(742, 184);
-            lbMessages.MultiColumn = true;
             lbMessages.Name = "lbMessages";
             lbMessages.Size = new Size(208, 364);
             lbMessages.TabIndex = 10;
@@ -249,7 +249,7 @@ namespace QUIZ_client_1
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(962, 650);
+            ClientSize = new Size(997, 650);
             Controls.Add(lbQ);
             Controls.Add(btnPlay);
             Controls.Add(num);

@@ -301,7 +301,7 @@ namespace QUIZproject_server
             {
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
                 S_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
-                MessageBox.Show("deserializing s_base is running");
+                //MessageBox.Show("deserializing s_base is running");
             }
         }
 

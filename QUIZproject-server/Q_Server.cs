@@ -22,6 +22,8 @@ namespace QUIZproject_server
         private List<Quiz> mh_questions;
         private List<SQuiz> s_questions;
         private StudentsDbContextFactory factory;
+        private byte[] marker = Encoding.UTF8.GetBytes("EndOfFile");
+        private string[] args = { "stupid rules", "stupid row"};
 
 
         private string message = "";
@@ -97,7 +99,7 @@ namespace QUIZproject_server
                 int receivedBytes = clientSocket.EndReceive(result);
                 var receivedData = Encoding.UTF8.GetString(state.Buffer, 0, receivedBytes);
                 
-                // РЕАГУВАННЯ НА ПОВІДОМЛЕННЯ
+                // ОБРОБКА ВХІДНИХ ПОВІДОЛМЕНЬ (СЕРВЕР)
 
                 if (receivedBytes > 0)
                 {
@@ -111,14 +113,30 @@ namespace QUIZproject_server
                             if (ifregistered && st.Ifnew)
                             { 
                                 byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
-                                SendData(clientSocket, msg);
+                                SendTextMessage(clientSocket, msg);
+                            }
+                            else if (ifregistered && !st.Ifnew)
+                            {
+                                string loginsuccess = TryLogin(st);
+                                
+                                byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
+
+                                SendTextMessage(clientSocket, msg);
+                                
                             }
                             else if (!ifregistered && st.Ifnew)
                             {
-                                byte[] msg = Encoding.UTF8.GetBytes("LoginSuccess");
-                                SendData(clientSocket, msg);
-                            }
+                                string registerresult = TryRegister(st);
+                                byte[] msg = Encoding.UTF8.GetBytes(registerresult);
 
+                                SendTextMessage(clientSocket, msg);
+                            }
+                            else if (!ifregistered && !st.Ifnew)
+                            {
+                                byte[] msg = Encoding.UTF8.GetBytes("LoginUnSuccess");
+
+                                SendTextMessage(clientSocket, msg);
+                            }
                         }
                         // ВИБІР ДИСЦИПЛІНИ
                         else if (receivedData == "Musichistory")
@@ -136,6 +154,10 @@ namespace QUIZproject_server
                         else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
                         {
                             Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
+                        }
+                        else if (TryDeserializeObject(state.Buffer, receivedBytes, out ShortAnswer sha) == true)
+                        {
+                            Message = $"{sha.Email} answered question # {sha.Questionid}";
                         }
                         else Message = $"uknonw type message: {receivedData}";
                     }
@@ -161,9 +183,35 @@ namespace QUIZproject_server
             }
         }
 
+        private void SendTextMessage(Socket clientSocket, byte[] msg)
+        {
+            SendData(clientSocket, msg);
+            SendData(clientSocket, marker);
+        }
+
+        private string TryRegister(StudentLogin st)
+        {
+            using (var db = factory.CreateDbContext(args))
+            {
+                try
+                {
+                    db.Students.Add(st);
+                    db.SaveChanges();
+                    Message = $"New student {st.Name} {st.SurName} just have registered";
+                    return "RegisterSuccess";
+                }
+                catch
+                {
+                    Message = $"Unsuccesful atempt to register {st.Name} {st.SurName}";
+                    return "RegisterUnSuccess";
+                    
+                }
+            }
+        }
+
         private bool CheckIfRegistered(StudentLogin st)
         {
-            string[] args = null;
+            
             using (var db = factory.CreateDbContext(args))
                 foreach( var student in  db.Students) 
                 { 
@@ -172,6 +220,22 @@ namespace QUIZproject_server
                 }
             return false;
         }
+
+        private string TryLogin(StudentLogin st)
+        {
+            string result = "";
+            
+            using (var db = factory.CreateDbContext(args))
+                foreach (var student in db.Students)
+                {
+                    if (st.Email == student.Email
+                        && st.Password == student.Password)
+                        return "LoginSuccess";
+                }
+            return "LoginUnSuccess";
+        }
+
+
 
         // Метод для відправки даних клієнту
 
@@ -193,9 +257,9 @@ namespace QUIZproject_server
                     serializer.WriteObject(memoryStream, S_questions);
                     //Message = $"{S_questions.Count} s_questions are prepared";
                 }                
-                // Write end-of-file marker
-                byte[] endOfFileMarker = Encoding.UTF8.GetBytes("EndOfFile");
-                memoryStream.Write(endOfFileMarker, 0, endOfFileMarker.Length);
+                
+                // Add end-of-file marker                
+                memoryStream.Write(marker, 0, marker.Length);
                                 
                 byte[] bytes = memoryStream.ToArray();
                 

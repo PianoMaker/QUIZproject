@@ -20,6 +20,7 @@ namespace QUIZ_client_1
         private Q_Client client;
         private Student student;
         private bool Ifconnected;
+        private bool IfloggedIn;
         private int? selectedanswer;
         private Quiz? current_mh_question;
         private SQuiz? current_s_question;
@@ -61,18 +62,20 @@ namespace QUIZ_client_1
         {
             await Connect();
             client.Connected += Client_Connected;
+            client.LoggedIn += Client_LoggedIn;
             if (Ifconnected == true)
             {
                 //btnQuiz.Enabled = true;//прибрати потім
                 btnProfile.Enabled = true;
                 if (student != null)
-                    lbStatus.Text = $"connected as {student.Name} {student.SurName}";
+                    lbStatus.Text = $"trying to connect as {student.Name} {student.SurName}";
                 else
                     lbStatus.Text = $"connected anonymously";
             }
 
         }
 
+        
 
         private void rb_hm_CheckedChanged(object sender, EventArgs e)
         {
@@ -106,19 +109,14 @@ namespace QUIZ_client_1
         private void btnProfile_Click(object sender, EventArgs e)
         {
             var window = new LogInForm();
-            if (window.ShowDialog() == DialogResult.OK)
-            {
-                if (CreateProfile())
-                {
-                    var ifnew = window.ifnew;
-                    var slogin = new StudentLogin(student, ifnew);
-                    Login(slogin);
-                    lbStatus.Text = $"connected as {student.Name} {student.SurName}";
-                    btnQuiz.Enabled = true;
-                }
-                else /*MessageBox.Show("cancel pressed");*/
-                    return;
-            }
+            window.ShowDialog();
+            var ifnew = window.ifnew;
+            var login = CreateProfile(ifnew);
+            if (login is null) return;
+            lbStatus.Text = $"trying to connect as {login.Name} {login.SurName}";
+            Login(login);
+            
+            btnQuiz.Enabled = true;                     
 
         }
 
@@ -197,6 +195,56 @@ namespace QUIZ_client_1
             }
         }
 
+        private StudentLogin? CreateProfile(bool ifnew)
+        {
+            var window = new StudentForm(false);
+            window.ShowDialog();
+            if (window.DialogResult == DialogResult.OK)
+            {
+                var student = new Student()
+                {
+                    Name = window.FirstName,
+                    SurName = window.SurName,
+                    Email = window.Email,
+                    Password = window.Password
+                };
+                return new StudentLogin(student, ifnew);
+            }
+        else return null;
+            
+        }
+
+
+        private void Login(StudentLogin st)
+        {
+            try
+            {
+                var msg = SerializeObject(st);
+                client.SendMessage(msg);
+                student = st;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error sending file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Client_LoggedIn(object? sender, EventArgs e)
+        {
+            try
+            {
+                
+                lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
+                lbStatus.Text= $"Logged as {student.Name} {student.SurName}";
+            }
+            catch (Exception ex)
+            {
+                lbMessages.Items.Add($"Failed to log in");
+                MessageBox.Show(ex.Message, "Login failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
+        }
+
         private async Task Connect()
         {
             client = new Q_Client(ip, port);
@@ -268,77 +316,59 @@ namespace QUIZ_client_1
             lbQ.Text = "No questions are loaded";
         }
 
-        private bool CreateProfile()
-        {
-            var window = new StudentForm(false);
-            window.ShowDialog();
-            if (window.DialogResult == DialogResult.OK)
-            {
-                student = new Student()
-                {
-                    Name = window.FirstName,
-                    SurName = window.SurName,
-                    Email = window.Email,
-                    Password = window.Password
-                };
-                return true;
-            }
-            else return false;
-        }
-
-
-        private void Login(StudentLogin st)
-        {
-            var msg = SerializeObject(st);
-            client.SendMessage(msg);
-        }
-
+        
         private void btnSend_Click(object sender, EventArgs e)
         {
             if (btnSend.Text != "Exit")
             {
-                SendAnswer();
+                Answer();
                 RefreshQuiz();
             }
             else this.Close();
         }
 
-
-
-        private void SendAnswer()
+        private void Answer()
         {
-            if (student is null || selectedanswer is null || current_mh_question is null)
+            if (student is null || selectedanswer is null)
             {
                 MessageBox.Show("Not ready to send answer"); return;
             }
 
-            StudentAnswer answer;
-            lbMessages.Items.Add("start creating answer");
+            ShortAnswer answer; int choice;
+            //lbMessages.Items.Add("start creating answer");
 
-            if (subj == Subject.Musichistory && current_mh_question is not null)
+            if (subj == Subject.Musichistory && current_mh_question is not null             )
             {
-                current_mh_question.Studentanswer = selectedanswer;
-                answer = new(student, current_mh_question);
-                lbMessages.Items.Add("start creating mh-answer");
+                choice = (int)selectedanswer;
+                answer = new(subj, student.Email, mh_index, choice);
+                //lbMessages.Items.Add("start creating mh-answer");
             }
-            else if (subj == Subject.Solfegio && current_s_question is not null)
+            else if (subj == Subject.Solfegio && current_s_question is not null
+                && current_s_question.Studentanswer is not null)
             {
-                current_s_question.Studentanswer = selectedanswer;
-                answer = new(student, current_s_question);
-                lbMessages.Items.Add("start creating s-answer");
+                choice = (int)selectedanswer;
+                answer = new(subj, student.Email, s_index, choice);
+                //lbMessages.Items.Add("start creating s-answer");
             }
-            else {
-                MessageBox.Show("Not ready to send answer");
+            else
+            {
+                lbMessages.Items.Add("Error while creating answer");                
                 return;
             }
 
             lbMessages.Items.Add("answer obj created");
-            var data = SerializeObject(answer);
-            lbMessages.Items.Add("answer obj serializied");
-            client.SendMessage(data);
-            lbMessages.Items.Add("answer sent");
+            try
+            {
+                var data = SerializeObject(answer);
+                //lbMessages.Items.Add("answer obj serializied");
+                client.SendMessage(data);
+                lbMessages.Items.Add("answer sent");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Send message Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-
         private void RefreshQuiz()
         {
             if (subj == Subject.Solfegio && s_quiz is not null

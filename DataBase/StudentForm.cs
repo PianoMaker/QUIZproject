@@ -82,12 +82,57 @@ namespace DataBase
                 MessageBox.Show(txt, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 ok = false;
             }
+            if (!PasswordIsStrong(out txt))
+            {
+                tbPassword.BackColor = Color.Pink;
+                MessageBox.Show(txt, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ok = false;
+            }
             if (ok == true)
             {
 
                 DialogResult = DialogResult.OK;
                 Close();
             }
+        }
+
+        private bool PasswordIsStrong(out string txt)
+        {
+            bool ok = true;
+            txt = "";
+            if (Password == null || Password.Length < 8)
+            {
+                ok = false;
+                txt = "less than 8 symbols";
+            }
+            bool hasLetter = false;
+            bool hasDigit = false;
+
+            // Перевірка наявності літер та цифр
+            foreach (char c in Password)
+            {
+                if (char.IsLetter(c))
+                {
+                    hasLetter = true;
+                }
+                if (char.IsDigit(c))
+                {
+                    hasDigit = true;
+                }
+            }
+
+            if (!hasLetter)
+            {
+                ok = false;
+                txt = "Password must contain at least one letter.";
+            }
+            else if (!hasDigit)
+            {
+                ok = false;
+                txt = "Password must contain at least one digit.";
+            }
+
+            return ok;
         }
 
         private bool EmailIsEligible(out string txt)
@@ -158,7 +203,7 @@ namespace DataBase
             tbSurName.Text = SurName;
             Email = "test@test.com";
             tbEmail.Text = Email;
-            Password = "testpassword";
+            Password = "testpassword123";
             tbPassword.Text = Password;
             
         }

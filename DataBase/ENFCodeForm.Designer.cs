@@ -35,6 +35,8 @@ namespace DataBase
             btnDelete = new Button();
             btnJson = new Button();
             btnRemove = new Button();
+            label1 = new Label();
+            btnStats = new Button();
             ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
             SuspendLayout();
             // 
@@ -96,13 +98,34 @@ namespace DataBase
             btnRemove.TabIndex = 7;
             btnRemove.Text = "Remove Student";
             btnRemove.UseVisualStyleBackColor = true;
-            btnRemove.Click += this.btnRemove_Click;
+            btnRemove.Click += btnRemove_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(572, 106);
+            label1.Name = "label1";
+            label1.Size = new Size(191, 20);
+            label1.TabIndex = 0;
+            label1.Text = "Attantion! Table is editable!";
+            // 
+            // btnStats
+            // 
+            btnStats.Location = new Point(382, 95);
+            btnStats.Name = "btnStats";
+            btnStats.Size = new Size(125, 29);
+            btnStats.TabIndex = 0;
+            btnStats.Text = "Statistics";
+            btnStats.UseVisualStyleBackColor = true;
+            btnStats.Click += btnStats_Click;
             // 
             // ENFCodeForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnStats);
+            Controls.Add(label1);
             Controls.Add(btnRemove);
             Controls.Add(btnJson);
             Controls.Add(btnDelete);
@@ -113,6 +136,7 @@ namespace DataBase
             Text = "ENFcodeForm";
             ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -124,5 +148,7 @@ namespace DataBase
         private Button btnDelete;
         private Button btnJson;
         private Button btnRemove;
+        private Label label1;
+        private Button btnStats;
     }
 }
