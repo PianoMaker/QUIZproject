@@ -49,7 +49,7 @@ namespace Models
 
         [Column("MusicHistory_mark")]        
         [DataMember]
-        public int MH_mark { get; set; }
+        public int? MH_mark { get; set; }
 
         [Column("Solfegio_answered")]
         [DataMember]
@@ -61,7 +61,7 @@ namespace Models
 
         [Column("Solfegio_mark")]
         [DataMember]
-        public int S_mark { get; set; } 
+        public int? S_mark { get; set; } 
 
     }
 }

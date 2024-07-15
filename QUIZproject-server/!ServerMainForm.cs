@@ -42,18 +42,36 @@ namespace QUIZproject_server
             port = int.Parse(tbPort.Text);
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private async void btnEdit_Click(object sender, EventArgs e)
         {
-            var window = new QuizForm();
-            window.ShowDialog();
+            await Task.Run(() =>
+            {
+                var window = new QuizForm();
+                window.ShowDialog();
+            });
         }
 
-        private void btnRes_Click(object sender, EventArgs e)
+        private async void btnShowResult_Click(object sender, EventArgs e)
         {
-            var window = new ResultsForm();
-            window.ShowDialog();
-            
+            await Task.Run(() =>
+            {
+                var window = new ResultsForm();
+                window.ShowDialog();
+            });
+
         }
+
+        private async void btnAdm_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                var window = new ENFCodeForm(factory);
+                window.ShowDialog();
+            });
+
+        }
+
+        
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -98,12 +116,6 @@ namespace QUIZproject_server
             Invoke(() => lbClients.Items.Add(server.Message));            
         }
 
-        private void btnAdm_Click(object sender, EventArgs e)
-        {
-            
-            var window = new ENFCodeForm(factory);
-            window.ShowDialog();
-            
-        }
+        
     }
 }

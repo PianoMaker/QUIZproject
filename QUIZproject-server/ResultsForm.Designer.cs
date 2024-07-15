@@ -48,6 +48,7 @@
             dgv.RowHeadersWidth = 51;
             dgv.Size = new Size(1071, 422);
             dgv.TabIndex = 0;
+            dgv.CellContentClick += dgv_CellContentClick;
             // 
             // menuStrip1
             // 
@@ -69,21 +70,21 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(175, 26);
+            exportToolStripMenuItem.Size = new Size(224, 26);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += ExportMenu_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(175, 26);
+            closeToolStripMenuItem.Size = new Size(224, 26);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += CloseMenu_Click;
             // 
             // adminToolsToolStripMenuItem
             // 
             adminToolsToolStripMenuItem.Name = "adminToolsToolStripMenuItem";
-            adminToolsToolStripMenuItem.Size = new Size(175, 26);
+            adminToolsToolStripMenuItem.Size = new Size(224, 26);
             adminToolsToolStripMenuItem.Text = "Admin Tools";
             adminToolsToolStripMenuItem.Click += adminTools_Click;
             // 

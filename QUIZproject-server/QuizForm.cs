@@ -29,6 +29,9 @@ namespace QUIZproject_server
         public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
         public List<Quiz> Mh_questions { get => mh_questions; set => mh_questions = value; }
 
+        public delegate bool DisplayBold(int index);
+
+        private DisplayBold DisplayBoldDelegate;
         public QuizForm()
         {
             InitializeComponent();
@@ -38,6 +41,8 @@ namespace QUIZproject_server
             rbMH.BackColor = Color.LightGreen;
             subj = Subject.Musichistory;
             Load_mh_questions();
+            lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
+            lbAnswers.DrawItem += lbAnswers_DrawItem;
 
         }
 
@@ -46,6 +51,7 @@ namespace QUIZproject_server
             lbQuestions.Items.Clear();
             foreach (var q in Mh_questions)
                 lbQuestions.Items.Add(q.Question);
+            
         }
 
         private void Load_s_questions()
@@ -331,6 +337,7 @@ namespace QUIZproject_server
                     lbAnswers.Items.Add($"{i}. {item}");                    
                     i++;
                 }
+                DisplayBoldFunc(bold => bold == Mh_questions[index].Correctanswer - 1);
             }
             else if (subj == Subject.Solfegio)
             {
@@ -340,12 +347,38 @@ namespace QUIZproject_server
                     lbAnswers.Items.Add(item);
                     i++;
                 }
-            }
-            
+            }           
 
         }
 
-        
+        public void DisplayBoldFunc(DisplayBold delegateFunc)
+        {
+            DisplayBoldDelegate = delegateFunc;
+        }
+
+        private void lbAnswers_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+
+            // Визначаємо, чи потрібно відобразити поточний елемент жирним шрифтом
+            bool isBold = DisplayBoldDelegate?.Invoke(e.Index) ?? false;
+
+            // Встановлюємо стиль шрифту для відповідного елемента
+            Font font = isBold ? new Font(lbAnswers.Font, FontStyle.Bold) : lbAnswers.Font;
+            Brush brush = new SolidBrush(lbAnswers.ForeColor);
+
+            // Отримуємо текст елемента
+            string text = lbAnswers.Items[e.Index].ToString();
+
+            // Відображаємо текст елемента з відповідним стилем
+            e.Graphics.DrawString(text, font, brush, e.Bounds, StringFormat.GenericDefault);
+
+            e.DrawFocusRectangle();
+        }
+
+
+
+
         /*
         private void lbAnswers_DrawItem(object sender, DrawItemEventArgs e)
         {

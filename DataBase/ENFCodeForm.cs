@@ -256,12 +256,25 @@ namespace DataBase
             using (var db = factory.CreateDbContext(args))
             {
                 int totalStudents = db.Students.Count();
-                double averageMH = db.Students.Average(s => s.MH_mark);
-                double averageS = db.Students.Average(s => s.S_mark);
+                if (totalStudents > 0)
+                {
 
-                info = $"Загальна кількість студентів: {totalStudents}\n" +
-                       $"Середній бал з Історії музики: {averageMH:F2}\n" +
-                       $"Середній бал з Сольфеджіо: {averageS:F2}";
+                    double averageMH = db.Students.Where(s => s.MH_mark.HasValue).Any()
+                        ? db.Students.Where(s => s.MH_mark.HasValue).Average(s => s.MH_mark.Value)
+                        : 0;
+
+                    double averageS = db.Students.Where(s => s.S_mark.HasValue).Any()
+                        ? db.Students.Where(s => s.S_mark.HasValue).Average(s => s.S_mark.Value)
+                        : 0;
+
+                    info = $"Загальна кількість студентів: {totalStudents}\n";
+                          
+                    if (averageMH > 0) info += $"Середній бал з Історії музики: {averageMH:F2}\n";
+                    
+                    if (averageS > 0) info += $"Середній бал з Сольфеджіо: {averageS:F2}\n";
+                    
+                }
+                else info = "Студенти ще не зареєструвались";
             }
 
             MessageBox.Show(info, "Statistics", MessageBoxButtons.OK, MessageBoxIcon.Information);

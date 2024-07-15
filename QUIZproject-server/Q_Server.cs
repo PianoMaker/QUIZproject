@@ -158,14 +158,24 @@ namespace QUIZproject_server
 
                         }
                         // ВІДПОВІДЬ НА ПИТАННЯ
+                        /*
                         else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
                         {
                             Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
                         }
+                        */
                         else if (TryDeserializeObject(state.Buffer, receivedBytes, out ShortAnswer sha) == true)
                         {
                             Message = $"{sha.Email} answered question # {sha.Questionid}";
-
+                            bool ifcorrect = IfAnswerIsCorrect(sha.StudentAnswer, sha.Subject, sha.Questionid);
+                            try
+                            {
+                                UpdateDatabase(sha.Email, sha.Subject, ifcorrect);
+                            }
+                            catch (Exception e) 
+                            { 
+                                MessageBox.Show(e.Message, "Answer processing failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         else Message = $"uknonw type message: {receivedData}";
                     }
@@ -189,6 +199,61 @@ namespace QUIZproject_server
                 clientSocket?.Shutdown(SocketShutdown.Both);
                 clientSocket?.Close();
             }
+        }
+
+        private void UpdateDatabase(string email, Subject subject, bool ifcorrect)
+        {
+            
+            using (var db = factory.CreateDbContext(args))            
+            {
+                bool ifsuccess = false;
+                foreach (var st in db.Students)
+                {
+                    if (st.Email == email)
+                    {
+                        ifsuccess = true;
+                        if (subject == Subject.Musichistory)
+                        {
+                            st.MH_answered++;
+                            if (ifcorrect == true)
+                                st.MH_correctAnswers++;
+                        }
+                        else if (subject == Subject.Solfegio)
+                        {
+                            st.S_answered++;
+                            if (ifcorrect == true)
+                                st.S_correctAnswers++;
+                        }
+                        else throw new Exception("Unknown subject");
+                    }            
+                }
+                if (ifsuccess == true) 
+                    db.SaveChanges();
+                else 
+                    throw new Exception("User identification failure");
+            }
+            
+        }
+
+        
+
+        private bool IfAnswerIsCorrect(int studentanswer, Subject subject, int questionid)
+        {
+            if (subject == Subject.Musichistory)
+            {
+                
+                var correctanswer = mh_questions[questionid].Correctanswer;
+                Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
+                if (correctanswer == studentanswer) return true;
+                else return false;
+            }
+            else if (subject == Subject.Solfegio)
+            {
+                var correctanswer = s_questions[questionid].Correctanswer;
+                if (correctanswer == studentanswer) return true;
+                else return false;
+            }
+            else throw new Exception("Unknown subject");
         }
 
         private void SendTextMessage(Socket clientSocket, byte[] msg)

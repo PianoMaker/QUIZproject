@@ -100,7 +100,7 @@ namespace QUIZproject_server
             button1.TabIndex = 5;
             button1.Text = "Show Results";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += btnRes_Click;
+            button1.Click += btnShowResult_Click;
             // 
             // lbStatus
             // 

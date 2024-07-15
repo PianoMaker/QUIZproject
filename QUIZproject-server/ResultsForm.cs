@@ -25,7 +25,8 @@ namespace QUIZproject_server
             {
                 ShowResults();
             }
-            catch { 
+            catch
+            {
                 dgv.BackgroundColor = Color.Pink;
             }
         }
@@ -47,7 +48,7 @@ namespace QUIZproject_server
 
         private void AdminTools()
         {
-            
+
             var window = new ENFCodeForm(factory);
             window.ShowDialog();
         }
@@ -58,10 +59,20 @@ namespace QUIZproject_server
             using (var db = factory.CreateDbContext(args))
             {
                 var students = db.Students.ToList();
-                dgv.DataSource = students;
+                dgv.DataSource = students.Select(s => new
+                {
+                    s.Name,
+                    s.SurName,
+                    s.MH_mark,
+                    s.S_mark
+                }).ToList();
             }
 
         }
 
+        private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
