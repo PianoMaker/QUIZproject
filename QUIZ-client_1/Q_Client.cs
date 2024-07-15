@@ -48,6 +48,7 @@ namespace QUIZ_client_1
 
         protected virtual void OnLoggedIn(Student st)
         {
+            // ПРИ ЛОГУВАННІ КОРИСТУВАЧА
             LoggedIn?.Invoke(this, st);
         }
 
@@ -86,7 +87,7 @@ namespace QUIZ_client_1
                         byte[] _response = await ReceiveMessageAsync(socket);
                         if (_response.Length > 0)
                         {
-                            //Message = $"{DateTime.Now.ToLongTimeString()} received {_response.Length} bytes";
+                            
                             if (TryDeserializeObject(_response, _response.Length, out List<Quiz> mh_questions))
                             {
                                 Message = $"{mh_questions.Count} m_questions";
@@ -98,9 +99,10 @@ namespace QUIZ_client_1
                                 Message = $"{s_questions.Count} s_questions";
                                 On_S_questions_Received(s_questions);
                             }
+                            // ОТРИМАННЯ ПРОФІЛЮ З РЕЗУЛЬТАТАМИ
                             else if (TryDeserializeObject(_response, _response.Length, out Student student))
                             {
-                                Message = $"{student.Name} {student.SurName} confirmed";
+                                Message = $"login {student.Name} {student.SurName} confirmed";
                                 OnLoggedIn(student);
                             }
 
@@ -167,7 +169,7 @@ namespace QUIZ_client_1
                 // Check for end of file marker
                 if (responseList.Count >= 9 && Encoding.UTF8.GetString(responseList.TakeLast(9).ToArray()) == "EndOfFile")
                 {
-                    Message = "EndOfFile";
+                    //Message = "EndOfFile";
                     responseList.RemoveRange(responseList.Count - 9, 9); 
                     break;
                 }

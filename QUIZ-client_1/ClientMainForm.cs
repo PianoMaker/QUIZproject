@@ -61,8 +61,8 @@ namespace QUIZ_client_1
         private async void btnConnect_Click(object sender, EventArgs e)
         {
             await Connect();
-            client.Connected += Client_Connected;
-            client.LoggedIn += Client_LoggedIn;
+            client.Connected += OnClient_Connected;
+            client.LoggedIn += OnClient_LoggedIn;
             if (Ifconnected == true)
             {
                 //btnQuiz.Enabled = true;//ïðèáðàòè ïîò³ì
@@ -72,10 +72,7 @@ namespace QUIZ_client_1
                 else
                     lbStatus.Text = $"connected anonymously";
             }
-
-        }
-
-        
+        }        
 
         private void rb_hm_CheckedChanged(object sender, EventArgs e)
         {
@@ -103,8 +100,6 @@ namespace QUIZ_client_1
                 else EmptyQuizInterface();
             }
         }
-
-
 
         private void btnProfile_Click(object sender, EventArgs e)
         {
@@ -158,6 +153,13 @@ namespace QUIZ_client_1
             }
         }
 
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            if (Answer())
+                RefreshQuiz();
+        }
+
+        ///ÏÎÄ²¯
 
         private void OnMessageChanged(object? sender, EventArgs e)
         {
@@ -177,8 +179,21 @@ namespace QUIZ_client_1
             }
         }
 
+        private void On_Mh_questions_Received(object? sender, List<Quiz> e)
+        {
+            btnPlay.Enabled = false;
+            mh_quiz = e;
+            GetCurrentMhQuestions();
+        }
 
-        private void Client_Connected(object? sender, EventArgs e)
+        private void On_S_questions_Received(object? sender, List<SQuiz> e)
+        {
+            s_quiz = e;
+            GetCurrentSQuestions();
+        }
+
+
+        private void OnClient_Connected(object? sender, EventArgs e)
         {
             if (client.Ifconnected == true)
             {
@@ -196,43 +211,10 @@ namespace QUIZ_client_1
                 btnConnect.Enabled = true;
             }
         }
-        /*
-        private StudentLogin? CreateProfile(bool ifnew)
+     
+        private void OnClient_LoggedIn(object? sender, Student e)
         {
-            var window = new StudentForm(false);
-            window.ShowDialog();
-            if (window.DialogResult == DialogResult.OK)
-            {
-                var student = new Student()
-                {
-                    Name = window.FirstName,
-                    SurName = window.SurName,
-                    Email = window.Email,
-                    Password = window.Password
-                };
-                return new StudentLogin(student, ifnew);
-            }
-        else return null;
-            
-        }
-        */
-
-        private void Login(StudentLogin st)
-        {
-            try
-            {
-                var msg = SerializeObject(st);
-                client.SendMessage(msg);
-                //student = st;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error sending file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void Client_LoggedIn(object? sender, Student e)
-        {
+         // ÏÐÈ ËÎÃÓÂÀÍÍ² ÊÎÐÈÑÒÓÂÀ×À
             try
             {
                 student = e;
@@ -241,6 +223,7 @@ namespace QUIZ_client_1
                 btnQuiz.Enabled = true;
                 mh_index = e.MH_answered;
                 s_index = e.S_answered;
+                lbMessages.Items.Add($"mh={mh_index}, s={s_index}");
             }
             catch (Exception ex)
             {
@@ -260,65 +243,58 @@ namespace QUIZ_client_1
 
         }
 
-        private void On_Mh_questions_Received(object? sender, List<Quiz> e)
+        // Ä²¯
+        private void Login(StudentLogin st)
         {
-            btnPlay.Enabled = false;
-            mh_quiz = e;
-            GetCurrentMhQuestions();
+            try
+            {
+                var msg = SerializeObject(st);
+                client.SendMessage(msg);
+                //student = st;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error sending file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void GetCurrentMhQuestions()
         {
             if (mh_quiz is null) return;
             if (mh_quiz.Count > 0 && mh_index < mh_quiz.Count)
-            {
-                //MessageBox.Show($"mh_index = {mh_index}");
+            {                
                 current_mh_question = mh_quiz[mh_index];
-                SetQuizInterface(current_mh_question);
+                SetQuizInterface(current_mh_question);                
             }
-            else if (mh_index >= mh_quiz.Count)
-            {
-                lblQuestion.Text = "Your quiz is already done!";
-                btnSend.Enabled = false;
-            }
+
+            else if (mh_index >= mh_quiz.Count)                           
+                EmptyQuizInterface("Your quiz is already done!");            
+            
             else
-            {
-                lblQuestion.Text = "No questions received";
-                return;
-            }
+                EmptyQuizInterface("No questions received");
+            
         }
 
-        private void On_S_questions_Received(object? sender, List<SQuiz> e)
-        {
-
-            s_quiz = e;
-            GetCurrentSQuestions();
-        }
-
+        
         private void GetCurrentSQuestions()
         {
             if (s_quiz is null) return;
             if (s_quiz.Count > 0 && s_index < s_quiz.Count)
             {
-
                 current_s_question = s_quiz[s_index];
                 lblQuestion.Text = current_s_question.Question;
-                SetQuizInterface(current_s_question);
-                //Console.Beep(440, 200);
-                btnPlay.Enabled = true;
+                SetQuizInterface(current_s_question);                
+                btnPlay.Enabled = true;                
             }
+            
             else if (s_index >= s_quiz.Count)
-            {
-                lblQuestion.Text = "Quiz is already done!";
-                btnSend.Enabled = false;
-            }
+                EmptyQuizInterface("Your quiz is already done!");
+            
             else
-            {
-                lblQuestion.Text = "No questions received";
-                return;
-            }
+                EmptyQuizInterface("No questions received");            
         }
 
+        
         private void SetQuizInterface<T>(T question) where T : Quiz
         {
             num.Enabled = true;
@@ -331,23 +307,27 @@ namespace QUIZ_client_1
             if (subj == Subject.Musichistory && mh_quiz is not null)
                 lbQ.Text = $"{mh_index + 1} question from {mh_quiz.Count}";
             else if (subj == Subject.Solfegio && s_quiz is not null)
-                lbQ.Text = $"{mh_index + 1} question from {s_quiz.Count}";
+                lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
+            btnSend.Enabled = true;
+            num.Enabled = true;
+        }
+
+        private void EmptyQuizInterface(string msg)
+        {
+            EmptyQuizInterface();
+            lblAnswer.Text = msg;
         }
 
         private void EmptyQuizInterface()
         {
             num.Enabled = false;
+            lblAnswer.Text = string.Empty;
             lbAnswers.Items.Clear();
             lblQuestion.Text = string.Empty;
+            btnPlay.Enabled = false;
             lbQ.Text = "No questions are loaded";
-        }
+        }        
 
-        
-        private void btnSend_Click(object sender, EventArgs e)
-        {            
-            if (Answer())
-            RefreshQuiz();            
-        }
 
         private bool Answer()
         {
@@ -358,20 +338,20 @@ namespace QUIZ_client_1
             }
 
             ShortAnswer answer; int choice;
-            //lbMessages.Items.Add("start creating answer");
+            //MessageBox.Show($"Creating Answer {subj} : {s_index} : {selectedanswer}");
+
 
             if (subj == Subject.Musichistory && current_mh_question is not null)
             {
-                choice = (int)selectedanswer; // íóìåðàö³ÿ â³äïîâ³äåé ç 1
+                choice = (int)selectedanswer; 
                 answer = new(subj, student.Email, mh_index, choice);
-                //lbMessages.Items.Add("start creating mh-answer");
+                lbMessages.Items.Add($"creating mh-answer: {choice}");
             }
-            else if (subj == Subject.Solfegio && current_s_question is not null
-                && current_s_question.Studentanswer is not null)
+            else if (subj == Subject.Solfegio && current_s_question is not null)
             {
-                choice = (int)selectedanswer + 1;
+                choice = (int)selectedanswer;
                 answer = new(subj, student.Email, s_index, choice);
-                //lbMessages.Items.Add("start creating s-answer");
+                lbMessages.Items.Add("creating s-answer: {choice}");
             }
             else
             {
@@ -379,11 +359,10 @@ namespace QUIZ_client_1
                 return false;
             }
 
-            lbMessages.Items.Add("answer obj created");
+            
             try
             {
-                var data = SerializeObject(answer);
-                //lbMessages.Items.Add("answer obj serializied");
+                var data = SerializeObject(answer);            
                 client.SendMessage(data);
                 lbMessages.Items.Add("answer sent");
                 return true;
@@ -413,8 +392,7 @@ namespace QUIZ_client_1
             else if ((mh_quiz is not null && mh_quiz.Count <= mh_index + 1) || (s_quiz is not null && s_quiz.Count <= s_index + 1))
             {
                 EmptyQuizInterface();
-                lbQ.Text = "Congratulations! Quiz is done!";
-                btnSend.Enabled = false;
+                lbQ.Text = "Congratulations! Quiz is done!";                
             }
             
             selectedanswer = null;

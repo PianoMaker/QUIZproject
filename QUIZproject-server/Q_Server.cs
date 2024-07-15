@@ -54,8 +54,7 @@ namespace QUIZproject_server
         {
             host = ip;
             this.port = port;
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Message = "test";
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
             clientSocket = new List<Socket>();
         }
 
@@ -63,8 +62,7 @@ namespace QUIZproject_server
         {
             host = ip;
             this.port = port;
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Message = "test";
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
             clientSocket = new List<Socket>();
             Mh_questions = mhq;
             S_questions = sq;
@@ -114,7 +112,7 @@ namespace QUIZproject_server
                             bool ifregistered = CheckIfRegistered(st);
                             if (ifregistered && st.Ifnew)
                             {
-                                //MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
+                                MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
                                 byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
                                 SendTextMessage(clientSocket, msg);
                             }
@@ -185,7 +183,7 @@ namespace QUIZproject_server
                 }
                 else
                 {
-                    Message = $"unknown message from {clientSocket.RemoteEndPoint} ";
+                    Message = $"unknown message from {clientSocket.RemoteEndPoint}";
                     clientSocket.Shutdown(SocketShutdown.Both);
                     clientSocket.Close();
                 }
@@ -231,11 +229,8 @@ namespace QUIZproject_server
                     db.SaveChanges();
                 else 
                     throw new Exception("User identification failure");
-            }
-            
-        }
-
-        
+            }            
+        }        
 
         private bool IfAnswerIsCorrect(int studentanswer, Subject subject, int questionid)
         {
@@ -243,7 +238,7 @@ namespace QUIZproject_server
             {
                 
                 var correctanswer = mh_questions[questionid].Correctanswer;
-                Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
+                //Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
                 if (correctanswer == studentanswer) return true;
                 else return false;
             }

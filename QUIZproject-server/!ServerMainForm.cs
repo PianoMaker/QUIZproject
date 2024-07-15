@@ -113,7 +113,7 @@ namespace QUIZproject_server
 
         private void OnServerMessage(object? sender, EventArgs e)
         {
-            Invoke(() => lbClients.Items.Add(server.Message));            
+            Invoke(() => lbClients.Items.Add(server.Message));
         }
 
         
