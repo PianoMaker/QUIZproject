@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QUIZproject_server", "QUIZproject-server\QUIZproject_server.csproj", "{62A02E04-17CC-4189-AA83-3E6996304EF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{F725C212-B811-4D64-A64A-D574C3968CF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F725C212-B811-4D64-A64A-D574C3968CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F725C212-B811-4D64-A64A-D574C3968CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F725C212-B811-4D64-A64A-D574C3968CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F725C212-B811-4D64-A64A-D574C3968CF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

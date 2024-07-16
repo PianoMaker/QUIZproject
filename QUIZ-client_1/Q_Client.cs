@@ -87,7 +87,7 @@ namespace QUIZ_client_1
                         byte[] _response = await ReceiveMessageAsync(socket);
                         if (_response.Length > 0)
                         {
-                            
+                            Message = $"trying to recognise {_response.Length} bytes";
                             if (TryDeserializeObject(_response, _response.Length, out List<Quiz> mh_questions))
                             {
                                 Message = $"{mh_questions.Count} m_questions";
@@ -163,7 +163,7 @@ namespace QUIZ_client_1
             while (true)
             {
                 int len = await socket.ReceiveAsync(buf, SocketFlags.None);
-
+                Message = $"processing message {len} bytes";
                 if (len <= 0)
                     break;
 
@@ -174,7 +174,7 @@ namespace QUIZ_client_1
                 // Check for end of file marker
                 if (responseList.Count >= 9 && Encoding.UTF8.GetString(responseList.TakeLast(9).ToArray()) == "EndOfFile")
                 {
-                    //Message = "EndOfFile";
+                    Message = "EndOfFile";
                     responseList.RemoveRange(responseList.Count - 9, 9); 
                     break;
                 }

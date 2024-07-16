@@ -119,11 +119,13 @@ namespace QUIZproject_server
                             else if (ifregistered && !st.Ifnew)
                             {
                                 //MessageBox.Show($"registered !new {st.Password} : {st.Email} : {st.Ifnew}");
-                                string loginsuccess = TryLogin(st, clientSocket);
+                                string loginsuccess = TryLogin(st, clientSocket, out Student? student);
                                 
                                 byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
 
                                 SendTextMessage(clientSocket, msg);
+                                if(student is not null)
+                                    SendLogin(student, clientSocket);
                                 
                             }
                             else if (!ifregistered && st.Ifnew)
@@ -285,20 +287,21 @@ namespace QUIZproject_server
             return false;
         }
 
-        private string TryLogin(StudentLogin st, Socket clientSocket)
+        private string TryLogin(StudentLogin st, Socket clientSocket, out Student? student)
         {
 
             //MessageBox.Show($"login attempt {st.Email}");
             using (var db = factory.CreateDbContext(args))
-                foreach (var student in db.Students)
+                foreach (var _student in db.Students)
                 {
-                    if (st.Email == student.Email
-                        && st.Password == student.Password)
+                    if (st.Email == _student.Email
+                        && st.Password == _student.Password)
                     {
-                        SendLogin(student, clientSocket);
+                        student = _student;
                         return "LoginSuccess";
                     }
                 }
+            student = null;
             return "LoginUnSuccess";
         }
 
@@ -307,7 +310,7 @@ namespace QUIZproject_server
             byte[] data = SerializeObject(student);
             SendData(clientSocket, data);
             SendData(clientSocket, marker);
-            Message = "Student info sent";
+            Message = $"Student info sent: {student.Email}";
         }
 
         private void ExtractAndSend(StudentLogin st, Socket clientSocket)

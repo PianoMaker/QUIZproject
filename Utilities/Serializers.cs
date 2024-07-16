@@ -5,7 +5,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+
+namespace Utilities
 {
     public static class Serializers
     {
@@ -35,6 +36,7 @@ namespace Models
             }
             catch 
             {
+                
                 return false;
             }
         }

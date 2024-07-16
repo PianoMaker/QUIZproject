@@ -13,7 +13,8 @@ namespace Models
     [Table("Students")]
     public class Student
     {
-        
+
+
         [Column("id")]
         [DataMember]
         public int Id { get; set; }

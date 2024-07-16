@@ -168,15 +168,15 @@ namespace QUIZ_client_1
         {
             if (client.Message is not null)
             {
-                lbMessages.Items.Add(client.Message);
+                Invoke(() => lbMessages.Items.Add(client.Message));
                 if (client.Message.Contains("session started"))
                 {
-                    lbStatus.Text = "connected";
+                    Invoke(() => lbStatus.Text = "connected");
                     Ifconnected = true;
                 }
                 else if (client.Message.Contains("imposible to connect server"))
                 {
-                    lbStatus.Text = "not connected";
+                    Invoke(() => lbStatus.Text = "not connected");
                     Ifconnected = false;
                 }
             }
