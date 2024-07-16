@@ -37,7 +37,10 @@ namespace DataBase
             btnRemove = new Button();
             label1 = new Label();
             btnStats = new Button();
+            numericUpDown1 = new NumericUpDown();
+            lbMark = new Label();
             ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // btnCreate
@@ -119,11 +122,32 @@ namespace DataBase
             btnStats.UseVisualStyleBackColor = true;
             btnStats.Click += btnStats_Click;
             // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(688, 39);
+            numericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(75, 27);
+            numericUpDown1.TabIndex = 8;
+            numericUpDown1.Value = new decimal(new int[] { 12, 0, 0, 0 });
+            numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
+            // 
+            // lbMark
+            // 
+            lbMark.AutoSize = true;
+            lbMark.Location = new Point(572, 46);
+            lbMark.Name = "lbMark";
+            lbMark.Size = new Size(88, 20);
+            lbMark.TabIndex = 9;
+            lbMark.Text = "Max makr is";
+            // 
             // ENFCodeForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(lbMark);
+            Controls.Add(numericUpDown1);
             Controls.Add(btnStats);
             Controls.Add(label1);
             Controls.Add(btnRemove);
@@ -135,6 +159,7 @@ namespace DataBase
             Name = "ENFCodeForm";
             Text = "ENFcodeForm";
             ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -150,5 +175,7 @@ namespace DataBase
         private Button btnRemove;
         private Label label1;
         private Button btnStats;
+        private NumericUpDown numericUpDown1;
+        private Label lbMark;
     }
 }

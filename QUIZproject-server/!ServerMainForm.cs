@@ -29,8 +29,16 @@ namespace QUIZproject_server
             tbPort.Text = port.ToString();
             Q = new QuizForm();
             factory = new StudentsDbContextFactory();
+            DisplayQuestionsInfo();
         }
 
+        private void DisplayQuestionsInfo()
+        {
+            if (Q.Mh_questions.Any())
+                lbQ.Text = $"Music history questions: {Q.Mh_questions.Count}\n";
+            if (Q.S_questions.Any())
+                lbQ.Text += $"Solfegio questions: {Q.S_questions.Count}";
+        }
 
         private void tbIp_TextChanged(object sender, EventArgs e)
         {
@@ -48,31 +56,45 @@ namespace QUIZproject_server
             {
                 var window = new QuizForm();
                 window.ShowDialog();
+                window.QuestionsCount += OnQuestionsCount;               
+
             });
         }
 
+
         private async void btnShowResult_Click(object sender, EventArgs e)
         {
+            UpdateMarks();
             await Task.Run(() =>
             {
+
                 var window = new ResultsForm();
                 window.ShowDialog();
             });
 
         }
 
+        
         private async void btnAdm_Click(object sender, EventArgs e)
         {
             await Task.Run(() =>
             {
-                var window = new ENFCodeForm(factory);
+                var window = new ENFCodeForm(factory, Q.Mh_questions.Count, Q.S_questions.Count);
                 window.ShowDialog();
             });
 
         }
-
+        private void UpdateMarks()
+        {
+            var enf = new ENFCodeForm(factory, Q.Mh_questions.Count, Q.S_questions.Count);
+            enf.UpdateMarks();
+        }
         
-
+        private void OnQuestionsCount(object? sender, int e)
+        {
+            DisplayQuestionsInfo();
+        }
+        
         private void btnConnect_Click(object sender, EventArgs e)
         {
             try
@@ -95,7 +117,7 @@ namespace QUIZproject_server
             try
             {
                 server = new Q_Server(Ip, port, Q.Mh_questions, Q.S_questions, factory);
-                lbQ.Text = $"({server.Mh_questions.Count} Music History questions and {server.S_questions.Count} solfegio questions"; 
+                lbQ.Text = $"({server.Mh_questions.Count} Music History questions and {server.S_questions.Count} solfegio questions";
                 server.MessageChanged += OnServerMessage;
                 if (server != null)
                 {
@@ -114,8 +136,9 @@ namespace QUIZproject_server
         private void OnServerMessage(object? sender, EventArgs e)
         {
             Invoke(() => lbClients.Items.Add(server.Message));
+            
         }
 
-        
+
     }
 }

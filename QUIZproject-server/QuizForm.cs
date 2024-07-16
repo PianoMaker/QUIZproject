@@ -25,9 +25,36 @@ namespace QUIZproject_server
         // файли з питаннями зберігаю в спільному каталозі з exe-файлом
         private readonly string MusicHistoryPath = "MusicHistory.bin";
         private readonly string SolfegioPath = "SolfegioQuiz.bin";
+               
+        public List<Quiz> Mh_questions
+        {
+            get => mh_questions;
+            set
+            {
+                mh_questions = value;
+                QestionsChanged(Mh_questions.Count);
+            }
+        }
 
-        public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
-        public List<Quiz> Mh_questions { get => mh_questions; set => mh_questions = value; }
+        public event EventHandler<int> QuestionsCount;
+
+        private void QestionsChanged(int count)
+        {
+            QuestionsCount?.Invoke(this, count);
+        }
+
+        public List<SQuiz> S_questions
+        {
+            get => s_questions;
+            set
+            {
+                s_questions = value;
+                QestionsChanged(s_questions.Count);
+            }
+        }
+
+        
+        
 
         public delegate bool DisplayBold(int index);
 
@@ -107,7 +134,7 @@ namespace QUIZproject_server
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"start saving");
+            //MessageBox.Show($"start saving");
             SaveQuizBase("MusicHistory.bin");
             SaveSQuizBase("SolfegioQuiz.bin");
         }

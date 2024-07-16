@@ -88,7 +88,7 @@ namespace QUIZproject_server
             lbClients.FormattingEnabled = true;
             lbClients.Location = new Point(49, 103);
             lbClients.Name = "lbClients";
-            lbClients.Size = new Size(485, 284);
+            lbClients.Size = new Size(485, 244);
             lbClients.TabIndex = 4;
             // 
             // button1
@@ -128,9 +128,11 @@ namespace QUIZproject_server
             // lbQ
             // 
             lbQ.AutoSize = true;
-            lbQ.Location = new Point(46, 408);
+            lbQ.BackColor = Color.Transparent;
+            lbQ.Font = new Font("Segoe UI", 11F);
+            lbQ.Location = new Point(49, 375);
             lbQ.Name = "lbQ";
-            lbQ.Size = new Size(180, 20);
+            lbQ.Size = new Size(229, 25);
             lbQ.TabIndex = 8;
             lbQ.Text = "No questnions are loaded";
             // 

@@ -11,13 +11,29 @@ namespace DataBase
 
         private StudentsDbContextFactory factory;
         private string[] args;
+        private int Mhquestions { get; set; }
+        private int Squestions { get; set; }
 
+        private int MaxMark {  get; set; }
 
         public ENFCodeForm(StudentsDbContextFactory factory)
         {
             InitializeComponent();
             this.factory = factory;
+            args = new string[] { };            
+            MaxMark = 12;
+            CheckDataBase();
+            dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
+        }
+
+        public ENFCodeForm(StudentsDbContextFactory factory, int mh_question_count, int s_questions_count)
+        {
+            InitializeComponent();
+            this.factory = factory;
             args = new string[] { };
+            Mhquestions = mh_question_count;
+            Squestions = s_questions_count;
+            MaxMark = 12;
             CheckDataBase();
             dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
         }
@@ -32,10 +48,28 @@ namespace DataBase
         {
             using (var db = factory.CreateDbContext(args))
             {
+                UpdateMarks();
                 var students = db.Students.ToList();
                 dgv.DataSource = students;
             }
         }
+
+        public void UpdateMarks()
+        {
+            //MessageBox.Show($"Upd marks, {Mhquestions} : {Squestions}");
+            using (var db = factory.CreateDbContext(args))
+            {
+                foreach (var st in db.Students)
+                {
+                    if (st.MH_answered == Mhquestions && Mhquestions > 0)
+                        st.MH_mark = st.MH_correctAnswers * MaxMark / Mhquestions;
+                    if (st.S_answered == Squestions && Squestions > 0)
+                        st.S_mark = st.S_correctAnswers * MaxMark / Squestions;                   
+                }
+                db.SaveChanges();
+            }
+        }
+
 
         private void BtnCreate_Click(object sender, EventArgs e)
         {
@@ -228,20 +262,20 @@ namespace DataBase
 
                     using (var db = factory.CreateDbContext(args))
                     {
-                        
+
                         int studentId = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["Id"].Value);
                         var student = db.Students.FirstOrDefault(s => s.Id == studentId);
                         if (student != null)
-                        {                            
+                        {
                             string columnName = dgv.Columns[e.ColumnIndex].Name;
-                                                        
+
                             var property = typeof(Student).GetProperty(columnName);
                             if (property != null)
                             {
                                 var convertedValue = Convert.ChangeType(newValue, property.PropertyType);
                                 property.SetValue(student, convertedValue);
                                 db.SaveChanges(); // Зберігаємо зміни в базі даних
-                                
+
                             }
                         }
                     }
@@ -268,16 +302,22 @@ namespace DataBase
                         : 0;
 
                     info = $"Загальна кількість студентів: {totalStudents}\n";
-                          
+
                     if (averageMH > 0) info += $"Середній бал з Історії музики: {averageMH:F2}\n";
-                    
+
                     if (averageS > 0) info += $"Середній бал з Сольфеджіо: {averageS:F2}\n";
-                    
+
                 }
                 else info = "Студенти ще не зареєструвались";
             }
 
             MessageBox.Show(info, "Statistics", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            MaxMark = (int)numericUpDown1.Value;
+            UpdateMarks();
         }
     }
 }

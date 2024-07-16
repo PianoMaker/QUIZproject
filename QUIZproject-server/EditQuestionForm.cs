@@ -48,9 +48,10 @@ namespace QUIZproject_server
             InitializeComponent();
             Answers = new List<string>();
             num.Maximum = Answers.Count;
-            num.Minimum = 0;    
-            InitialaizeSolfegio(subj);
-            Pitches = null!;
+            num.Minimum = 0;
+            if (subj == Subject.Solfegio)
+                InitialaizeSolfegio(subj);
+            
         }
         public EditQuestionForm(Subject subj, Quiz quiz)
         {
@@ -60,9 +61,7 @@ namespace QUIZproject_server
             num.Maximum = Answers.Count;
             num.Minimum = 0;
             Correctanswer = quiz.Correctanswer;            
-            num.Value = quiz.Correctanswer;
-            InitialaizeSolfegio(subj);
-            Pitches = null!;
+            num.Value = quiz.Correctanswer;                    
             tbQuestion.Text = Question;
             RenewAnswerList();
 
