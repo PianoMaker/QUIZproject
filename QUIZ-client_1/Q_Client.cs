@@ -123,6 +123,11 @@ namespace QUIZ_client_1
                                 Message = $"login success!";
                                 //OnLoggedIn();
                             }
+                            else if (Encoding.UTF8.GetString(_response) == "EndOfFileLoginSuccess")
+                            {
+                                Message = $"login success with warning!";
+                                //OnLoggedIn();
+                            }
                             else if (Encoding.UTF8.GetString(_response) == "LoginUnSuccess")
                             {
                                 Message = $"login failed!";
@@ -184,7 +189,7 @@ namespace QUIZ_client_1
             try
             {
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, socket);
-                Message = "msg sent";
+               // Message = "msg sent";
             }
             catch
             {

@@ -121,7 +121,7 @@
             label1.Name = "label1";
             label1.Size = new Size(126, 25);
             label1.TabIndex = 8;
-            label1.Text = "Music History";
+            label1.Text = "Theory";
             // 
             // label2
             // 

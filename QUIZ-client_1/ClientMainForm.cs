@@ -12,6 +12,9 @@ using static Models.Serializers;
 
 namespace QUIZ_client_1
 {
+
+// DISCLAMER! Індекси відповідей від 0, але номери відповідей від 1!
+
     public partial class ClientMainForm : Form
     {
         public Subject subj { get; set; }
@@ -87,7 +90,7 @@ namespace QUIZ_client_1
         {
             if (rb_hm.Checked)
             {
-                subj = Subject.Musichistory;
+                subj = Subject.Theory;
                 if (mh_quiz is not null)
                     GetCurrentMhQuestions();
                 else EmptyQuizInterface();
@@ -127,8 +130,8 @@ namespace QUIZ_client_1
         private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
         {
             var index = lbAnswers.SelectedIndex;
-            selectedanswer = index;
-            try { num.Value = (int)selectedanswer + 1; }
+            selectedanswer = index + 1; // номер відповіді більше за індекс на 1
+            try { num.Value = (int)selectedanswer; }
             catch { MessageBox.Show("Error with Numbering questions"); }
             lblAnswer.Text = (string)lbAnswers.Items[index];
         }
@@ -143,11 +146,11 @@ namespace QUIZ_client_1
         {
             if (num.Value > 0 && num.Value <= lbAnswers.Items.Count)
             {
-                selectedanswer = (int)num.Value + 1;
+                selectedanswer = (int)num.Value;
 
                 try {
                     lblAnswer.Text = (string)lbAnswers.Items[(int)num.Value - 1];
-                    lbAnswers.SelectedIndex = (int)num.Value - 1;
+                    lbAnswers.SelectedIndex = (int)num.Value - 1;//індекс менше за номер відповіді
                 }
                 catch { MessageBox.Show("index is out of range"); }
             }
@@ -221,7 +224,7 @@ namespace QUIZ_client_1
                 lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
                 lbStatus.Text= $"Logged as {student.Name} {student.SurName}";
                 btnQuiz.Enabled = true;
-                mh_index = e.MH_answered;
+                mh_index = e.T_answered;
                 s_index = e.S_answered;
                 lbMessages.Items.Add($"mh={mh_index}, s={s_index}");
             }
@@ -304,7 +307,7 @@ namespace QUIZ_client_1
             lbAnswers.Items.Clear();
             foreach (var answer in question.Answers)
                 lbAnswers.Items.Add(answer);
-            if (subj == Subject.Musichistory && mh_quiz is not null)
+            if (subj == Subject.Theory && mh_quiz is not null)
                 lbQ.Text = $"{mh_index + 1} question from {mh_quiz.Count}";
             else if (subj == Subject.Solfegio && s_quiz is not null)
                 lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
@@ -325,6 +328,7 @@ namespace QUIZ_client_1
             lbAnswers.Items.Clear();
             lblQuestion.Text = string.Empty;
             btnPlay.Enabled = false;
+            btnSend.Enabled = false;
             lbQ.Text = "No questions are loaded";
         }        
 
@@ -341,7 +345,7 @@ namespace QUIZ_client_1
             //MessageBox.Show($"Creating Answer {subj} : {s_index} : {selectedanswer}");
 
 
-            if (subj == Subject.Musichistory && current_mh_question is not null)
+            if (subj == Subject.Theory && current_mh_question is not null)
             {
                 choice = (int)selectedanswer; 
                 answer = new(subj, student.Email, mh_index, choice);
@@ -382,7 +386,7 @@ namespace QUIZ_client_1
                 current_s_question = s_quiz[s_index];
                 SetQuizInterface(current_s_question);
             }
-            else if (subj == Subject.Musichistory && mh_quiz is not null
+            else if (subj == Subject.Theory && mh_quiz is not null
                 && mh_quiz.Count > mh_index + 1)
             {
                 mh_index++;

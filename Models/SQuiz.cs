@@ -19,15 +19,13 @@ namespace Models
     private List<SignalGenerator> sg = new();
 
         public SQuiz()
-        {
-            Question = "Який акорд звучить?";
+        {            
             sg = new();
             woe = new();
         }
 
         public SQuiz(List<int> pitches)
-        {
-            Question = "Який акорд звучить?";
+        {         
             Pitches = pitches;
             sg = new();
             woe = new();
@@ -37,7 +35,7 @@ namespace Models
         public SQuiz(string question, List<string> answers, int correctanswer, List<int> pitches) 
             : base(question, answers, correctanswer)
         {
-            Question = "Який акорд звучить?";
+            Question = question;
             Answers = answers;
             Correctanswer = correctanswer;
             Pitches = pitches;
@@ -67,7 +65,7 @@ namespace Models
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show("impossible ");
+                    //MessageBox.Show("impossible to synth");
                 }
             }
         }

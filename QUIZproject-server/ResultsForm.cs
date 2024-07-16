@@ -31,21 +31,6 @@ namespace QUIZproject_server
             }
         }
 
-        private void ExportMenu_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("exporting");
-        }
-
-        private void CloseMenu_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void adminTools_Click(object sender, EventArgs e)
-        {
-            AdminTools();
-        }
-
         private void AdminTools()
         {
 

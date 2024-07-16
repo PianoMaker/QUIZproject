@@ -41,7 +41,7 @@
             cb3 = new ComboBox();
             cb2 = new ComboBox();
             cb1 = new ComboBox();
-            brnSave = new Button();
+            btnSave = new Button();
             btnCancel = new Button();
             num = new NumericUpDown();
             label1 = new Label();
@@ -73,6 +73,7 @@
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(629, 104);
             lbAnswers.TabIndex = 2;
+            lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
             // 
             // btnAdd
             // 
@@ -165,16 +166,16 @@
             cb1.TabIndex = 10;
             cb1.SelectedIndexChanged += cb1_SelectedIndexChanged;
             // 
-            // brnSave
+            // btnSave
             // 
-            brnSave.Font = new Font("Segoe UI", 12F);
-            brnSave.Location = new Point(164, 387);
-            brnSave.Name = "brnSave";
-            brnSave.Size = new Size(150, 45);
-            brnSave.TabIndex = 6;
-            brnSave.Text = "Save";
-            brnSave.UseVisualStyleBackColor = true;
-            brnSave.Click += btnSave_Click;
+            btnSave.Font = new Font("Segoe UI", 12F);
+            btnSave.Location = new Point(164, 387);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(150, 45);
+            btnSave.TabIndex = 6;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // btnCancel
             // 
@@ -205,7 +206,7 @@
             label1.TabIndex = 9;
             label1.Text = "Set correct answer:";
             // 
-            // QuizEditForm
+            // EditQuestionForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -215,14 +216,14 @@
             Controls.Add(label1);
             Controls.Add(num);
             Controls.Add(btnCancel);
-            Controls.Add(brnSave);
+            Controls.Add(btnSave);
             Controls.Add(panel1);
             Controls.Add(btnDelete);
             Controls.Add(btnAdd);
             Controls.Add(lbAnswers);
             Controls.Add(tbCorrectAnswer);
             Controls.Add(tbQuestion);
-            Name = "QuizEditForm";
+            Name = "EditQuestionForm";
             Text = "EditQuestionForm";
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)num).EndInit();
@@ -243,7 +244,7 @@
         private ComboBox cb3;
         private ComboBox cb2;
         private ComboBox cb1;
-        private Button brnSave;
+        private Button btnSave;
         private Button btnCancel;
         private NumericUpDown num;
         private Label label1;

@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Models;
+using static Models.Serializers;
 
 namespace QUIZproject_server
 {
@@ -20,27 +21,20 @@ namespace QUIZproject_server
         //дисципліна
         private Subject subj;
         // колекції питань
-        private List<Quiz> mh_questions = new();
+        private List<Quiz> t_questions = new();
         private List<SQuiz> s_questions = new();
         // файли з питаннями зберігаю в спільному каталозі з exe-файлом
-        private readonly string MusicHistoryPath = "MusicHistory.bin";
-        private readonly string SolfegioPath = "SolfegioQuiz.bin";
-               
-        public List<Quiz> Mh_questions
+        private readonly string TheoryPath = "Theory.bin";
+        private readonly string SolfegioPath = "Solfegio.bin";
+
+        public List<Quiz> T_questions
         {
-            get => mh_questions;
+            get => t_questions;
             set
             {
-                mh_questions = value;
-                QestionsChanged(Mh_questions.Count);
+                t_questions = value;
+                QestionsChanged(T_questions.Count);
             }
-        }
-
-        public event EventHandler<int> QuestionsCount;
-
-        private void QestionsChanged(int count)
-        {
-            QuestionsCount?.Invoke(this, count);
         }
 
         public List<SQuiz> S_questions
@@ -49,43 +43,55 @@ namespace QUIZproject_server
             set
             {
                 s_questions = value;
-                QestionsChanged(s_questions.Count);
+                if (s_questions is not null)
+                    QestionsChanged(s_questions.Count);
             }
         }
 
-        
-        
+
+        public event EventHandler<int> QuestionsCount;
+
+        private void QestionsChanged(int count)
+        {
+            QuestionsCount?.Invoke(this, count);
+        }
+       
+
 
         public delegate bool DisplayBold(int index);
 
         private DisplayBold DisplayBoldDelegate;
         public QuizForm()
         {
-            InitializeComponent();
-            LoadQuizBase(MusicHistoryPath);
+            InitializeComponent();            
+            LoadQuizBase(TheoryPath);
             LoadSQuizBase(SolfegioPath);
+            
             rbMH.Checked = true;
             rbMH.BackColor = Color.LightGreen;
-            subj = Subject.Musichistory;
-            Load_mh_questions();
+            subj = Subject.Theory;
+            Load_t_questions();
             lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
             lbAnswers.DrawItem += lbAnswers_DrawItem;
 
         }
 
-        private void Load_mh_questions()
+        private void Load_t_questions()
         {
             lbQuestions.Items.Clear();
-            foreach (var q in Mh_questions)
-                lbQuestions.Items.Add(q.Question);
-            
+            if (t_questions is not null)
+                foreach (var q in T_questions)
+                    lbQuestions.Items.Add(q.Question);
+            else t_questions = new();
         }
 
         private void Load_s_questions()
         {
             lbQuestions.Items.Clear();
-            foreach (var q in S_questions)
-                lbQuestions.Items.Add(q.Question);
+            if (s_questions is not null)
+                foreach (var q in S_questions)
+                    lbQuestions.Items.Add(q.Question);
+            else s_questions = new();
         }
 
         private void rbS_CheckedChanged(object sender, EventArgs e)
@@ -98,25 +104,7 @@ namespace QUIZproject_server
             ChooseSubject();
         }
 
-        private void closeMenu_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-        private void exportMenu_Click(object sender, EventArgs e)
-        {
-            ExportQuizBase();
-
-        }
-
-        private void importMenu_Click(object sender, EventArgs e)
-        {
-            ImportQuiz();
-        }
-
-        private void ImportQuiz()
-        {
-            MessageBox.Show("Todo: import quiz");
-        }
+                        
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -135,8 +123,8 @@ namespace QUIZproject_server
         private void btnSave_Click(object sender, EventArgs e)
         {
             //MessageBox.Show($"start saving");
-            SaveQuizBase("MusicHistory.bin");
-            SaveSQuizBase("SolfegioQuiz.bin");
+            SaveQuizBase(TheoryPath);
+            SaveSQuizBase(SolfegioPath);
         }
 
         private void ChooseSubject()
@@ -151,10 +139,10 @@ namespace QUIZproject_server
             }
             else if (rbMH.Checked)
             {
-                subj = Subject.Musichistory;
+                subj = Subject.Theory;
                 rbMH.BackColor = Color.LightGreen;
                 rbS.BackColor = Color.Transparent;
-                Load_mh_questions();
+                Load_t_questions();
             }
         }
 
@@ -163,10 +151,10 @@ namespace QUIZproject_server
             var w = new EditQuestionForm(subj);
             w.ShowDialog();
             SaveNewQuestion(w);
-            if(subj == Subject.Musichistory)
-                Load_mh_questions();
+            if (subj == Subject.Theory)
+                Load_t_questions();
             else if (subj == Subject.Solfegio)
-                Load_s_questions();            
+                Load_s_questions();
         }
 
         private void EditQuestion(int index)
@@ -183,21 +171,21 @@ namespace QUIZproject_server
                 SaveEditedQuestion(window, S_questions[index]);
                 Load_s_questions();
             }
-            else if (subj == Subject.Musichistory)
+            else if (subj == Subject.Theory)
             {
-                var window = new EditQuestionForm(subj, Mh_questions[index]);
+                var window = new EditQuestionForm(subj, T_questions[index]);
                 window.ShowDialog();
-                SaveEditedQuestion(window, Mh_questions[index]);
-                Load_mh_questions();
+                SaveEditedQuestion(window, T_questions[index]);
+                Load_t_questions();
             }
-            
+
         }
         private void SaveNewQuestion(EditQuestionForm w)
         {
-            if (w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
+            if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
                 var question = new Quiz(w.Question, w.Answers, w.Correctanswer);
-                Mh_questions.Add(question);
+                T_questions.Add(question);
                 btnSave.Text = "Save*";
 
             }
@@ -211,21 +199,21 @@ namespace QUIZproject_server
 
         private void SaveEditedQuestion(EditQuestionForm w, Quiz q)
         {
-            if (w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
+            if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
                 q.Question = w.Question;
                 q.Answers = w.Answers;
                 q.Correctanswer = w.Correctanswer;
                 btnSave.Text = "Save*";
-            }            
+            }
         }
 
         private void SaveEditedQuestion(EditQuestionForm w, SQuiz q)
         {
-            if (w.DialogResult == DialogResult.OK && subj == Subject.Musichistory)
+            if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
-                q.Question = w.Question; 
-                q.Answers = w.Answers; 
+                q.Question = w.Question;
+                q.Answers = w.Answers;
                 q.Correctanswer = w.Correctanswer;
                 q.Pitches = w.Pitches;
                 btnSave.Text = "Save*";
@@ -239,10 +227,10 @@ namespace QUIZproject_server
                 MessageBox.Show("Choose quiestion", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (subj == Subject.Musichistory)
+            if (subj == Subject.Theory)
             {
-                Mh_questions.RemoveAt(index);
-                Load_mh_questions();
+                T_questions.RemoveAt(index);
+                Load_t_questions();
             }
             else if (subj == Subject.Solfegio)
             {
@@ -253,44 +241,73 @@ namespace QUIZproject_server
             btnSave.Text = "Save*";
         }
 
-        private void ExportQuizBase()
+        // виклик з основного вікна, інакше System.Threading.ThreadStateException
+        public void ExportQuizBase()
         {
-            var sfd = new SaveFileDialog();
-            sfd.Title = "Зберегти файл";
-            sfd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
 
-            if (subj == Subject.Musichistory)
+            if (t_questions.Count > 0)
             {
-                sfd.FileName = "MusicHistoryQuiz.bin";
+                var sfd = new SaveFileDialog();
+                sfd.Title = "Зберегти файл";
+                sfd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+                sfd.FileName = "Theory.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
                     SaveQuizBase(sfd.FileName);
             }
-            else if (subj == Subject.Solfegio)
+            else MessageBox.Show("Theory quiz is empty, nothing to save", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            if (s_questions.Count > 0)
             {
+                var sfd = new SaveFileDialog();
+                sfd.Title = "Зберегти файл";
+                sfd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
                 sfd.FileName = "Solfegio.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
                     SaveSQuizBase(sfd.FileName);
             }
-            else MessageBox.Show("Не визначено дисципліну");
+            else MessageBox.Show("Solfegio quiz is empty, nothing to save", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        public void ImportQuizBase()
+        {
+            try
+            {
+                var ofd = new OpenFileDialog();
+                ofd.Title = "Choose theory quiz";
+                ofd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+                if (ofd.ShowDialog() == DialogResult.Yes)
+                    LoadQuizBase(ofd.FileName);
+            }
+            catch { MessageBox.Show("Failed to load Theory quiz"); }
+            try
+            {
+                var ofd = new OpenFileDialog();
+                ofd.Title = "Choose solfegio quiz";
+                ofd.Filter = "Binary Files (*.bin)|*.bin|All Files (*.*)|*.*";
+                if (ofd.ShowDialog() == DialogResult.Yes)
+                    LoadSQuizBase(ofd.FileName);
+            }
+            catch { MessageBox.Show("Failed to load Solfegio quiz"); }
+
         }
 
         private void SaveQuizBase(string path)
         {
             try
             {
-                MessageBox.Show($"{path} : {SerializeQuizBase().Length} bytes ");
+                //MessageBox.Show($"{path} : {SerializeQuizBase().Length} bytes ");
                 File.WriteAllBytes(path, SerializeQuizBase());
                 btnSave.Text = "Save";
             }
             catch { MessageBox.Show("Error saving file"); }
-            
+
         }
 
         private void SaveSQuizBase(string path)
         {
             try
             {
-                MessageBox.Show($"{path} : {SerializeQuizBase().Length} bytes ");
+                //MessageBox.Show($"{path} : {SerializeSQuizBase().Length} bytes ");
                 File.WriteAllBytes(path, SerializeSQuizBase());
             }
             catch { MessageBox.Show("Error saving file"); }
@@ -298,83 +315,87 @@ namespace QUIZproject_server
 
         private byte[] SerializeQuizBase()
         {
-
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                serializer.WriteObject(memoryStream, Mh_questions);
-                return memoryStream.ToArray();
-            }
+            return SerializeObject(T_questions);
         }
 
         private byte[] SerializeSQuizBase()
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                serializer.WriteObject(memoryStream, S_questions);
-                return memoryStream.ToArray();
-            }
+            return SerializeObject(S_questions);
         }
-
 
         private void DeserializeQuizBase(byte[] data)
         {
-
-            using (MemoryStream memoryStream = new MemoryStream(data))
-            {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                Mh_questions = (List<Quiz>)serializer.ReadObject(memoryStream)!;
-            }
+            if (TryDeserializeObject(data, data.Length, out List<Quiz> t_questions))
+                T_questions = t_questions;
         }
 
         private void DeserializeSQuizBase(byte[] data)
         {
-            using (MemoryStream memoryStream = new MemoryStream(data))
-            {
-                DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                S_questions = (List<SQuiz>)serializer.ReadObject(memoryStream)!;
-                //MessageBox.Show("deserializing s_base is running");
-            }
+            if (TryDeserializeObject(data, data.Length, out List<SQuiz> s_questions))
+                S_questions = s_questions;
+
         }
 
+        // ЗАВАНТАЖЕННЯ ПИТАНЬ І ВІДПОВІДЕЙ
         private void LoadQuizBase(string path)
         {
-            var bytes = File.ReadAllBytes(path);
-            DeserializeQuizBase(bytes);
-            Load_mh_questions();
+            try
+            {                
+                var bytes = File.ReadAllBytes(path);
+                DeserializeQuizBase(bytes);
+                Load_t_questions();
+            }
+            catch (Exception e)
+            {
+                lblQ.Text += "Impossible to load theory quiz\n";
+            }
         }
         private void LoadSQuizBase(string path)
         {
-            var bytes = File.ReadAllBytes(path);
-            DeserializeSQuizBase(bytes);
-            Load_s_questions();
+            try
+            {
+                var bytes = File.ReadAllBytes(path);
+                DeserializeSQuizBase(bytes);
+                Load_s_questions();
+            }
+            catch (Exception e)
+            {
+                lblQ.Text += "Impossible to load solfegio quiz\n";
+            }
         }
 
         private void lbQuestions_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lbQuestions.SelectedIndex == -1) return;
+            // убезпечує від помилки якщо миша не влучає в питання
+            
             lbAnswers.Items.Clear();
             int i = 1;
-            if (subj==Subject.Musichistory)
+            if (subj == Subject.Theory)
             {
-             
+                
                 var index = lbQuestions.SelectedIndex;
-                foreach (var item in Mh_questions[index].Answers)
+                foreach (var item in T_questions[index].Answers)
                 {
-                    lbAnswers.Items.Add($"{i}. {item}");                    
+                    lbAnswers.Items.Add($"{i}. {item}");
                     i++;
                 }
-                DisplayBoldFunc(bold => bold == Mh_questions[index].Correctanswer - 1);
+                // ІНДЕКС ПРАВИЛЬНОЇ ВІДПОВІДІ ТУТ
+                DisplayBoldFunc(bold => bold == T_questions[index].Correctanswer - 1);
             }
             else if (subj == Subject.Solfegio)
             {
+            
                 var index = lbQuestions.SelectedIndex;
                 foreach (var item in S_questions[index].Answers)
                 {
                     lbAnswers.Items.Add(item);
                     i++;
                 }
-            }           
+                // ІНДЕКС ПРАВИЛЬНОЇ ВІДПОВІДІ ТУТ
+                DisplayBoldFunc(bold => bold == S_questions[index].Correctanswer - 1);
+            }
+            
 
         }
 
@@ -385,23 +406,31 @@ namespace QUIZproject_server
 
         private void lbAnswers_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index < 0) 
+                return;
+            
+
             e.DrawBackground();
 
             // Визначаємо, чи потрібно відобразити поточний елемент жирним шрифтом
             bool isBold = DisplayBoldDelegate?.Invoke(e.Index) ?? false;
+            
 
-            // Встановлюємо стиль шрифту для відповідного елемента
             Font font = isBold ? new Font(lbAnswers.Font, FontStyle.Bold) : lbAnswers.Font;
-            Brush brush = new SolidBrush(lbAnswers.ForeColor);
+            Brush brush = isBold ? new SolidBrush(Color.DarkGreen) : new SolidBrush(lbAnswers.ForeColor);
 
             // Отримуємо текст елемента
-            string text = lbAnswers.Items[e.Index].ToString();
+
+            string text = lbAnswers.Items[e.Index]?.ToString() ?? "Error occured!";
+
 
             // Відображаємо текст елемента з відповідним стилем
             e.Graphics.DrawString(text, font, brush, e.Bounds, StringFormat.GenericDefault);
 
             e.DrawFocusRectangle();
         }
+
+        
 
 
 

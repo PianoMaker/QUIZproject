@@ -41,11 +41,11 @@ namespace Models
 
         [Column("MusicHistory_question_answered")]
         [DataMember]
-        public int MH_answered { get; set; }
+        public int T_answered { get; set; }
 
         [Column("MusicHistory_correct_answers")]
         [DataMember]
-        public int MH_correctAnswers { get; set; }
+        public int T_correctAnswers { get; set; }
 
         [Column("MusicHistory_mark")]        
         [DataMember]

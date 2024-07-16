@@ -51,21 +51,19 @@ namespace QUIZproject_server
             // lbQuestions
             // 
             lbQuestions.FormattingEnabled = true;
-            lbQuestions.Location = new Point(46, 66);
+            lbQuestions.Location = new Point(46, 106);
             lbQuestions.Name = "lbQuestions";
-            lbQuestions.Size = new Size(485, 364);
+            lbQuestions.Size = new Size(485, 324);
             lbQuestions.TabIndex = 0;
             lbQuestions.SelectedIndexChanged += lbQuestions_SelectedIndexChanged;
             // 
             // lbAnswers
             // 
             lbAnswers.FormattingEnabled = true;
-            lbAnswers.Location = new Point(574, 66);
+            lbAnswers.Location = new Point(574, 106);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(396, 184);
-            lbAnswers.TabIndex = 1;
-            //lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
-            
+            lbAnswers.Size = new Size(396, 144);
+            lbAnswers.TabIndex = 1;            
             // 
             // btnAdd
             // 
@@ -104,11 +102,12 @@ namespace QUIZproject_server
             // 
             lblQ.AutoSize = true;
             lblQ.BackColor = Color.Transparent;
-            lblQ.Location = new Point(48, 23);
+            lblQ.Font = new Font("Segoe UI", 11F);
+            lblQ.Location = new Point(46, 60);
             lblQ.Name = "lblQ";
-            lblQ.Size = new Size(72, 20);
+            lblQ.Size = new Size(93, 25);
             lblQ.TabIndex = 5;
-            lblQ.Text = "questions";
+            
             // 
             // rbMH
             // 
@@ -116,10 +115,10 @@ namespace QUIZproject_server
             rbMH.Font = new Font("Segoe UI", 12F);
             rbMH.Location = new Point(330, 23);
             rbMH.Name = "rbMH";
-            rbMH.Size = new Size(170, 32);
+            rbMH.Size = new Size(92, 32);
             rbMH.TabIndex = 6;
             rbMH.TabStop = true;
-            rbMH.Text = "Історія Музики";
+            rbMH.Text = "Теорія";
             rbMH.UseVisualStyleBackColor = true;
             rbMH.CheckedChanged += rbMH_CheckedChanged;
             // 
@@ -134,45 +133,8 @@ namespace QUIZproject_server
             rbS.TabStop = true;
             rbS.Text = "Сольфеджіо";
             rbS.UseVisualStyleBackColor = true;
-            rbS.CheckedChanged += rbS_CheckedChanged;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1014, 28);
-            menuStrip1.TabIndex = 8;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importToolStripMenuItem, exportToolStripMenuItem, closeToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(46, 24);
-            fileToolStripMenuItem.Text = "File";
-            // 
-            // importToolStripMenuItem
-            // 
-            importToolStripMenuItem.Name = "importToolStripMenuItem";
-            importToolStripMenuItem.Size = new Size(137, 26);
-            importToolStripMenuItem.Text = "Import";
-            importToolStripMenuItem.Click += importMenu_Click;
-            // 
-            // exportToolStripMenuItem
-            // 
-            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(137, 26);
-            exportToolStripMenuItem.Text = "Export";
-            exportToolStripMenuItem.Click += exportMenu_Click;
-            // 
-            // closeToolStripMenuItem
-            // 
-            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(137, 26);
-            closeToolStripMenuItem.Text = "Close";
-            closeToolStripMenuItem.Click += closeMenu_Click;
+            rbS.CheckedChanged += rbS_CheckedChanged;          
+            
             // 
             // btnSave
             // 
@@ -210,7 +172,7 @@ namespace QUIZproject_server
             PerformLayout();
         }
 
-        
+
 
         #endregion
 

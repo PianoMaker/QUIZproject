@@ -29,14 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResultsForm));
-            dgv = new DataGridView();
-            menuStrip1 = new MenuStrip();
-            fileToolStripMenuItem = new ToolStripMenuItem();
-            exportToolStripMenuItem = new ToolStripMenuItem();
-            closeToolStripMenuItem = new ToolStripMenuItem();
-            adminToolsToolStripMenuItem = new ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
-            menuStrip1.SuspendLayout();
+            dgv = new DataGridView();            
+            ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();            
             SuspendLayout();
             // 
             // dgv
@@ -49,45 +43,7 @@
             dgv.Size = new Size(1071, 422);
             dgv.TabIndex = 0;
             dgv.CellContentClick += dgv_CellContentClick;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1071, 28);
-            menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportToolStripMenuItem, closeToolStripMenuItem, adminToolsToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(46, 24);
-            fileToolStripMenuItem.Text = "File";
-            // 
-            // exportToolStripMenuItem
-            // 
-            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(175, 26);
-            exportToolStripMenuItem.Text = "Export";
-            exportToolStripMenuItem.Click += ExportMenu_Click;
-            // 
-            // closeToolStripMenuItem
-            // 
-            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(175, 26);
-            closeToolStripMenuItem.Text = "Close";
-            closeToolStripMenuItem.Click += CloseMenu_Click;
-            // 
-            // adminToolsToolStripMenuItem
-            // 
-            adminToolsToolStripMenuItem.Name = "adminToolsToolStripMenuItem";
-            adminToolsToolStripMenuItem.Size = new Size(175, 26);
-            adminToolsToolStripMenuItem.Text = "Admin Tools";
-            adminToolsToolStripMenuItem.Click += adminTools_Click;
-            // 
+            //
             // ResultsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -95,14 +51,10 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1071, 450);
-            Controls.Add(dgv);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
+            Controls.Add(dgv);            
             Name = "ResultsForm";
             Text = "Results";
-            ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgv).EndInit();            
             ResumeLayout(false);
             PerformLayout();
         }
@@ -110,10 +62,5 @@
         #endregion
 
         private DataGridView dgv;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem exportToolStripMenuItem;
-        private ToolStripMenuItem closeToolStripMenuItem;
-        private ToolStripMenuItem adminToolsToolStripMenuItem;
     }
 }

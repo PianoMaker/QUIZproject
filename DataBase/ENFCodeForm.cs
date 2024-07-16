@@ -61,8 +61,8 @@ namespace DataBase
             {
                 foreach (var st in db.Students)
                 {
-                    if (st.MH_answered == Mhquestions && Mhquestions > 0)
-                        st.MH_mark = st.MH_correctAnswers * MaxMark / Mhquestions;
+                    if (st.T_answered == Mhquestions && Mhquestions > 0)
+                        st.MH_mark = st.T_correctAnswers * MaxMark / Mhquestions;
                     if (st.S_answered == Squestions && Squestions > 0)
                         st.S_mark = st.S_correctAnswers * MaxMark / Squestions;                   
                 }

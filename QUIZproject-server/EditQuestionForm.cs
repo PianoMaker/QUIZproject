@@ -11,6 +11,8 @@ using Models;
 
 namespace QUIZproject_server
 {
+    // DISCLAMER! Індекси відповідей від 0, але номери відповідей від 1!
+
     public partial class EditQuestionForm : Form
     {
         //private enum Subject { Musichistory, Solfegio }
@@ -48,10 +50,10 @@ namespace QUIZproject_server
             InitializeComponent();
             Answers = new List<string>();
             num.Maximum = Answers.Count;
-            num.Minimum = 0;
-            if (subj == Subject.Solfegio)
-                InitialaizeSolfegio(subj);
+            num.Minimum = 0;            
+            IfSolfegio(subj);            
             
+            ButtonSendEnable();
         }
         public EditQuestionForm(Subject subj, Quiz quiz)
         {
@@ -60,10 +62,11 @@ namespace QUIZproject_server
             Answers = quiz.Answers;
             num.Maximum = Answers.Count;
             num.Minimum = 0;
-            Correctanswer = quiz.Correctanswer;            
-            num.Value = quiz.Correctanswer;                    
+            Correctanswer = quiz.Correctanswer;
+            num.Value = quiz.Correctanswer;
             tbQuestion.Text = Question;
             RenewAnswerList();
+            
 
         }
 
@@ -73,7 +76,7 @@ namespace QUIZproject_server
             Question = quiz.Question;
             Answers = quiz.Answers;
             Pitches = quiz.Pitches;
-            InitialaizeSolfegio(subj);
+            IfSolfegio(subj);
             //MessageBox.Show($"count = {quiz.Pitches.Count}, 1={quiz.Pitches[0]}, 2={quiz.Pitches[3]}");
             try
             {
@@ -82,35 +85,39 @@ namespace QUIZproject_server
                 cb3.SelectedIndex = quiz.Pitches[2] + 1;
                 cb4.SelectedIndex = quiz.Pitches[3] + 1;
                 cb5.SelectedIndex = quiz.Pitches[4] + 1;
-            }  
+            }
             catch (Exception Ex)
             {
                 MessageBox.Show("Impossible to proceed voicing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }   
+            }
             Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
-            num.Minimum = 0;         
-            
+            num.Minimum = 0;
+
             tbQuestion.Text = Question;
             RenewAnswerList();
         }
 
 
 
-        private void InitialaizeSolfegio(Subject subj)
+        private void IfSolfegio(Subject subj)
         {
-            if (subj == Subject.Musichistory) panel1.Visible = false;
-
-            foreach (string s in notes)
+            if (subj == Subject.Theory) panel1.Visible = false;
+            else
             {
-                cb1.Items.Add(s);
-                cb2.Items.Add(s);
-                cb3.Items.Add(s);
-                cb4.Items.Add(s);
-                cb5.Items.Add(s);
+                foreach (string s in notes)
+                {
+                    cb1.Items.Add(s);
+                    cb2.Items.Add(s);
+                    cb3.Items.Add(s);
+                    cb4.Items.Add(s);
+                    cb5.Items.Add(s);
+                }
+                Pitches = new List<int>()
+                { -1, -1, -1, -1, -1 };
+                Question = "Який акорд звучить?";
+                tbQuestion.Text = Question;
             }
-            Pitches = new List<int>()
-            { -1, -1, -1, -1, -1 };
 
         }
 
@@ -135,8 +142,6 @@ namespace QUIZproject_server
             Pitches[4] = cb5.SelectedIndex - 1;
         }
 
-
-
         private void tbQuestion_TextChanged(object sender, EventArgs e)
         {
             Question = tbQuestion.Text;
@@ -157,26 +162,32 @@ namespace QUIZproject_server
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            Correctanswer = (int)num.Value;
+            Correctanswer = (int)num.Value; // на 1 більше ніж індекс
             DisplayCorrectAnswer();
+            ButtonSendEnable();
+
+
+        }
+
+        private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Correctanswer = lbAnswers.SelectedIndex + 1; // на 1 більше ніж індекс
+            num.Value = Correctanswer;
+            DisplayCorrectAnswer();
+            ButtonSendEnable();
         }
 
         private void DisplayCorrectAnswer()
         {
             if (Correctanswer > 0)
-                tbCorrectAnswer.Text = Answers[Correctanswer - 1];
+                tbCorrectAnswer.Text = Answers[Correctanswer - 1]; // Correctanswer на 1 більше ніж індекс
             else
                 tbCorrectAnswer.Text = "NO ANSWER SET!";
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            /*string txt = "";
-            foreach (int i in Pitches)
-            {
-                txt += i.ToString() + " ";
-            }
-            MessageBox.Show(txt);*/
+            
             var quiz = new SQuiz(Pitches);
             /*MessageBox.Show(quiz.GetFrequences());*/
             quiz.Play();
@@ -222,6 +233,13 @@ namespace QUIZproject_server
                 i++;
             }
             DisplayCorrectAnswer();
+            ButtonSendEnable();
+        }
+
+        private void ButtonSendEnable()
+        {
+            if (Answers.Count < 2 || Correctanswer == 0) btnSave.Enabled = false;
+            else btnSave.Enabled = true;
         }
 
         private void DisplayCorrectAnswerNumber()
@@ -229,8 +247,11 @@ namespace QUIZproject_server
             try
             {
                 num.Value = Correctanswer;
+                ButtonSendEnable();
             }
             catch { Correctanswer = 0; num.Value = 0; }
         }
+
+        
     }
 }

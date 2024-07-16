@@ -39,6 +39,12 @@ namespace QUIZproject_server
             lbStatus = new Label();
             btnAdm = new Button();
             lbQ = new Label();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            exportQuizToolStripMenuItem = new ToolStripMenuItem();
+            importQuizToolStripMenuItem = new ToolStripMenuItem();
+            exportStudentsToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tbIp
@@ -136,6 +142,44 @@ namespace QUIZproject_server
             lbQ.TabIndex = 8;
             lbQ.Text = "No questnions are loaded";
             // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(800, 28);
+            menuStrip1.TabIndex = 9;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportQuizToolStripMenuItem, importQuizToolStripMenuItem, exportStudentsToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // exportQuizToolStripMenuItem
+            // 
+            exportQuizToolStripMenuItem.Name = "exportQuizToolStripMenuItem";
+            exportQuizToolStripMenuItem.Size = new Size(224, 26);
+            exportQuizToolStripMenuItem.Text = "Export Quiz";
+            exportQuizToolStripMenuItem.Click += exportQuizToolStripMenuItem_Click;
+            // 
+            // importQuizToolStripMenuItem
+            // 
+            importQuizToolStripMenuItem.Name = "importQuizToolStripMenuItem";
+            importQuizToolStripMenuItem.Size = new Size(224, 26);
+            importQuizToolStripMenuItem.Text = "Import Quiz";
+            importQuizToolStripMenuItem.Click += importQuizToolStripMenuItem_Click;
+            // 
+            // exportStudentsToolStripMenuItem
+            // 
+            exportStudentsToolStripMenuItem.Name = "exportStudentsToolStripMenuItem";
+            exportStudentsToolStripMenuItem.Size = new Size(224, 26);
+            exportStudentsToolStripMenuItem.Text = "Export Students";
+            exportStudentsToolStripMenuItem.Click += exportStudentsToolStripMenuItem_Click;
+            // 
             // ServerMainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -152,8 +196,12 @@ namespace QUIZproject_server
             Controls.Add(tbPort);
             Controls.Add(btnConnect);
             Controls.Add(tbIp);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             Name = "ServerMainForm";
             Text = "Quiz-Server";
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -170,5 +218,10 @@ namespace QUIZproject_server
         private Label lbStatus;
         private Button btnAdm;
         private Label lbQ;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem exportQuizToolStripMenuItem;
+        private ToolStripMenuItem importQuizToolStripMenuItem;
+        private ToolStripMenuItem exportStudentsToolStripMenuItem;
     }
 }

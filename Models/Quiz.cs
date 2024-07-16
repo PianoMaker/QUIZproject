@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models   
 {
-    public enum Subject { Musichistory, Solfegio }
+    public enum Subject { Theory, Solfegio }
     public class Quiz
     {
         private string question;

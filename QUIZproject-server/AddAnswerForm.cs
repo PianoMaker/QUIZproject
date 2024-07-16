@@ -16,6 +16,7 @@ namespace QUIZproject_server
         public AddAnswerForm()
         {
             InitializeComponent();
+            ButtonSubmitEnable();
         }
 
         public AddAnswerForm(string question)
@@ -23,11 +24,20 @@ namespace QUIZproject_server
             InitializeComponent();
             lbQuestion.Text = question;
             textBox1.Text = Answer;
+            ButtonSubmitEnable();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             Answer = textBox1.Text;
+            ButtonSubmitEnable();
+        }
+
+        private void ButtonSubmitEnable()
+        {
+            if (string.IsNullOrEmpty(Answer))
+                btnSubmit.Enabled = false; 
+            else btnSubmit.Enabled = true;
         }
 
         private void btnClear_Click(object sender, EventArgs e)

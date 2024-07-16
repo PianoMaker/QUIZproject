@@ -1,7 +1,9 @@
 using DataBase;
 using DbLayer;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Net;
+using System.Text;
 using static Models.Serializers;
 
 namespace QUIZproject_server
@@ -13,12 +15,12 @@ namespace QUIZproject_server
         internal Q_Server _Server { get => server; set => server = value; }
 
         //private Numbers nums;
-        private int[] numbers;
+        //private int[] numbers;
         private IPAddress Ip;
         private int port;
         private QuizForm Q;
         private StudentsDbContextFactory factory;
-
+        private string[] args;
 
         public ServerMainForm()
         {
@@ -34,10 +36,12 @@ namespace QUIZproject_server
 
         private void DisplayQuestionsInfo()
         {
-            if (Q.Mh_questions.Any())
-                lbQ.Text = $"Music history questions: {Q.Mh_questions.Count}\n";
-            if (Q.S_questions.Any())
+
+            if (Q.T_questions is not null && Q.T_questions.Any())
+                lbQ.Text = $"Theory questions: {Q.T_questions.Count}\n";
+            if (Q.S_questions is not null && Q.S_questions.Any())
                 lbQ.Text += $"Solfegio questions: {Q.S_questions.Count}";
+
         }
 
         private void tbIp_TextChanged(object sender, EventArgs e)
@@ -50,13 +54,13 @@ namespace QUIZproject_server
             port = int.Parse(tbPort.Text);
         }
 
-        private async void btnEdit_Click(object sender, EventArgs e)
+        private void btnEdit_Click(object sender, EventArgs e)
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 var window = new QuizForm();
                 window.ShowDialog();
-                window.QuestionsCount += OnQuestionsCount;               
+                window.QuestionsCount += OnQuestionsCount;
 
             });
         }
@@ -74,27 +78,27 @@ namespace QUIZproject_server
 
         }
 
-        
+
         private async void btnAdm_Click(object sender, EventArgs e)
         {
             await Task.Run(() =>
             {
-                var window = new ENFCodeForm(factory, Q.Mh_questions.Count, Q.S_questions.Count);
+                var window = new ENFCodeForm(factory, Q.T_questions.Count, Q.S_questions.Count);
                 window.ShowDialog();
             });
 
         }
         private void UpdateMarks()
         {
-            var enf = new ENFCodeForm(factory, Q.Mh_questions.Count, Q.S_questions.Count);
+            var enf = new ENFCodeForm(factory, Q.T_questions.Count, Q.S_questions.Count);
             enf.UpdateMarks();
         }
-        
+
         private void OnQuestionsCount(object? sender, int e)
         {
             DisplayQuestionsInfo();
         }
-        
+
         private void btnConnect_Click(object sender, EventArgs e)
         {
             try
@@ -109,15 +113,14 @@ namespace QUIZproject_server
                 lbStatus.Text = "Not connected";
             }
 
-
         }
 
         private void StartServer()
         {
             try
             {
-                server = new Q_Server(Ip, port, Q.Mh_questions, Q.S_questions, factory);
-                lbQ.Text = $"({server.Mh_questions.Count} Music History questions and {server.S_questions.Count} solfegio questions";
+                server = new Q_Server(Ip, port, Q.T_questions, Q.S_questions, factory);
+                lbQ.Text = $"({server.T_questions.Count} Theory questions and {server.S_questions.Count} solfegio questions";
                 server.MessageChanged += OnServerMessage;
                 if (server != null)
                 {
@@ -136,9 +139,49 @@ namespace QUIZproject_server
         private void OnServerMessage(object? sender, EventArgs e)
         {
             Invoke(() => lbClients.Items.Add(server.Message));
-            
+
         }
 
+        private void exportQuizToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Q.ExportQuizBase();
+        }
 
+        private void importQuizToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Q.ImportQuizBase();
+        }
+
+        private async void exportStudentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            var sfd = new SaveFileDialog();
+            sfd.Title = "studentbase.csv";
+            sfd.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                var filePath = sfd.FileName;
+                
+                using (var db = factory.CreateDbContext(args))
+                {
+                    var students = await db.Students.ToListAsync();
+                                        
+                    using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                    
+                        await writer.WriteLineAsync("FirstName;SurName;Theory Mark;Solf.Mark");
+
+                        foreach (var st in students)
+                        {
+                            await writer.WriteLineAsync($"{st.Name};{st.SurName};{st.MH_mark};{st.S_mark}");
+                        }
+                    }
+                }
+
+                
+            }
+
+        }
     }
 }

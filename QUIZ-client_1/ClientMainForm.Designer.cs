@@ -122,7 +122,7 @@ namespace QUIZ_client_1
             rb_hm.Size = new Size(166, 32);
             rb_hm.TabIndex = 12;
             rb_hm.TabStop = true;
-            rb_hm.Text = "Історія музики";
+            rb_hm.Text = "Теорія";
             rb_hm.UseVisualStyleBackColor = false;
             rb_hm.CheckedChanged += rb_hm_CheckedChanged;
             // 

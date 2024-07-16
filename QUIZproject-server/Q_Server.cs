@@ -20,7 +20,7 @@ namespace QUIZproject_server
         private int port;
         private Socket socket;
         private List<Socket> clientSocket;
-        private List<Quiz> mh_questions;
+        private List<Quiz> t_questions;
         private List<SQuiz> s_questions;
         private StudentsDbContextFactory factory;
         private byte[] marker = Encoding.UTF8.GetBytes("EndOfFile");
@@ -39,7 +39,7 @@ namespace QUIZproject_server
             }
         }// повідомлення
 
-        public List<Quiz> Mh_questions { get => mh_questions; set => mh_questions = value; }
+        public List<Quiz> T_questions { get => t_questions; set => t_questions = value; }
         public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
 
         public event EventHandler? MessageChanged;
@@ -64,7 +64,7 @@ namespace QUIZproject_server
             this.port = port;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
             clientSocket = new List<Socket>();
-            Mh_questions = mhq;
+            T_questions = mhq;
             S_questions = sq;
             factory = _factory;            
         }
@@ -144,10 +144,10 @@ namespace QUIZproject_server
                             }
                         }
                         // ВИБІР ДИСЦИПЛІНИ
-                        else if (receivedData == "Musichistory")
+                        else if (receivedData == "Theory")
                         {
                             Message = $"student - {clientSocket.RemoteEndPoint} requested MusicHistory quiz"; // Адреса клієнта
-                            SendData(clientSocket, PrepareDara(Subject.Musichistory));
+                            SendData(clientSocket, PrepareDara(Subject.Theory));
                         }
                         else if (receivedData == "Solfegio")
                         {
@@ -156,15 +156,10 @@ namespace QUIZproject_server
 
                         }
                         // ВІДПОВІДЬ НА ПИТАННЯ
-                        /*
-                        else if (TryDeserializeObject(state.Buffer, receivedBytes, out StudentAnswer sta) == true)
-                        {
-                            Message = $"{sta.Name} {sta.SurName} answered {sta.S_quiz?.Question}";
-                        }
-                        */
+
                         else if (TryDeserializeObject(state.Buffer, receivedBytes, out ShortAnswer sha) == true)
                         {
-                            Message = $"{sha.Email} answered question # {sha.Questionid}";
+                            Message = $"{sha.Email} answered question # {sha.Questionid} : {sha.StudentAnswer}";
                             bool ifcorrect = IfAnswerIsCorrect(sha.StudentAnswer, sha.Subject, sha.Questionid);
                             try
                             {
@@ -210,11 +205,11 @@ namespace QUIZproject_server
                     if (st.Email == email)
                     {
                         ifsuccess = true;
-                        if (subject == Subject.Musichistory)
+                        if (subject == Subject.Theory)
                         {
-                            st.MH_answered++;
+                            st.T_answered++;
                             if (ifcorrect == true)
-                                st.MH_correctAnswers++;
+                                st.T_correctAnswers++;
                         }
                         else if (subject == Subject.Solfegio)
                         {
@@ -234,10 +229,10 @@ namespace QUIZproject_server
 
         private bool IfAnswerIsCorrect(int studentanswer, Subject subject, int questionid)
         {
-            if (subject == Subject.Musichistory)
+            if (subject == Subject.Theory)
             {
                 
-                var correctanswer = mh_questions[questionid].Correctanswer;
+                var correctanswer = t_questions[questionid].Correctanswer;
                 //Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
                 if (correctanswer == studentanswer) return true;
                 else return false;
@@ -334,11 +329,11 @@ namespace QUIZproject_server
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                if (subj == Subject.Musichistory)
+                if (subj == Subject.Theory)
                 {
-                    // Serialize Music History quizzes
+                    // Serialize Theory quizzes
                     DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                    serializer.WriteObject(memoryStream, Mh_questions);
+                    serializer.WriteObject(memoryStream, T_questions);
                     //Message = $"{Mh_questions.Count} mh_questions are prepared";
                 }
                 else if (subj == Subject.Solfegio)
@@ -364,7 +359,7 @@ namespace QUIZproject_server
             try
             {
                 clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallbackMethod, clientSocket);
-                Message = $"data {data.Length} is sent";
+                //Message = $"data {data.Length} is sent";
             }
             catch (Exception ex)
             {
