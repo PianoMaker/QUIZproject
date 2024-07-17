@@ -15,18 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbLayer", "DbLayer\DbLayer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QUIZ_client_1", "QUIZ-client_1\QUIZ_client_1.csproj", "{897A4DD2-18AF-46A8-8E36-6CEAB143FF2F}"
 	ProjectSection(ProjectDependencies) = postProject
-		{06014128-FAB6-4400-95F0-34E0637FA951} = {06014128-FAB6-4400-95F0-34E0637FA951}
 		{22BB7963-363E-41BF-9786-7BB8382E30DE} = {22BB7963-363E-41BF-9786-7BB8382E30DE}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{22BB7963-363E-41BF-9786-7BB8382E30DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QUIZproject_server", "QUIZproject-server\QUIZproject_server.csproj", "{62A02E04-17CC-4189-AA83-3E6996304EF4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{06014128-FAB6-4400-95F0-34E0637FA951} = {06014128-FAB6-4400-95F0-34E0637FA951}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{06014128-FAB6-4400-95F0-34E0637FA951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,10 +48,6 @@ Global
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62A02E04-17CC-4189-AA83-3E6996304EF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06014128-FAB6-4400-95F0-34E0637FA951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06014128-FAB6-4400-95F0-34E0637FA951}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06014128-FAB6-4400-95F0-34E0637FA951}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06014128-FAB6-4400-95F0-34E0637FA951}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
