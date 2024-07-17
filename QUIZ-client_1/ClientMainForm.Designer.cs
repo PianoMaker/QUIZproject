@@ -253,6 +253,7 @@ namespace QUIZ_client_1
             pictureBox.Size = new Size(107, 164);
             pictureBox.TabIndex = 23;
             pictureBox.TabStop = false;
+            pictureBox.Click += pictureBox_Click;
             // 
             // ClientMainForm
             // 

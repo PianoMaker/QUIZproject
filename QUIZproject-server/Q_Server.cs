@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text;
 using Models;
-using static Models.Serializers;
+using static Utilities.Serializers;
 using System.Runtime.Serialization;
 using DbLayer;
 

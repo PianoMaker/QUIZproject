@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Utilities
 {
@@ -22,8 +17,8 @@ namespace Utilities
 
         public static bool TryDeserializeObject<T>(byte[] data, int dataLength, out T obj)
         {
-            
-            obj = default;            
+
+            obj = default;
             try
             {
                 using (MemoryStream memoryStream = new MemoryStream(data, 0, dataLength))
@@ -33,8 +28,9 @@ namespace Utilities
                     return true;
                 }
             }
-            catch 
+            catch (Exception ex) 
             {
+                /*MessageBox.Show($"Serialisation Error:\n{ex.Message}"); */
                 return false;
             }
         }

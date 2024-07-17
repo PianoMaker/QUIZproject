@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
-namespace Utilities
-
+namespace QuizHolder
 {
-    
-    public class SQuiz : Quiz
+
+    public class SQuiz : TQuiz
     {
         readonly int camerton = 220; // hz
     public List<int> Pitches { get; set; }

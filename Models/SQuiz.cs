@@ -1,9 +1,9 @@
 ﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+//MOdels
 
 namespace Models
 {
-
     public class SQuiz : Quiz
     {
         readonly int camerton = 220; // hz

@@ -1,7 +1,8 @@
 using System.Net;
 using System.Text;
+using System.Windows.Forms;
 using Models;
-using static Models.Serializers;
+using static Utilities.Serializers;
 //using Utilities;
 /*
 using static Utilities.Serializers;
@@ -23,7 +24,7 @@ namespace QUIZ_client_1
         private Q_Client client;
         private Student student;
         private bool Ifconnected;
-        
+
         private int? selectedanswer;
         private Quiz? current_t_question;
         private SQuiz? current_s_question;
@@ -75,7 +76,7 @@ namespace QUIZ_client_1
                 else
                     lbStatus.Text = $"connected anonymously";
             }
-        }        
+        }
 
         private void rb_hm_CheckedChanged(object sender, EventArgs e)
         {
@@ -109,12 +110,12 @@ namespace QUIZ_client_1
             var window = new LogInForm();
             if (window.ShowDialog() == DialogResult.OK)
             {
-                var login = window.Login;                
+                var login = window.Login;
                 if (login is null) return;
                 lbStatus.Text = $"trying to connect as {login.Name} {login.SurName}";
                 //MessageBox.Show($"{login.Password} : {login.Email} : {login.Ifnew}");
                 Login(login);
-                
+
             }
             else return;
         }
@@ -149,7 +150,8 @@ namespace QUIZ_client_1
             {
                 selectedanswer = (int)num.Value;
 
-                try {
+                try
+                {
                     lblAnswer.Text = (string)lbAnswers.Items[(int)num.Value - 1];
                     lbAnswers.SelectedIndex = (int)num.Value - 1;//³íäåêñ ìåíøå çà íîìåð â³äïîâ³ä³
                 }
@@ -215,15 +217,15 @@ namespace QUIZ_client_1
                 btnConnect.Enabled = true;
             }
         }
-     
+
         private void OnClient_LoggedIn(object? sender, Student e)
         {
-         // ÏÐÈ ËÎÃÓÂÀÍÍ² ÊÎÐÈÑÒÓÂÀ×À
+            // ÏÐÈ ËÎÃÓÂÀÍÍ² ÊÎÐÈÑÒÓÂÀ×À
             try
             {
                 student = e;
                 lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
-                lbStatus.Text= $"Logged as {student.Name} {student.SurName}";
+                lbStatus.Text = $"Logged as {student.Name} {student.SurName}";
                 btnQuiz.Enabled = true;
                 t_index = e.T_answered;
                 s_index = e.S_answered;
@@ -234,7 +236,7 @@ namespace QUIZ_client_1
                 lbMessages.Items.Add($"Failed to log in");
                 MessageBox.Show(ex.Message, "Login failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-           
+
         }
 
         private async Task Connect()
@@ -266,20 +268,20 @@ namespace QUIZ_client_1
         {
             if (t_quiz is null) return;
             if (t_quiz.Count > 0 && t_index < t_quiz.Count)
-            {                
+            {
                 current_t_question = t_quiz[t_index];
-                SetQuizInterface(current_t_question);                
+                SetQuizInterface(current_t_question);
             }
 
-            else if (t_index >= t_quiz.Count)                           
-                EmptyQuizInterface("Your quiz is already done!");            
-            
+            else if (t_index >= t_quiz.Count)
+                EmptyQuizInterface("Your quiz is already done!");
+
             else
                 EmptyQuizInterface("No questions received");
-            
+
         }
 
-        
+
         private void GetCurrentSQuestions()
         {
             if (s_quiz is null) return;
@@ -287,26 +289,26 @@ namespace QUIZ_client_1
             {
                 current_s_question = s_quiz[s_index];
                 lblQuestion.Text = current_s_question.Question;
-                SetQuizInterface(current_s_question);                
-                btnPlay.Enabled = true;                
+                SetQuizInterface(current_s_question);
+                btnPlay.Enabled = true;
             }
-            
+
             else if (s_index >= s_quiz.Count)
                 EmptyQuizInterface("Your quiz is already done!");
-            
+
             else
-                EmptyQuizInterface("No questions received");            
+                EmptyQuizInterface("No questions received");
         }
 
-        
+
         private void SetQuizInterface<T>(T question) where T : Quiz
         {
-            
+
             num.Enabled = true;
             num.Minimum = 1;
             num.Maximum = question.Answers.Count;
             lblQuestion.Text = question.Question;
-            lblAnswer.Text = string.Empty; 
+            lblAnswer.Text = string.Empty;
             //pictureBox.Image = quiestion.Bitmap;
             lbAnswers.Items.Clear();
             foreach (var answer in question.Answers)
@@ -317,7 +319,7 @@ namespace QUIZ_client_1
                 lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
             btnSend.Enabled = true;
             num.Enabled = true;
-            
+
         }
 
         private void EmptyQuizInterface(string msg)
@@ -335,14 +337,14 @@ namespace QUIZ_client_1
             btnPlay.Enabled = false;
             btnSend.Enabled = false;
             lbQ.Text = "No questions are loaded";
-        }        
+        }
 
 
         private bool Answer()
         {
             if (student is null || selectedanswer is null)
             {
-                MessageBox.Show("Not ready to send answer"); 
+                MessageBox.Show("Not ready to send answer");
                 return false;
             }
 
@@ -352,7 +354,7 @@ namespace QUIZ_client_1
 
             if (subj == Subject.Theory && current_t_question is not null)
             {
-                choice = (int)selectedanswer; 
+                choice = (int)selectedanswer;
                 answer = new(subj, student.Email, t_index, choice);
                 lbMessages.Items.Add($"creating t-answer: {choice}");
             }
@@ -364,14 +366,14 @@ namespace QUIZ_client_1
             }
             else
             {
-                lbMessages.Items.Add("Error while creating answer");                
+                lbMessages.Items.Add("Error while creating answer");
                 return false;
             }
 
-            
+
             try
             {
-                var data = SerializeObject(answer);            
+                var data = SerializeObject(answer);
                 client.SendMessage(data);
                 lbMessages.Items.Add("answer sent");
                 return true;
@@ -384,7 +386,7 @@ namespace QUIZ_client_1
         }
         private void RefreshQuiz()
         {
-            
+
             if (subj == Subject.Solfegio && s_quiz is not null
                 && s_quiz.Count > s_index + 1)
             {
@@ -402,9 +404,9 @@ namespace QUIZ_client_1
             else if ((t_quiz is not null && t_quiz.Count <= t_index + 1) || (s_quiz is not null && s_quiz.Count <= s_index + 1))
             {
                 EmptyQuizInterface();
-                lbQ.Text = "Congratulations! Quiz is done!";                
+                lbQ.Text = "Congratulations! Quiz is done!";
             }
-            
+
             selectedanswer = null;
         }
 
@@ -413,7 +415,7 @@ namespace QUIZ_client_1
 
         }
 
-       
+
         private void PlayChord()
         {
             if (current_s_question is not null)
@@ -422,6 +424,33 @@ namespace QUIZ_client_1
                 catch { MessageBox.Show("Inmpossible to play chord"); }
             }
         }
-    }
+
+        private async void pictureBox_Click(object sender, EventArgs e)
+        {
+            await OpenImage(pictureBox.Image);
+        }
+
+        private Task OpenImage(Image image)
+        {
+            return Task.Run(() =>
+            {
+                Form fullSizeForm = new Form
+                {
+                    Text = "Full Size Image",
+                    Width = image.Width,
+                    Height = image.Height
+                };
+
+                PictureBox fullSizePictureBox = new PictureBox
+                {
+                    Image = image,
+                    SizeMode = PictureBoxSizeMode.AutoSize,
+                    Dock = DockStyle.Fill
+                };
+
+                fullSizeForm.Controls.Add(fullSizePictureBox);
+                fullSizeForm.ShowDialog();
+            });
+        }
 
 }

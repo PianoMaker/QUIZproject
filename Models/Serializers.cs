@@ -2,7 +2,7 @@
 
 namespace Models
 {
-    public static class Serializers
+/*    public static class Serializers
     {
         public static byte[] SerializeObject<T>(T obj)
         {
@@ -35,4 +35,5 @@ namespace Models
         }
 
     }
+*/
 }

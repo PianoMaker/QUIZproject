@@ -16,6 +16,7 @@
     <ProjectReference Include="..\DataBase\DataBase.csproj" />
     <ProjectReference Include="..\DbLayer\DbLayer.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Utilities\Utilitiies\Utilitiies.csproj" />
   </ItemGroup>
 
   <ItemGroup>
