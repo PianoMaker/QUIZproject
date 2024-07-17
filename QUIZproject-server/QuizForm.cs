@@ -1,5 +1,5 @@
 ﻿using Models;
-using static Models.Serializers;
+using static Utilities.Serializers;
 
 namespace QUIZproject_server
 {
