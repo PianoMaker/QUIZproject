@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Models
 {
@@ -19,7 +14,7 @@ namespace Models
             SurName = student.SurName;
             Email = student.Email;
             Password = student.Password;
-            MH_mark = student.MH_mark;
+            T_mark = student.T_mark;
             S_mark = student.S_mark;
         }
     }

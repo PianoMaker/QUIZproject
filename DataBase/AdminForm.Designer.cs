@@ -1,7 +1,7 @@
 ﻿
 namespace DataBase
 {
-    partial class ENFCodeForm
+    partial class AdminForm
     {
         /// <summary>
         ///  Required designer variable.

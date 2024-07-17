@@ -1,18 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Models;
-using static Models.Serializers;
+﻿using Models;
+using static Utilities.Serializers;
 
 namespace QUIZproject_server
 {
@@ -20,6 +7,7 @@ namespace QUIZproject_server
     {
         //дисципліна
         private Subject subj;
+        //public Bitmap bitmap;
         // колекції питань
         private List<Quiz> t_questions = new();
         private List<SQuiz> s_questions = new();
@@ -55,7 +43,7 @@ namespace QUIZproject_server
         {
             QuestionsCount?.Invoke(this, count);
         }
-       
+
 
 
         public delegate bool DisplayBold(int index);
@@ -63,16 +51,19 @@ namespace QUIZproject_server
         private DisplayBold DisplayBoldDelegate;
         public QuizForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
             LoadQuizBase(TheoryPath);
             LoadSQuizBase(SolfegioPath);
-            
-            rbMH.Checked = true;
-            rbMH.BackColor = Color.LightGreen;
+
+            rbT.Checked = true;
+            rbT.BackColor = Color.LightGreen;
             subj = Subject.Theory;
             Load_t_questions();
             lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
             lbAnswers.DrawItem += lbAnswers_DrawItem;
+
+
+
 
         }
 
@@ -99,12 +90,12 @@ namespace QUIZproject_server
             ChooseSubject();
         }
 
-        private void rbMH_CheckedChanged(object sender, EventArgs e)
+        private void rbT_CheckedChanged(object sender, EventArgs e)
         {
             ChooseSubject();
         }
 
-                        
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -133,16 +124,18 @@ namespace QUIZproject_server
             if (rbS.Checked)
             {
                 subj = Subject.Solfegio;
-                rbMH.BackColor = Color.Transparent;
+                rbT.BackColor = Color.Transparent;
                 rbS.BackColor = Color.LightGreen;
                 Load_s_questions();
+                btnPlay.Enabled = true;
             }
-            else if (rbMH.Checked)
+            else if (rbT.Checked)
             {
                 subj = Subject.Theory;
-                rbMH.BackColor = Color.LightGreen;
+                rbT.BackColor = Color.LightGreen;
                 rbS.BackColor = Color.Transparent;
                 Load_t_questions();
+                btnPlay.Enabled = false;
             }
         }
 
@@ -340,7 +333,7 @@ namespace QUIZproject_server
         private void LoadQuizBase(string path)
         {
             try
-            {                
+            {
                 var bytes = File.ReadAllBytes(path);
                 DeserializeQuizBase(bytes);
                 Load_t_questions();
@@ -368,12 +361,12 @@ namespace QUIZproject_server
         {
             if (lbQuestions.SelectedIndex == -1) return;
             // убезпечує від помилки якщо миша не влучає в питання
-            
+
             lbAnswers.Items.Clear();
             int i = 1;
             if (subj == Subject.Theory)
             {
-                
+
                 var index = lbQuestions.SelectedIndex;
                 foreach (var item in T_questions[index].Answers)
                 {
@@ -385,7 +378,7 @@ namespace QUIZproject_server
             }
             else if (subj == Subject.Solfegio)
             {
-            
+
                 var index = lbQuestions.SelectedIndex;
                 foreach (var item in S_questions[index].Answers)
                 {
@@ -395,7 +388,7 @@ namespace QUIZproject_server
                 // ІНДЕКС ПРАВИЛЬНОЇ ВІДПОВІДІ ТУТ
                 DisplayBoldFunc(bold => bold == S_questions[index].Correctanswer - 1);
             }
-            
+
 
         }
 
@@ -406,15 +399,15 @@ namespace QUIZproject_server
 
         private void lbAnswers_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0) 
+            if (e.Index < 0)
                 return;
-            
+
 
             e.DrawBackground();
 
             // Визначаємо, чи потрібно відобразити поточний елемент жирним шрифтом
             bool isBold = DisplayBoldDelegate?.Invoke(e.Index) ?? false;
-            
+
 
             Font font = isBold ? new Font(lbAnswers.Font, FontStyle.Bold) : lbAnswers.Font;
             Brush brush = isBold ? new SolidBrush(Color.DarkGreen) : new SolidBrush(lbAnswers.ForeColor);
@@ -430,22 +423,9 @@ namespace QUIZproject_server
             e.DrawFocusRectangle();
         }
 
-        
-
-
-
-
-        /*
-        private void lbAnswers_DrawItem(object sender, DrawItemEventArgs e)
+        private void btnPlay_Click(object sender, EventArgs e)
         {
-            if (e.Index >= 0 && e.Index < lbAnswers.Items.Count)
-            {
-                string itemText = lbAnswers.Items[e.Index].ToString();
-                Color textColor = Color.DarkGreen;
-                e.DrawBackground();
-                e.Graphics.DrawString(itemText, e.Font, new SolidBrush(textColor), e.Bounds);
-                e.DrawFocusRectangle();
-            }
-        */
+            s_questions[lbQuestions.SelectedIndex].Play();
+        }
     }
 }

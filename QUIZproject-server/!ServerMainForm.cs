@@ -1,10 +1,8 @@
 using DataBase;
 using DbLayer;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using System.Net;
 using System.Text;
-using static Models.Serializers;
 
 namespace QUIZproject_server
 {
@@ -83,14 +81,14 @@ namespace QUIZproject_server
         {
             await Task.Run(() =>
             {
-                var window = new ENFCodeForm(factory, Q.T_questions.Count, Q.S_questions.Count);
+                var window = new AdminForm(factory, Q.T_questions.Count, Q.S_questions.Count);
                 window.ShowDialog();
             });
 
         }
         private void UpdateMarks()
         {
-            var enf = new ENFCodeForm(factory, Q.T_questions.Count, Q.S_questions.Count);
+            var enf = new AdminForm(factory, Q.T_questions.Count, Q.S_questions.Count);
             enf.UpdateMarks();
         }
 
@@ -174,7 +172,7 @@ namespace QUIZproject_server
 
                         foreach (var st in students)
                         {
-                            await writer.WriteLineAsync($"{st.Name};{st.SurName};{st.MH_mark};{st.S_mark}");
+                            await writer.WriteLineAsync($"{st.Name};{st.SurName};{st.T_mark};{st.S_mark}");
                         }
                     }
                 }

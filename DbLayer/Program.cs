@@ -1,10 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Configuration;
-
-namespace DbLayer
+﻿namespace DbLayer
 {
     internal class Program
     {

@@ -14,7 +14,7 @@ namespace DataBase
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             var factory = new StudentsDbContextFactory();           
-            Application.Run(new ENFCodeForm(factory));
+            Application.Run(new AdminForm(factory));
         }
     }
 }

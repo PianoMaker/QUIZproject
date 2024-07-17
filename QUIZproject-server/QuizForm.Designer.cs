@@ -37,7 +37,7 @@ namespace QUIZproject_server
             btnDelete = new Button();
             btnEdit = new Button();
             lblQ = new Label();
-            rbMH = new RadioButton();
+            rbT = new RadioButton();
             rbS = new RadioButton();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
@@ -45,7 +45,7 @@ namespace QUIZproject_server
             exportToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
             btnSave = new Button();
-            menuStrip1.SuspendLayout();
+            btnPlay = new Button();
             SuspendLayout();
             // 
             // lbQuestions
@@ -60,10 +60,10 @@ namespace QUIZproject_server
             // lbAnswers
             // 
             lbAnswers.FormattingEnabled = true;
-            lbAnswers.Location = new Point(574, 106);
+            lbAnswers.Location = new Point(675, 106);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(396, 144);
-            lbAnswers.TabIndex = 1;            
+            lbAnswers.Size = new Size(295, 144);
+            lbAnswers.TabIndex = 1;
             // 
             // btnAdd
             // 
@@ -105,22 +105,21 @@ namespace QUIZproject_server
             lblQ.Font = new Font("Segoe UI", 11F);
             lblQ.Location = new Point(46, 60);
             lblQ.Name = "lblQ";
-            lblQ.Size = new Size(93, 25);
+            lblQ.Size = new Size(0, 25);
             lblQ.TabIndex = 5;
-            
             // 
             // rbMH
             // 
-            rbMH.AutoSize = true;
-            rbMH.Font = new Font("Segoe UI", 12F);
-            rbMH.Location = new Point(330, 23);
-            rbMH.Name = "rbMH";
-            rbMH.Size = new Size(92, 32);
-            rbMH.TabIndex = 6;
-            rbMH.TabStop = true;
-            rbMH.Text = "Теорія";
-            rbMH.UseVisualStyleBackColor = true;
-            rbMH.CheckedChanged += rbMH_CheckedChanged;
+            rbT.AutoSize = true;
+            rbT.Font = new Font("Segoe UI", 12F);
+            rbT.Location = new Point(330, 23);
+            rbT.Name = "rbT";
+            rbT.Size = new Size(92, 32);
+            rbT.TabIndex = 6;
+            rbT.TabStop = true;
+            rbT.Text = "Теорія";
+            rbT.UseVisualStyleBackColor = true;
+            rbT.CheckedChanged += rbT_CheckedChanged;
             // 
             // rbS
             // 
@@ -133,8 +132,35 @@ namespace QUIZproject_server
             rbS.TabStop = true;
             rbS.Text = "Сольфеджіо";
             rbS.UseVisualStyleBackColor = true;
-            rbS.CheckedChanged += rbS_CheckedChanged;          
-            
+            rbS.CheckedChanged += rbS_CheckedChanged;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1014, 24);
+            menuStrip1.TabIndex = 10;
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(32, 19);
+            // 
+            // importToolStripMenuItem
+            // 
+            importToolStripMenuItem.Name = "importToolStripMenuItem";
+            importToolStripMenuItem.Size = new Size(32, 19);
+            // 
+            // exportToolStripMenuItem
+            // 
+            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            exportToolStripMenuItem.Size = new Size(32, 19);
+            // 
+            // closeToolStripMenuItem
+            // 
+            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            closeToolStripMenuItem.Size = new Size(32, 19);
             // 
             // btnSave
             // 
@@ -147,15 +173,27 @@ namespace QUIZproject_server
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Click += btnSave_Click;
             // 
+            // btnPlay
+            // 
+            btnPlay.Font = new Font("Segoe UI", 12F);
+            btnPlay.Location = new Point(572, 125);
+            btnPlay.Name = "btnPlay";
+            btnPlay.Size = new Size(79, 58);
+            btnPlay.TabIndex = 11;
+            btnPlay.Text = "PLAY";
+            btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.Click += btnPlay_Click;
+            // 
             // QuizForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1014, 450);
+            Controls.Add(btnPlay);
             Controls.Add(btnSave);
             Controls.Add(rbS);
-            Controls.Add(rbMH);
+            Controls.Add(rbT);
             Controls.Add(lblQ);
             Controls.Add(btnEdit);
             Controls.Add(btnDelete);
@@ -166,8 +204,6 @@ namespace QUIZproject_server
             MainMenuStrip = menuStrip1;
             Name = "QuizForm";
             Text = "QuizForm";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -182,7 +218,7 @@ namespace QUIZproject_server
         private Button btnDelete;
         private Button btnEdit;
         private Label lblQ;
-        private RadioButton rbMH;
+        private RadioButton rbT;
         private RadioButton rbS;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
@@ -190,5 +226,6 @@ namespace QUIZproject_server
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private Button btnSave;
+        private Button btnPlay;
     }
 }

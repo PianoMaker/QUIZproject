@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Models;
 using static Models.Serializers;
 using System.Runtime.Serialization;
 using DbLayer;
-using System.Diagnostics.Eventing.Reader;
-using Microsoft.VisualBasic.Logging;
 
 namespace QUIZproject_server
 {
@@ -112,7 +106,7 @@ namespace QUIZproject_server
                             bool ifregistered = CheckIfRegistered(st);
                             if (ifregistered && st.Ifnew)
                             {
-                                MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
+                                //MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
                                 byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
                                 SendTextMessage(clientSocket, msg);
                             }
@@ -124,6 +118,7 @@ namespace QUIZproject_server
                                 byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
 
                                 SendTextMessage(clientSocket, msg);
+                                Thread.Sleep(500);
                                 if(student is not null)
                                     SendLogin(student, clientSocket);
                                 

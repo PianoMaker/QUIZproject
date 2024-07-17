@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
@@ -50,7 +45,7 @@ namespace Models
 
         [Column("MusicHistory_mark")]        
         [DataMember]
-        public int? MH_mark { get; set; }
+        public int? T_mark { get; set; }
 
         [Column("Solfegio_answered")]
         [DataMember]

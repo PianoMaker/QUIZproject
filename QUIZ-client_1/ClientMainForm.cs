@@ -1,19 +1,19 @@
-using System.IO;
 using System.Net;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Windows.Forms;
-using DataBase;
 using Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static Models.Serializers;
-
+//using Utilities;
+/*
+using static Utilities.Serializers;
+using Quiz = Utilities.Quiz;
+using ShortAnswer = Utilities.ShortAnswer;
+using SQuiz = Utilities.SQuiz;
+using Subject = Utilities.Subject;
+*/
 namespace QUIZ_client_1
 {
 
-// DISCLAMER! Індекси відповідей від 0, але номери відповідей від 1!
+    // DISCLAMER! Індекси відповідей від 0, але номери відповідей від 1!
 
     public partial class ClientMainForm : Form
     {
@@ -25,11 +25,11 @@ namespace QUIZ_client_1
         private bool Ifconnected;
         
         private int? selectedanswer;
-        private Quiz? current_mh_question;
+        private Quiz? current_t_question;
         private SQuiz? current_s_question;
-        private List<Quiz>? mh_quiz;
+        private List<Quiz>? t_quiz;
         private List<SQuiz>? s_quiz;
-        private int mh_index;
+        private int t_index;
         private int s_index;
 
 
@@ -48,7 +48,7 @@ namespace QUIZ_client_1
             num.Enabled = false;
             btnPlay.Enabled = false;
             s_index = 0;
-            mh_index = 0;
+            t_index = 0;
         }
 
         private void tbPort_TextChanged(object sender, EventArgs e)
@@ -91,8 +91,8 @@ namespace QUIZ_client_1
             if (rb_hm.Checked)
             {
                 subj = Subject.Theory;
-                if (mh_quiz is not null)
-                    GetCurrentMhQuestions();
+                if (t_quiz is not null)
+                    GetCurrentTQuestions();
                 else EmptyQuizInterface();
             }
             else
@@ -125,6 +125,7 @@ namespace QUIZ_client_1
             byte[] msg = Encoding.UTF8.GetBytes(subj.ToString());
             client.SendMessage(msg, subj.ToString());
             selectedanswer = null;
+            lbQ.Text = string.Empty;
         }
 
         private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
@@ -182,11 +183,11 @@ namespace QUIZ_client_1
             }
         }
 
-        private void On_Mh_questions_Received(object? sender, List<Quiz> e)
+        private void On_T_questions_Received(object? sender, List<Quiz> e)
         {
             btnPlay.Enabled = false;
-            mh_quiz = e;
-            GetCurrentMhQuestions();
+            t_quiz = e;
+            GetCurrentTQuestions();
         }
 
         private void On_S_questions_Received(object? sender, List<SQuiz> e)
@@ -224,9 +225,9 @@ namespace QUIZ_client_1
                 lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
                 lbStatus.Text= $"Logged as {student.Name} {student.SurName}";
                 btnQuiz.Enabled = true;
-                mh_index = e.T_answered;
+                t_index = e.T_answered;
                 s_index = e.S_answered;
-                lbMessages.Items.Add($"mh={mh_index}, s={s_index}");
+                lbMessages.Items.Add($"t={t_index}, s={s_index}");
             }
             catch (Exception ex)
             {
@@ -240,7 +241,7 @@ namespace QUIZ_client_1
         {
             client = new Q_Client(ip, port);
             client.MessageChanged += OnMessageChanged;
-            client.Mh_questions_Received += On_Mh_questions_Received;
+            client.T_questions_Received += On_T_questions_Received;
             client.S_questions_Received += On_S_questions_Received;
             await client.StartClientAsync();
 
@@ -261,16 +262,16 @@ namespace QUIZ_client_1
             }
         }
 
-        private void GetCurrentMhQuestions()
+        private void GetCurrentTQuestions()
         {
-            if (mh_quiz is null) return;
-            if (mh_quiz.Count > 0 && mh_index < mh_quiz.Count)
+            if (t_quiz is null) return;
+            if (t_quiz.Count > 0 && t_index < t_quiz.Count)
             {                
-                current_mh_question = mh_quiz[mh_index];
-                SetQuizInterface(current_mh_question);                
+                current_t_question = t_quiz[t_index];
+                SetQuizInterface(current_t_question);                
             }
 
-            else if (mh_index >= mh_quiz.Count)                           
+            else if (t_index >= t_quiz.Count)                           
                 EmptyQuizInterface("Your quiz is already done!");            
             
             else
@@ -300,19 +301,23 @@ namespace QUIZ_client_1
         
         private void SetQuizInterface<T>(T question) where T : Quiz
         {
+            
             num.Enabled = true;
             num.Minimum = 1;
             num.Maximum = question.Answers.Count;
             lblQuestion.Text = question.Question;
+            lblAnswer.Text = string.Empty; 
+            //pictureBox.Image = quiestion.Bitmap;
             lbAnswers.Items.Clear();
             foreach (var answer in question.Answers)
                 lbAnswers.Items.Add(answer);
-            if (subj == Subject.Theory && mh_quiz is not null)
-                lbQ.Text = $"{mh_index + 1} question from {mh_quiz.Count}";
+            if (subj == Subject.Theory && t_quiz is not null)
+                lbQ.Text = $"{t_index + 1} question from {t_quiz.Count}";
             else if (subj == Subject.Solfegio && s_quiz is not null)
                 lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
             btnSend.Enabled = true;
             num.Enabled = true;
+            
         }
 
         private void EmptyQuizInterface(string msg)
@@ -345,11 +350,11 @@ namespace QUIZ_client_1
             //MessageBox.Show($"Creating Answer {subj} : {s_index} : {selectedanswer}");
 
 
-            if (subj == Subject.Theory && current_mh_question is not null)
+            if (subj == Subject.Theory && current_t_question is not null)
             {
                 choice = (int)selectedanswer; 
-                answer = new(subj, student.Email, mh_index, choice);
-                lbMessages.Items.Add($"creating mh-answer: {choice}");
+                answer = new(subj, student.Email, t_index, choice);
+                lbMessages.Items.Add($"creating t-answer: {choice}");
             }
             else if (subj == Subject.Solfegio && current_s_question is not null)
             {
@@ -379,6 +384,7 @@ namespace QUIZ_client_1
         }
         private void RefreshQuiz()
         {
+            
             if (subj == Subject.Solfegio && s_quiz is not null
                 && s_quiz.Count > s_index + 1)
             {
@@ -386,14 +392,14 @@ namespace QUIZ_client_1
                 current_s_question = s_quiz[s_index];
                 SetQuizInterface(current_s_question);
             }
-            else if (subj == Subject.Theory && mh_quiz is not null
-                && mh_quiz.Count > mh_index + 1)
+            else if (subj == Subject.Theory && t_quiz is not null
+                && t_quiz.Count > t_index + 1)
             {
-                mh_index++;
-                current_mh_question = mh_quiz[mh_index];
-                SetQuizInterface(current_mh_question);
+                t_index++;
+                current_t_question = t_quiz[t_index];
+                SetQuizInterface(current_t_question);
             }
-            else if ((mh_quiz is not null && mh_quiz.Count <= mh_index + 1) || (s_quiz is not null && s_quiz.Count <= s_index + 1))
+            else if ((t_quiz is not null && t_quiz.Count <= t_index + 1) || (s_quiz is not null && s_quiz.Count <= s_index + 1))
             {
                 EmptyQuizInterface();
                 lbQ.Text = "Congratulations! Quiz is done!";                

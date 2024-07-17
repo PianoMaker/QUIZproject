@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using Models;
 using static Models.Serializers;
-using System.Runtime.Serialization;
+//using Utilities;
+//using Quiz = Utilities.Quiz;
+//using SQuiz = Utilities.SQuiz;
+//using Subject = Utilities.Subject;
+
 namespace QUIZ_client_1
 {
     public class Q_Client
@@ -22,7 +23,7 @@ namespace QUIZ_client_1
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
         public event EventHandler<Student>? LoggedIn;
-        public event EventHandler<List<Quiz>>? Mh_questions_Received;
+        public event EventHandler<List<Quiz>>? T_questions_Received;
         public event EventHandler<List<SQuiz>>? S_questions_Received;
 
         public IPAddress Ip { get; set; }
@@ -54,7 +55,7 @@ namespace QUIZ_client_1
 
         protected virtual void On_Mh_questions_Received(List<Quiz> quizzes)
         {
-            Mh_questions_Received?.Invoke(this, quizzes);
+            T_questions_Received?.Invoke(this, quizzes);
         }
 
         protected virtual void On_S_questions_Received(List<SQuiz> squizzes)

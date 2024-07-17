@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Utilities
 {
     public static class Serializers
@@ -36,7 +35,6 @@ namespace Utilities
             }
             catch 
             {
-                
                 return false;
             }
         }

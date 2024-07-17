@@ -1,9 +1,17 @@
-﻿using NAudio.Wave;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+using NAudio;
+using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
-namespace Models
-{
+namespace Utilities
 
+{
+    
     public class SQuiz : Quiz
     {
         readonly int camerton = 220; // hz

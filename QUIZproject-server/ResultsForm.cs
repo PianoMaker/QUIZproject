@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using DataBase;
 using DbLayer;
-using Models;
-using System.Diagnostics;
 
 namespace QUIZproject_server
 {
@@ -34,7 +24,7 @@ namespace QUIZproject_server
         private void AdminTools()
         {
 
-            var window = new ENFCodeForm(factory);
+            var window = new AdminForm(factory);
             window.ShowDialog();
         }
 
@@ -48,7 +38,7 @@ namespace QUIZproject_server
                 {
                     s.Name,
                     s.SurName,
-                    s.MH_mark,
+                    s.T_mark,
                     s.S_mark
                 }).ToList();
             }

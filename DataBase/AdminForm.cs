@@ -2,11 +2,10 @@ using DbLayer;
 using Models;
 using System.Data;
 using System.Diagnostics;
-using System.DirectoryServices;
 
 namespace DataBase
 {
-    public partial class ENFCodeForm : Form
+    public partial class AdminForm : Form
     {
 
         private StudentsDbContextFactory factory;
@@ -16,7 +15,7 @@ namespace DataBase
 
         private int MaxMark {  get; set; }
 
-        public ENFCodeForm(StudentsDbContextFactory factory)
+        public AdminForm(StudentsDbContextFactory factory)
         {
             InitializeComponent();
             this.factory = factory;
@@ -26,7 +25,7 @@ namespace DataBase
             dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
         }
 
-        public ENFCodeForm(StudentsDbContextFactory factory, int mh_question_count, int s_questions_count)
+        public AdminForm(StudentsDbContextFactory factory, int mh_question_count, int s_questions_count)
         {
             InitializeComponent();
             this.factory = factory;
@@ -62,7 +61,7 @@ namespace DataBase
                 foreach (var st in db.Students)
                 {
                     if (st.T_answered == Mhquestions && Mhquestions > 0)
-                        st.MH_mark = st.T_correctAnswers * MaxMark / Mhquestions;
+                        st.T_mark = st.T_correctAnswers * MaxMark / Mhquestions;
                     if (st.S_answered == Squestions && Squestions > 0)
                         st.S_mark = st.S_correctAnswers * MaxMark / Squestions;                   
                 }
@@ -138,7 +137,7 @@ namespace DataBase
                         Email = email,
                         Password = password,
                         S_mark = s,
-                        MH_mark = mh
+                        T_mark = mh
                     };
 
                     db.Students.Add(student);
@@ -293,8 +292,8 @@ namespace DataBase
                 if (totalStudents > 0)
                 {
 
-                    double averageMH = db.Students.Where(s => s.MH_mark.HasValue).Any()
-                        ? db.Students.Where(s => s.MH_mark.HasValue).Average(s => s.MH_mark.Value)
+                    double averageMH = db.Students.Where(s => s.T_mark.HasValue).Any()
+                        ? db.Students.Where(s => s.T_mark.HasValue).Average(s => s.T_mark.Value)
                         : 0;
 
                     double averageS = db.Students.Where(s => s.S_mark.HasValue).Any()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Models
 {
@@ -23,7 +18,7 @@ namespace Models
             Email = st.Email;
             Password = st.Password;
             S_mark = st.S_mark;
-            MH_mark = st.MH_mark;
+            T_mark = st.T_mark;
             Mh_quiz = q;
         }
 
@@ -34,7 +29,7 @@ namespace Models
             Email = st.Email;
             Password = st.Password;
             S_mark = st.S_mark;
-            MH_mark = st.MH_mark;
+            T_mark = st.T_mark;
             S_quiz = q;
         }
 

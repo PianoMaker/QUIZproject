@@ -48,8 +48,10 @@ namespace QUIZ_client_1
             num = new NumericUpDown();
             btnPlay = new Button();
             lbQ = new Label();
+            pictureBox = new PictureBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)num).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // tbIp
@@ -198,7 +200,7 @@ namespace QUIZ_client_1
             lbAnswers.FormattingEnabled = true;
             lbAnswers.Location = new Point(83, 260);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(608, 164);
+            lbAnswers.Size = new Size(484, 164);
             lbAnswers.TabIndex = 18;
             lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
             // 
@@ -243,6 +245,15 @@ namespace QUIZ_client_1
             lbQ.TabIndex = 22;
             lbQ.Text = "No questions are loaded";
             // 
+            // pictureBox
+            // 
+            pictureBox.BackColor = Color.Transparent;
+            pictureBox.Location = new Point(584, 260);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(107, 164);
+            pictureBox.TabIndex = 23;
+            pictureBox.TabStop = false;
+            // 
             // ClientMainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -250,6 +261,7 @@ namespace QUIZ_client_1
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(997, 650);
+            Controls.Add(pictureBox);
             Controls.Add(lbQ);
             Controls.Add(btnPlay);
             Controls.Add(num);
@@ -270,6 +282,7 @@ namespace QUIZ_client_1
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)num).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -296,5 +309,6 @@ namespace QUIZ_client_1
         private NumericUpDown num;
         private Button btnPlay;
         private Label lbQ;
+        private PictureBox pictureBox;
     }
 }
