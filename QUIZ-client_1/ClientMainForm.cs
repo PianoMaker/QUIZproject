@@ -92,7 +92,7 @@ namespace QUIZ_client_1
             });
         }
 
-        private void rb_hm_CheckedChanged(object sender, EventArgs e)
+        private void rb_t_CheckedChanged(object sender, EventArgs e)
         {
             ChooseSubject();
         }
@@ -303,6 +303,8 @@ namespace QUIZ_client_1
             {
                 current_t_question = t_quiz[t_index];
                 SetQuizInterface(current_t_question);
+                btnPlay.Visible = false;
+                btnPlay.Enabled = false;
             }
 
             else if (t_index >= t_quiz.Count)
@@ -321,8 +323,12 @@ namespace QUIZ_client_1
             {
                 current_s_question = s_quiz[s_index];
                 SetQuizInterface(current_s_question);
-                Invoke(() => lblQuestion.Text = current_s_question.Question);
-                Invoke(() => btnPlay.Enabled = true);
+                Invoke(() =>
+                {
+                    lblQuestion.Text = current_s_question.Question;
+                    btnPlay.Visible = true;
+                    btnPlay.Enabled = true;
+                });
             }
 
             else if (s_index >= s_quiz.Count)
@@ -482,8 +488,8 @@ namespace QUIZ_client_1
 
         private async void pictureBox_Click(object sender, EventArgs e)
         {
-            if(pictureBox.Image is not null) 
-            await OpenImage(pictureBox.Image);
+            if (pictureBox.Image is not null)
+                await OpenImage(pictureBox.Image);
         }
 
         private Task OpenImage(Image image)
@@ -545,5 +551,6 @@ namespace QUIZ_client_1
         {
             Readtext(sender);
         }
+
     }
 }

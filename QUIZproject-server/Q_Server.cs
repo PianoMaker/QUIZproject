@@ -330,6 +330,8 @@ namespace QUIZproject_server
         private byte[] PrepareDara(Subject subj)
         {
 
+            
+
             if (subj == Subject.Theory)
                 return SerializeObject(T_questions);
             else 
