@@ -6,6 +6,7 @@ using static Utilities.Serializers;
 using QuizHolder;
 using System.Runtime.Serialization;
 using DbLayer;
+using System.Collections.Generic;
 
 namespace QUIZproject_server
 {
@@ -231,14 +232,14 @@ namespace QUIZproject_server
             if (subject == Subject.Theory)
             {
                 
-                var correctanswer = t_questions[questionid].Correctanswer;
-                //Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
+                var correctanswer = T_questions[questionid].Correctanswer;
+                Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
                 if (correctanswer == studentanswer) return true;
                 else return false;
             }
             else if (subject == Subject.Solfegio)
             {
-                var correctanswer = s_questions[questionid].Correctanswer;
+                var correctanswer = S_questions[questionid].Correctanswer;
                 if (correctanswer == studentanswer) return true;
                 else return false;
             }
@@ -329,14 +330,37 @@ namespace QUIZproject_server
 
         private byte[] PrepareDara(Subject subj)
         {
-
+            //усуваю можливість перехопити правильну відповідь
+            var tquestions = RejectCorrectAnswers(T_questions);
+            var squestions = RejectCorrectAnswers(S_questions);
             
-
             if (subj == Subject.Theory)
-                return SerializeObject(T_questions);
+                return SerializeObject(tquestions);
             else 
-                return SerializeObject(S_questions);
+                return SerializeObject(squestions);
 
+        }
+
+        private List<TQuiz> RejectCorrectAnswers(List<TQuiz> questions) 
+        {
+            List<TQuiz> edited = new();
+
+            foreach (var q in questions)
+            {
+                edited.Add(q);
+            }
+            return edited;
+        }
+
+        private List<SQuiz> RejectCorrectAnswers(List<SQuiz> questions)
+        {
+            List<SQuiz> edited = new();
+
+            foreach (var q in questions)
+            {
+                edited.Add(q);
+            }
+            return edited;
         }
 
         public void SendData(Socket clientSocket, byte[] data)

@@ -149,9 +149,12 @@ namespace QUIZ_client_1
         {
             var index = lbAnswers.SelectedIndex;
             selectedanswer = index + 1; // номер відповіді більше за індекс на 1
-            try { num.Value = (int)selectedanswer; }
-            catch { MessageBox.Show($"Error with Numbering questions: selectedanswer = {selectedanswer}"); }
-            Invoke(() => lblAnswer.Text = (string)lbAnswers.Items[index]);
+            try { 
+                num.Value = (int)selectedanswer;
+                Invoke(() => lblAnswer.Text = (string)lbAnswers.Items[index]);
+            }
+            catch { MessageBox.Show($"Error with Numbering questions: selected answer № {selectedanswer}"); }
+            
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -247,7 +250,7 @@ namespace QUIZ_client_1
                 s_index = e.S_answered;
                 Invoke(() =>
                 {
-                    lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
+                    lbMessages.Items.Add($"Logged as {student.Email}");
                     lbStatus.Text = $"Logged as {student.Name} {student.SurName}";
                     btnQuiz.Enabled = true;
                     lbMessages.Items.Add($"t={t_index}, s={s_index}");

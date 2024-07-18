@@ -8,27 +8,27 @@ namespace QuizHolder
     public class SQuiz : TQuiz
     {
         readonly int camerton = 220; // hz
-        
-    [DataMember]
-    public List<int> Pitches { get; set; }
-    private List<WaveOutEvent> woe = new();
-    private List<SignalGenerator> sg = new();
+
+        [DataMember]
+        public List<int> Pitches { get; set; }
+        private List<WaveOutEvent> woe = new();
+        private List<SignalGenerator> sg = new();
 
         public SQuiz()
-        {            
+        {
             sg = new();
             woe = new();
         }
 
         public SQuiz(List<int> pitches)
-        {         
+        {
             Pitches = pitches;
             sg = new();
             woe = new();
 
         }
 
-        public SQuiz(string question, List<string> answers, int correctanswer, List<int> pitches) 
+        public SQuiz(string question, List<string> answers, int correctanswer, List<int> pitches)
             : base(question, answers, correctanswer)
         {
             Question = question;
@@ -107,6 +107,21 @@ namespace QuizHolder
             }
         }
 
-    }
+        public override object Clone()
+        {
 
+            var baseClone = (Quiz)base.Clone();
+
+            return new SQuiz
+            {
+                Question = baseClone.Question,
+                Answers = baseClone.Answers,
+                Picture = baseClone.Picture,
+                Studentanswer = baseClone.Studentanswer,
+                Pitches = this.Pitches
+                //Correctanswer не копіюємо, бо пересилаємо клієнту без нього :)
+            };
+
+        }
+    }
 }
