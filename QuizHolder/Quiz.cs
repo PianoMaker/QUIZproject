@@ -3,7 +3,7 @@
 namespace QuizHolder
 {
     [DataContract]
-    public class Quiz
+    public class Quiz : ICloneable
     {
         [DataMember]
         public string Question { get; set; }
@@ -32,8 +32,17 @@ namespace QuizHolder
         }
 
         
-        public List<string> Answers { get => answers; set => answers = value; }        
+        public List<string> Answers { get => answers; set => answers = value; }
 
-
+        public virtual object Clone()
+        {
+            return new Quiz
+            {
+                Answers = this.Answers,
+                Question = this.Question,
+                Picture = this.Picture,
+                Studentanswer = this.Studentanswer                
+            };
+        }
     }
 }

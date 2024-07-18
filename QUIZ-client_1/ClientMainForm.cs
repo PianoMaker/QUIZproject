@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Models;
 using QuizHolder;
 using static Utilities.Serializers;
+using static Utilities.Tools;
 //using Utilities;
 /*
 using static Utilities.Serializers;
@@ -91,7 +92,7 @@ namespace QUIZ_client_1
             });
         }
 
-        private void rb_hm_CheckedChanged(object sender, EventArgs e)
+        private void rb_t_CheckedChanged(object sender, EventArgs e)
         {
             ChooseSubject();
         }
@@ -148,9 +149,12 @@ namespace QUIZ_client_1
         {
             var index = lbAnswers.SelectedIndex;
             selectedanswer = index + 1; // номер відповіді більше за індекс на 1
-            try { num.Value = (int)selectedanswer; }
-            catch { MessageBox.Show($"Error with Numbering questions: selectedanswer = {selectedanswer}"); }
-            Invoke(() => lblAnswer.Text = (string)lbAnswers.Items[index]);
+            try { 
+                num.Value = (int)selectedanswer;
+                Invoke(() => lblAnswer.Text = (string)lbAnswers.Items[index]);
+            }
+            catch { MessageBox.Show($"Error with Numbering questions: selected answer № {selectedanswer}"); }
+            
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -246,7 +250,7 @@ namespace QUIZ_client_1
                 s_index = e.S_answered;
                 Invoke(() =>
                 {
-                    lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
+                    lbMessages.Items.Add($"Logged as {student.Email}");
                     lbStatus.Text = $"Logged as {student.Name} {student.SurName}";
                     btnQuiz.Enabled = true;
                     lbMessages.Items.Add($"t={t_index}, s={s_index}");
@@ -302,6 +306,8 @@ namespace QUIZ_client_1
             {
                 current_t_question = t_quiz[t_index];
                 SetQuizInterface(current_t_question);
+                btnPlay.Visible = false;
+                btnPlay.Enabled = false;
             }
 
             else if (t_index >= t_quiz.Count)
@@ -320,8 +326,12 @@ namespace QUIZ_client_1
             {
                 current_s_question = s_quiz[s_index];
                 SetQuizInterface(current_s_question);
-                Invoke(() => lblQuestion.Text = current_s_question.Question);
-                Invoke(() => btnPlay.Enabled = true);
+                Invoke(() =>
+                {
+                    lblQuestion.Text = current_s_question.Question;
+                    btnPlay.Visible = true;
+                    btnPlay.Enabled = true;
+                });
             }
 
             else if (s_index >= s_quiz.Count)
@@ -383,7 +393,7 @@ namespace QUIZ_client_1
         {
             if (student is null || selectedanswer is null)
             {
-                MessageBox.Show($"Not ready to send answer:\n student: {student?.Email ?? null}  answer: {selectedanswer?? null}");
+                MessageBox.Show($"Not ready to send answer:\n student: {student?.Email ?? null}  answer: {selectedanswer ?? null}");
                 return false;
             }
 
@@ -463,26 +473,11 @@ namespace QUIZ_client_1
             selectedanswer = null;
         }
 
-        private void lblAnswer_Click(object sender, EventArgs e)        
+        private void lblAnswer_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(lblAnswer.Text)) return;
-            Task.Run(() =>
-            {
-                string fullAnswer = lblAnswer.Text;                
-                Form answerForm = new Form();
-                answerForm.Text = "Повний текст";
-                answerForm.Size = new Size(800, 600);              
-
-                Label lblFullAnswer = new Label();
-                lblFullAnswer.Dock = DockStyle.Fill;
-                lblFullAnswer.Font = new Font("Segoe UI", 12F);
-                lblFullAnswer.Text = fullAnswer;
-                lblFullAnswer.TextAlign = ContentAlignment.MiddleCenter;
-                lblFullAnswer.AutoSize = false;                                
-                answerForm.Controls.Add(lblFullAnswer);
-                answerForm.ShowDialog();
-            });
+            Readtext(sender);
         }
+
 
 
         private void PlayChord()
@@ -496,7 +491,8 @@ namespace QUIZ_client_1
 
         private async void pictureBox_Click(object sender, EventArgs e)
         {
-            await OpenImage(pictureBox.Image);
+            if (pictureBox.Image is not null)
+                await OpenImage(pictureBox.Image);
         }
 
         private Task OpenImage(Image image)
@@ -520,36 +516,44 @@ namespace QUIZ_client_1
                 fullSizeForm.Controls.Add(fullSizePictureBox);
                 fullSizeForm.ShowDialog();
             });
-        
-         
 
-        
+
+
+
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            lbMessages.Visible = !checkBox1.Checked;            
+            lbMessages.Visible = !checkBox1.Checked;
             if (lbMessages.Visible)
-            {              
-                
-                pictureBox.Parent = panelQuiz;                
+            {
+
+                pictureBox.Parent = panelQuiz;
                 pictureBox.Size = picpointer.Size;
                 pictureBox.Location = picpointer.Location;
                 picpointer.SendToBack();
-                pictureBox.BringToFront();                
+                pictureBox.BringToFront();
                 lblAnswer.MaximumSize = new Size(lbAnswers.Width, 48);
                 lblQuestion.MaximumSize = new Size(lbAnswers.Width, 48);
             }
             else
-            {                
-                pictureBox.Parent = panelPicture;                
+            {
+                pictureBox.Parent = panelPicture;
                 pictureBox.Size = panelPicture.Size;
                 pictureBox.Location = new Point(0, 0);
                 lblAnswer.MaximumSize = new Size(panel1.Width, 48);
                 lblQuestion.MaximumSize = new Size(lbAnswers.Width, 48);
+                lbMessages.Size = panelPicture.Size;
+                checkBox1.BringToFront();
                 //lbAnswers.Size = new Size(804, 184);
 
             }
         }
+
+        private void lblQuestion_Click(object sender, EventArgs e)
+        {
+            Readtext(sender);
+        }
+
     }
 }

@@ -53,7 +53,9 @@ namespace QuizHolder
             // lbQuestions
             // 
             lbQuestions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            lbQuestions.Enabled = false;
             lbQuestions.FormattingEnabled = true;
+            lbQuestions.HorizontalScrollbar = true;
             lbQuestions.Location = new Point(46, 106);
             lbQuestions.Name = "lbQuestions";
             lbQuestions.Size = new Size(485, 324);
@@ -68,6 +70,7 @@ namespace QuizHolder
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(275, 144);
             lbAnswers.TabIndex = 9;
+            lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
             // 
             // btnAdd
             // 

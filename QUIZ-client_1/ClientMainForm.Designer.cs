@@ -119,28 +119,29 @@ namespace QUIZ_client_1
             rb_hm.Anchor = AnchorStyles.Top;
             rb_hm.BackColor = Color.Transparent;
             rb_hm.Checked = true;
-            rb_hm.Font = new Font("Times New Roman", 12F);
-            rb_hm.Location = new Point(246, 10);
+            rb_hm.Font = new Font("Times New Roman", 13.8F);
+            rb_hm.Location = new Point(274, 10);
             rb_hm.Name = "rb_hm";
-            rb_hm.Size = new Size(89, 32);
+            rb_hm.Size = new Size(130, 32);
             rb_hm.TabIndex = 12;
             rb_hm.TabStop = true;
             rb_hm.Text = "Теорія";
             rb_hm.UseVisualStyleBackColor = false;
-            rb_hm.CheckedChanged += rb_hm_CheckedChanged;
+            rb_hm.CheckedChanged += rb_t_CheckedChanged;
             // 
             // rb_s
             // 
             rb_s.Anchor = AnchorStyles.Top;
             rb_s.BackColor = Color.Transparent;
-            rb_s.Font = new Font("Times New Roman", 12F);
+            rb_s.Font = new Font("Times New Roman", 13.8F);
             rb_s.Location = new Point(427, 13);
             rb_s.Name = "rb_s";
-            rb_s.Size = new Size(144, 26);
+            rb_s.Size = new Size(173, 26);
             rb_s.TabIndex = 13;
             rb_s.TabStop = true;
             rb_s.Text = "Сольфеджіо";
             rb_s.UseVisualStyleBackColor = false;
+            rb_s.CheckedChanged += rb_s_CheckedChanged;
             // 
             // panel1
             // 
@@ -160,10 +161,10 @@ namespace QUIZ_client_1
             label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Segoe UI", 12F);
+            label1.Font = new Font("Microsoft Sans Serif", 13.8F);
             label1.Location = new Point(8, 9);
             label1.Name = "label1";
-            label1.Size = new Size(195, 28);
+            label1.Size = new Size(233, 29);
             label1.TabIndex = 14;
             label1.Text = "Оберіть дисципліну";
             // 
@@ -227,9 +228,9 @@ namespace QUIZ_client_1
             // 
             picpointer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             picpointer.BackColor = Color.Transparent;
-            picpointer.Location = new Point(730, 72);
+            picpointer.Location = new Point(710, 72);
             picpointer.Name = "picpointer";
-            picpointer.Size = new Size(200, 178);
+            picpointer.Size = new Size(155, 184);
             picpointer.TabIndex = 27;
             // 
             // pictureBox
@@ -237,26 +238,26 @@ namespace QUIZ_client_1
             pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.BackgroundImageLayout = ImageLayout.None;
-            pictureBox.Location = new Point(730, 72);
+            pictureBox.Location = new Point(710, 72);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(145, 184);
+            pictureBox.Size = new Size(155, 184);
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 26;
             pictureBox.TabStop = false;
             pictureBox.Click += pictureBox_Click;
-            
             // 
             // btnPlay
             // 
             btnPlay.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnPlay.Enabled = false;
             btnPlay.Font = new Font("Segoe UI", 12F);
-            btnPlay.Location = new Point(754, 0);
+            btnPlay.Location = new Point(710, 0);
             btnPlay.Name = "btnPlay";
             btnPlay.Size = new Size(116, 40);
             btnPlay.TabIndex = 25;
             btnPlay.Text = "Play";
             btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.Visible = false;
             btnPlay.Click += btnPlay_Click;
             // 
             // num
@@ -264,7 +265,7 @@ namespace QUIZ_client_1
             num.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             num.Enabled = false;
             num.Font = new Font("Segoe UI", 12F);
-            num.Location = new Point(751, 277);
+            num.Location = new Point(710, 277);
             num.Name = "num";
             num.Size = new Size(93, 34);
             num.TabIndex = 24;
@@ -278,22 +279,23 @@ namespace QUIZ_client_1
             lblAnswer.BackColor = Color.Ivory;
             lblAnswer.Font = new Font("Times New Roman", 12F);
             lblAnswer.Location = new Point(0, 277);
-            lblAnswer.MaximumSize = new Size(635, 48);
-            lblAnswer.MinimumSize = new Size(635, 34);
+            lblAnswer.MaximumSize = new Size(700, 68);
+            lblAnswer.MinimumSize = new Size(675, 34);
             lblAnswer.Name = "lblAnswer";
-            lblAnswer.Size = new Size(635, 34);
+            lblAnswer.Size = new Size(675, 34);
             lblAnswer.TabIndex = 22;
             lblAnswer.Click += lblAnswer_Click;
             // 
             // lbAnswers
             // 
             lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lbAnswers.Font = new Font("Times New Roman", 11F);
+            lbAnswers.Font = new Font("Times New Roman", 12F);
             lbAnswers.FormattingEnabled = true;
+            lbAnswers.ItemHeight = 22;
             lbAnswers.Location = new Point(8, 72);
             lbAnswers.MinimumSize = new Size(500, 184);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(721, 184);
+            lbAnswers.Size = new Size(675, 180);
             lbAnswers.TabIndex = 21;
             lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
             // 
@@ -301,17 +303,18 @@ namespace QUIZ_client_1
             // 
             lblQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblQuestion.BackColor = Color.Ivory;
-            lblQuestion.Font = new Font("Times New Roman", 12F);
+            lblQuestion.Font = new Font("Times New Roman", 14F);
             lblQuestion.Location = new Point(0, 0);
-            lblQuestion.MinimumSize = new Size(635, 30);
+            lblQuestion.MinimumSize = new Size(500, 30);
             lblQuestion.Name = "lblQuestion";
-            lblQuestion.Size = new Size(771, 30);
+            lblQuestion.Size = new Size(675, 30);
             lblQuestion.TabIndex = 20;
+            lblQuestion.Click += lblQuestion_Click;
             // 
             // panelPicture
             // 
             panelPicture.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelPicture.BackColor = Color.LemonChiffon;
+            panelPicture.BackColor = Color.Transparent;
             panelPicture.Controls.Add(checkBox1);
             panelPicture.Controls.Add(lbMessages);
             panelPicture.Location = new Point(973, 191);
