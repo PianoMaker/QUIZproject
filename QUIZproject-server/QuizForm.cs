@@ -1,8 +1,10 @@
-﻿using Models;
-using static Models.Serializers;
+﻿using System;
+using Models;
+using System.Windows.Forms;
+using static Utilities.Serializers;
 
 
-namespace QUIZproject_server
+namespace QuizHolder
 {
     public partial class QuizForm : Form
     {
@@ -10,15 +12,15 @@ namespace QUIZproject_server
         private Subject subj;
         //public Bitmap bitmap;
         // колекції питань
-        private List<Quiz> t_questions = new();
+        private List<TQuiz> t_questions = new();
         private List<SQuiz> s_questions = new();
         // файли з питаннями зберігаю в спільному каталозі з exe-файлом
         private readonly string TheoryPath = "Theory.bin";
         private readonly string SolfegioPath = "Solfegio.bin";
 
-        public List<Quiz> T_questions
+        public List<TQuiz> T_questions
         {
-            get => t_questions;
+            get { return t_questions; }
             set
             {
                 t_questions = value;
@@ -71,19 +73,19 @@ namespace QUIZproject_server
         private void Load_t_questions()
         {
             lbQuestions.Items.Clear();
-            if (t_questions is not null)
+            if (T_questions is not null)
                 foreach (var q in T_questions)
                     lbQuestions.Items.Add(q.Question);
-            else t_questions = new();
+            else T_questions = new();
         }
 
         private void Load_s_questions()
         {
             lbQuestions.Items.Clear();
-            if (s_questions is not null)
+            if (S_questions is not null)
                 foreach (var q in S_questions)
                     lbQuestions.Items.Add(q.Question);
-            else s_questions = new();
+            else S_questions = new();
         }
 
         private void rbS_CheckedChanged(object sender, EventArgs e)
@@ -178,7 +180,8 @@ namespace QUIZproject_server
         {
             if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
-                var question = new Quiz(w.Question, w.Answers, w.Correctanswer);
+                
+                var question = new TQuiz(w.Question, w.Answers, w.Correctanswer, w.Picture);
                 T_questions.Add(question);
                 btnSave.Text = "Save*";
 
@@ -191,14 +194,17 @@ namespace QUIZproject_server
             }
         }
 
-        private void SaveEditedQuestion(EditQuestionForm w, Quiz q)
+        private void SaveEditedQuestion(EditQuestionForm w, TQuiz q)
         {
             if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
                 q.Question = w.Question;
                 q.Answers = w.Answers;
-                q.Correctanswer = w.Correctanswer;
+                q.Correctanswer = w.Correctanswer;                
                 btnSave.Text = "Save*";
+                if(w.Picture is not null)
+                    q.Picture = w.Picture;
+
             }
         }
 
@@ -210,6 +216,8 @@ namespace QUIZproject_server
                 q.Answers = w.Answers;
                 q.Correctanswer = w.Correctanswer;
                 q.Pitches = w.Pitches;
+                if (w.Picture is not null)
+                    q.Picture = w.Picture;
                 btnSave.Text = "Save*";
             }
         }
@@ -293,7 +301,11 @@ namespace QUIZproject_server
                 File.WriteAllBytes(path, SerializeQuizBase());
                 btnSave.Text = "Save";
             }
-            catch { MessageBox.Show("Error saving file"); }
+            catch (Exception ex)
+            { 
+                MessageBox.Show("Error saving file\n" + ex.Message);
+            
+            }
 
         }
 
@@ -319,7 +331,7 @@ namespace QUIZproject_server
 
         private void DeserializeQuizBase(byte[] data)
         {
-            if (TryDeserializeObject(data, data.Length, out List<Quiz> t_questions))
+            if (TryDeserializeObject(data, data.Length, out List<TQuiz> t_questions))
                 T_questions = t_questions;
         }
 
@@ -367,8 +379,10 @@ namespace QUIZproject_server
             int i = 1;
             if (subj == Subject.Theory)
             {
-
+                
                 var index = lbQuestions.SelectedIndex;
+                pictureBox.Image = T_questions[index].Picture;
+                if(T_questions[index].Answers is not null)
                 foreach (var item in T_questions[index].Answers)
                 {
                     lbAnswers.Items.Add($"{i}. {item}");
@@ -381,6 +395,7 @@ namespace QUIZproject_server
             {
 
                 var index = lbQuestions.SelectedIndex;
+                pictureBox.Image = S_questions[index].Picture;
                 foreach (var item in S_questions[index].Answers)
                 {
                     lbAnswers.Items.Add(item);
@@ -427,6 +442,34 @@ namespace QUIZproject_server
         private void btnPlay_Click(object sender, EventArgs e)
         {
             s_questions[lbQuestions.SelectedIndex].Play();
+        }
+
+        private async void pictureBox_Click(object sender, EventArgs e)
+        {
+            await OpenImageInNewWindowAsync(pictureBox.Image);
+        }
+
+        private Task OpenImageInNewWindowAsync(Image image)
+        {
+            return Task.Run(() =>
+            {
+                Form fullSizeForm = new Form
+                {
+                    Text = "Full Size Image",
+                    Width = image.Width,
+                    Height = image.Height
+                };
+
+                PictureBox fullSizePictureBox = new PictureBox
+                {
+                    Image = image,
+                    SizeMode = PictureBoxSizeMode.AutoSize,
+                    Dock = DockStyle.Fill
+                };
+
+                fullSizeForm.Controls.Add(fullSizePictureBox);
+                fullSizeForm.ShowDialog();
+            });
         }
     }
 }

@@ -2,7 +2,8 @@
 using System.Net;
 using System.Text;
 using Models;
-using static Models.Serializers;
+using static Utilities.Serializers;
+using QuizHolder;
 using System.Runtime.Serialization;
 using DbLayer;
 
@@ -14,7 +15,7 @@ namespace QUIZproject_server
         private int port;
         private Socket socket;
         private List<Socket> clientSocket;
-        private List<Quiz> t_questions;
+        private List<TQuiz> t_questions;
         private List<SQuiz> s_questions;
         private StudentsDbContextFactory factory;
         private byte[] marker = Encoding.UTF8.GetBytes("EndOfFile");
@@ -33,7 +34,7 @@ namespace QUIZproject_server
             }
         }// повідомлення
 
-        public List<Quiz> T_questions { get => t_questions; set => t_questions = value; }
+        public List<TQuiz> T_questions { get => t_questions; set => t_questions = value; }
         public List<SQuiz> S_questions { get => s_questions; set => s_questions = value; }
 
         public event EventHandler? MessageChanged;
@@ -52,13 +53,13 @@ namespace QUIZproject_server
             clientSocket = new List<Socket>();
         }
 
-        public Q_Server(IPAddress ip, int port, List<Quiz> mhq, List<SQuiz> sq, StudentsDbContextFactory _factory)
+        public Q_Server(IPAddress ip, int port, List<TQuiz> tq, List<SQuiz> sq, StudentsDbContextFactory _factory)
         {
             host = ip;
             this.port = port;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
             clientSocket = new List<Socket>();
-            T_questions = mhq;
+            T_questions = tq;
             S_questions = sq;
             factory = _factory;            
         }
@@ -118,7 +119,7 @@ namespace QUIZproject_server
                                 byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
 
                                 SendTextMessage(clientSocket, msg);
-                                Thread.Sleep(500);
+                                Thread.Sleep(1000);
                                 if(student is not null)
                                     SendLogin(student, clientSocket);
                                 
@@ -145,12 +146,13 @@ namespace QUIZproject_server
                         {
                             Message = $"student - {clientSocket.RemoteEndPoint} requested MusicHistory quiz"; // Адреса клієнта
                             SendData(clientSocket, PrepareDara(Subject.Theory));
+                            SendData(clientSocket, marker);
                         }
                         else if (receivedData == "Solfegio")
                         {
                             Message = $"student - {clientSocket.RemoteEndPoint} requested Solfegio quiz";
                             SendData(clientSocket, PrepareDara(Subject.Solfegio));
-
+                            SendData(clientSocket, marker);
                         }
                         // ВІДПОВІДЬ НА ПИТАННЯ
 
@@ -303,9 +305,10 @@ namespace QUIZproject_server
         private void SendLogin(Student student, Socket clientSocket)
         {
             byte[] data = SerializeObject(student);
+            Thread.Sleep(100);
             SendData(clientSocket, data);
             SendData(clientSocket, marker);
-            Message = $"Student info sent: {student.Email}";
+            Message = $"Student info sent: {student.Email} - {data.Length} bytes";
         }
 
         private void ExtractAndSend(StudentLogin st, Socket clientSocket)
@@ -316,7 +319,8 @@ namespace QUIZproject_server
                     if (st.Email == student.Email
                         && st.Password == student.Password)
                     {
-                        SendLogin(student, clientSocket);                        
+                        SendLogin(student, clientSocket);
+                        
                     }
                 }
         }
@@ -325,30 +329,12 @@ namespace QUIZproject_server
 
         private byte[] PrepareDara(Subject subj)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                if (subj == Subject.Theory)
-                {
-                    // Serialize Theory quizzes
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<Quiz>));
-                    serializer.WriteObject(memoryStream, T_questions);
-                    //Message = $"{Mh_questions.Count} mh_questions are prepared";
-                }
-                else if (subj == Subject.Solfegio)
-                {
-                    // Serialize Solfegio quizzes
-                    DataContractSerializer serializer = new DataContractSerializer(typeof(List<SQuiz>));
-                    serializer.WriteObject(memoryStream, S_questions);
-                    //Message = $"{S_questions.Count} s_questions are prepared";
-                }                
-                
-                // Add end-of-file marker                
-                memoryStream.Write(marker, 0, marker.Length);
-                                
-                byte[] bytes = memoryStream.ToArray();
-                
-                return bytes;
-            }
+
+            if (subj == Subject.Theory)
+                return SerializeObject(T_questions);
+            else 
+                return SerializeObject(S_questions);
+
         }
 
         public void SendData(Socket clientSocket, byte[] data)

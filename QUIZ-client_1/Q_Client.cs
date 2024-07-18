@@ -2,8 +2,9 @@
 using System.Net;
 using System.Text;
 using Models;
-using static Models.Serializers;
-//using Utilities;
+using static Utilities.Serializers;
+using Utilities;
+using QuizHolder;
 //using Quiz = Utilities.Quiz;
 //using SQuiz = Utilities.SQuiz;
 //using Subject = Utilities.Subject;
@@ -23,8 +24,16 @@ namespace QUIZ_client_1
         public event EventHandler? MessageChanged;
         public event EventHandler? Connected;
         public event EventHandler<Student>? LoggedIn;
-        public event EventHandler<List<Quiz>>? T_questions_Received;
+        public event EventHandler<List<TQuiz>>? T_questions_Received;
         public event EventHandler<List<SQuiz>>? S_questions_Received;
+        public event EventHandler? QuizLoaded;
+        
+        public event EventHandler? Relogin;
+        public void TriggerRelogin()
+        {
+            Relogin?.Invoke(this, EventArgs.Empty);
+        }
+
 
         public IPAddress Ip { get; set; }
         public int Port { get; set; }
@@ -37,28 +46,35 @@ namespace QUIZ_client_1
                 OnMessageChanged();
             }
         }
-        protected virtual void OnMessageChanged()
+        private void OnMessageChanged()
         {
             MessageChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnConnected()
+        private void OnConnected()
         {
             Connected?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnLoggedIn(Student st)
+        private void OnLoggedIn(Student st)
         {
             // ПРИ ЛОГУВАННІ КОРИСТУВАЧА
             LoggedIn?.Invoke(this, st);
         }
 
-        protected virtual void On_Mh_questions_Received(List<Quiz> quizzes)
+
+        private void OnQuizLoaded()
+        {
+            QuizLoaded?.Invoke(this, EventArgs.Empty);
+            Message = $"{DateTime.Now.ToLongTimeString()} quiz has been loaded";
+        }
+
+        private void On_T_questions_Received(List<TQuiz> quizzes)
         {
             T_questions_Received?.Invoke(this, quizzes);
         }
 
-        protected virtual void On_S_questions_Received(List<SQuiz> squizzes)
+        private void On_S_questions_Received(List<SQuiz> squizzes)
         {
             S_questions_Received?.Invoke(this, squizzes);
         }
@@ -89,16 +105,20 @@ namespace QUIZ_client_1
                         if (_response.Length > 0)
                         {
                             Message = $"trying to recognise {_response.Length} bytes";
-                            if (TryDeserializeObject(_response, _response.Length, out List<Quiz> mh_questions))
+                            if (TryDeserializeObject(_response, _response.Length, out List<TQuiz> t_questions))
                             {
-                                Message = $"{mh_questions.Count} m_questions";
-                                On_Mh_questions_Received(mh_questions);
+                                Message = $"{t_questions.Count} t_questions";
+                                await Task.Run(OnQuizLoaded);
+                                await Task.Run(() => On_T_questions_Received(t_questions));
+
                             }
 
                             else if (TryDeserializeObject(_response, _response.Length, out List<SQuiz> s_questions))
                             {
                                 Message = $"{s_questions.Count} s_questions";
-                                On_S_questions_Received(s_questions);
+                                await Task.Run(OnQuizLoaded);
+                                await Task.Run(() => On_S_questions_Received(s_questions));
+
                             }
                             // ОТРИМАННЯ ПРОФІЛЮ З РЕЗУЛЬТАТАМИ
                             else if (TryDeserializeObject(_response, _response.Length, out Student student))
@@ -110,7 +130,7 @@ namespace QUIZ_client_1
                             else if (Encoding.UTF8.GetString(_response) == "RegisterSuccess")
                             {
                                 Message = $"registration succes";
-                                //OnLoggedIn();
+                                //OnLoggedIn(student);
                             }
 
                             else if (Encoding.UTF8.GetString(_response) == "RegisterUnSuccess")
@@ -132,7 +152,7 @@ namespace QUIZ_client_1
                             else if (Encoding.UTF8.GetString(_response) == "LoginUnSuccess")
                             {
                                 Message = $"login failed!";
-                                
+
                             }
 
                             else if (Encoding.UTF8.GetString(_response) == "AlreadyRegistered")
@@ -142,11 +162,17 @@ namespace QUIZ_client_1
                             }
 
 
-                            else Message = $"unknown message: {Encoding.UTF8.GetString(_response)}";
+                            else
+                            {
+                                Message = $"unknown message: {Encoding.UTF8.GetString(_response)}";
+                                TriggerRelogin();
+                            }
                         }
 
                     }
                 });
+
+                
             }
             catch (Exception ex)
             {
@@ -156,6 +182,8 @@ namespace QUIZ_client_1
             }
         }
 
+        
+
         private async Task<byte[]> ReceiveMessageAsync(Socket socket)
         {
             byte[] buf = new byte[1024];
@@ -164,7 +192,7 @@ namespace QUIZ_client_1
             while (true)
             {
                 int len = await socket.ReceiveAsync(buf, SocketFlags.None);
-                Message = $"processing message {len} bytes";
+                Message = $"{DateTime.Now.ToLongTimeString()} processing message {len} bytes";
                 if (len <= 0)
                     break;
 

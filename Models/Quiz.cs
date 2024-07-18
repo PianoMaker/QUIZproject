@@ -1,6 +1,6 @@
 ﻿namespace Models
 {
-    public enum Subject { Theory, Solfegio }
+    
     public class Quiz
     {
         private string question;
