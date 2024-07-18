@@ -98,6 +98,7 @@
             Controls.Add(btnClear);
             Controls.Add(btnSubmit);
             Controls.Add(textBox1);
+            MaximizeBox = false;
             Name = "AddAnswerForm";
             Text = "AddAnswerForm";
             ResumeLayout(false);

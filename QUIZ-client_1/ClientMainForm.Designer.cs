@@ -227,9 +227,9 @@ namespace QUIZ_client_1
             // 
             picpointer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             picpointer.BackColor = Color.Transparent;
-            picpointer.Location = new Point(730, 72);
+            picpointer.Location = new Point(710, 72);
             picpointer.Name = "picpointer";
-            picpointer.Size = new Size(200, 178);
+            picpointer.Size = new Size(155, 184);
             picpointer.TabIndex = 27;
             // 
             // pictureBox
@@ -237,34 +237,33 @@ namespace QUIZ_client_1
             pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.BackgroundImageLayout = ImageLayout.None;
-            pictureBox.Location = new Point(730, 72);
+            pictureBox.Location = new Point(710, 72);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(145, 184);
+            pictureBox.Size = new Size(155, 184);
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 26;
             pictureBox.TabStop = false;
             pictureBox.Click += pictureBox_Click;
-            
             // 
             // btnPlay
             // 
             btnPlay.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnPlay.Enabled = false;
             btnPlay.Font = new Font("Segoe UI", 12F);
-            btnPlay.Location = new Point(754, 0);
+            btnPlay.Location = new Point(710, 0);
             btnPlay.Name = "btnPlay";
             btnPlay.Size = new Size(116, 40);
             btnPlay.TabIndex = 25;
             btnPlay.Text = "Play";
             btnPlay.UseVisualStyleBackColor = true;
-            btnPlay.Click += btnPlay_Click;
+            btnPlay.Click += btnPlay_Click;            
             // 
             // num
             // 
             num.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             num.Enabled = false;
             num.Font = new Font("Segoe UI", 12F);
-            num.Location = new Point(751, 277);
+            num.Location = new Point(710, 277);
             num.Name = "num";
             num.Size = new Size(93, 34);
             num.TabIndex = 24;
@@ -278,10 +277,10 @@ namespace QUIZ_client_1
             lblAnswer.BackColor = Color.Ivory;
             lblAnswer.Font = new Font("Times New Roman", 12F);
             lblAnswer.Location = new Point(0, 277);
-            lblAnswer.MaximumSize = new Size(635, 48);
-            lblAnswer.MinimumSize = new Size(635, 34);
+            lblAnswer.MaximumSize = new Size(700, 68);
+            lblAnswer.MinimumSize = new Size(675, 34);
             lblAnswer.Name = "lblAnswer";
-            lblAnswer.Size = new Size(635, 34);
+            lblAnswer.Size = new Size(675, 34);
             lblAnswer.TabIndex = 22;
             lblAnswer.Click += lblAnswer_Click;
             // 
@@ -293,7 +292,7 @@ namespace QUIZ_client_1
             lbAnswers.Location = new Point(8, 72);
             lbAnswers.MinimumSize = new Size(500, 184);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(721, 184);
+            lbAnswers.Size = new Size(675, 184);
             lbAnswers.TabIndex = 21;
             lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
             // 
@@ -303,15 +302,16 @@ namespace QUIZ_client_1
             lblQuestion.BackColor = Color.Ivory;
             lblQuestion.Font = new Font("Times New Roman", 12F);
             lblQuestion.Location = new Point(0, 0);
-            lblQuestion.MinimumSize = new Size(635, 30);
+            lblQuestion.MinimumSize = new Size(500, 30);
             lblQuestion.Name = "lblQuestion";
-            lblQuestion.Size = new Size(771, 30);
+            lblQuestion.Size = new Size(675, 30);
             lblQuestion.TabIndex = 20;
+            lblQuestion.Click += lblQuestion_Click;
             // 
             // panelPicture
             // 
             panelPicture.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelPicture.BackColor = Color.LemonChiffon;
+            panelPicture.BackColor = Color.Transparent;
             panelPicture.Controls.Add(checkBox1);
             panelPicture.Controls.Add(lbMessages);
             panelPicture.Location = new Point(973, 191);

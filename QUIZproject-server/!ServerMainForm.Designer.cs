@@ -51,7 +51,7 @@ namespace QUIZproject_server
             // 
             tbIp.Anchor = AnchorStyles.Top;
             tbIp.Font = new Font("Segoe UI", 12F);
-            tbIp.Location = new Point(213, 22);
+            tbIp.Location = new Point(214, 33);
             tbIp.Name = "tbIp";
             tbIp.PlaceholderText = "IP";
             tbIp.Size = new Size(156, 34);
@@ -61,7 +61,7 @@ namespace QUIZproject_server
             // btnConnect
             // 
             btnConnect.Font = new Font("Segoe UI", 12F);
-            btnConnect.Location = new Point(55, 22);
+            btnConnect.Location = new Point(56, 33);
             btnConnect.Name = "btnConnect";
             btnConnect.Size = new Size(94, 34);
             btnConnect.TabIndex = 1;
@@ -73,7 +73,7 @@ namespace QUIZproject_server
             // 
             tbPort.Anchor = AnchorStyles.Top;
             tbPort.Font = new Font("Segoe UI", 12F);
-            tbPort.Location = new Point(409, 22);
+            tbPort.Location = new Point(410, 33);
             tbPort.Name = "tbPort";
             tbPort.PlaceholderText = "port";
             tbPort.Size = new Size(125, 34);
@@ -84,7 +84,7 @@ namespace QUIZproject_server
             // 
             btnEdit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnEdit.Font = new Font("Segoe UI", 12F);
-            btnEdit.Location = new Point(621, 20);
+            btnEdit.Location = new Point(622, 31);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(130, 36);
             btnEdit.TabIndex = 3;
@@ -96,16 +96,16 @@ namespace QUIZproject_server
             // 
             lbClients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbClients.FormattingEnabled = true;
-            lbClients.Location = new Point(49, 103);
+            lbClients.Location = new Point(49, 123);
             lbClients.Name = "lbClients";
-            lbClients.Size = new Size(485, 244);
+            lbClients.Size = new Size(485, 224);
             lbClients.TabIndex = 4;
             // 
             // button1
             // 
             button1.Anchor = AnchorStyles.Right;
             button1.Font = new Font("Segoe UI", 12F);
-            button1.Location = new Point(621, 103);
+            button1.Location = new Point(622, 114);
             button1.Name = "button1";
             button1.Size = new Size(130, 70);
             button1.TabIndex = 5;
@@ -119,7 +119,7 @@ namespace QUIZproject_server
             lbStatus.BackColor = Color.Transparent;
             lbStatus.Font = new Font("Segoe UI", 10F);
             lbStatus.ForeColor = Color.DarkRed;
-            lbStatus.Location = new Point(56, 64);
+            lbStatus.Location = new Point(56, 77);
             lbStatus.Name = "lbStatus";
             lbStatus.Size = new Size(124, 23);
             lbStatus.TabIndex = 6;
@@ -129,7 +129,7 @@ namespace QUIZproject_server
             // 
             btnAdm.Anchor = AnchorStyles.Right;
             btnAdm.Font = new Font("Segoe UI", 12F);
-            btnAdm.Location = new Point(621, 210);
+            btnAdm.Location = new Point(622, 221);
             btnAdm.Name = "btnAdm";
             btnAdm.Size = new Size(130, 36);
             btnAdm.TabIndex = 7;

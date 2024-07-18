@@ -2,6 +2,7 @@
 using Models;
 using System.Windows.Forms;
 using static Utilities.Serializers;
+using static Utilities.Tools;
 
 
 namespace QuizHolder
@@ -10,14 +11,14 @@ namespace QuizHolder
     {
         //дисципліна
         private Subject subj;
-        
+
         // колекції питань
         private List<TQuiz> t_questions = new();
         private List<SQuiz> s_questions = new();
         // файли з питаннями зберігаю в спільному каталозі з exe-файлом
         private readonly string TheoryPath = "Theory.bin";
         private readonly string SolfegioPath = "Solfegio.bin";
-
+        private ToolTip toolTip;
         public List<TQuiz> T_questions
         {
             get { return t_questions; }
@@ -55,6 +56,7 @@ namespace QuizHolder
         public QuizForm()
         {
             InitializeComponent();
+            InitializeToolTips();
             LoadQuizBase(TheoryPath);
             LoadSQuizBase(SolfegioPath);
 
@@ -64,7 +66,11 @@ namespace QuizHolder
             Load_t_questions();
             lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
             lbAnswers.DrawItem += lbAnswers_DrawItem;
+            lbAnswers.MouseMove += new MouseEventHandler(lbAnswers_MouseMove);
+            lbQuestions.MouseMove += new MouseEventHandler(lbQuestions_MouseMove);
         }
+
+        
 
         private void Load_t_questions()
         {
@@ -176,7 +182,7 @@ namespace QuizHolder
         {
             if (w.DialogResult == DialogResult.OK && subj == Subject.Theory)
             {
-                
+
                 var question = new TQuiz(w.Question, w.Answers, w.Correctanswer, w.Picture);
                 T_questions.Add(question);
                 btnSave.Text = "Save*";
@@ -196,9 +202,9 @@ namespace QuizHolder
             {
                 q.Question = w.Question;
                 q.Answers = w.Answers;
-                q.Correctanswer = w.Correctanswer;                
+                q.Correctanswer = w.Correctanswer;
                 btnSave.Text = "Save*";
-                if(w.Picture is not null)
+                if (w.Picture is not null)
                     q.Picture = w.Picture;
 
             }
@@ -298,9 +304,9 @@ namespace QuizHolder
                 btnSave.Text = "Save";
             }
             catch (Exception ex)
-            { 
+            {
                 MessageBox.Show("Error saving file\n" + ex.Message);
-            
+
             }
 
         }
@@ -375,15 +381,15 @@ namespace QuizHolder
             int i = 1;
             if (subj == Subject.Theory)
             {
-                
+
                 var index = lbQuestions.SelectedIndex;
                 pictureBox.Image = T_questions[index].Picture;
-                if(T_questions[index].Answers is not null)
-                foreach (var item in T_questions[index].Answers)
-                {
-                    lbAnswers.Items.Add($"{i}. {item}");
-                    i++;
-                }
+                if (T_questions[index].Answers is not null)
+                    foreach (var item in T_questions[index].Answers)
+                    {
+                        lbAnswers.Items.Add($"{i}. {item}");
+                        i++;
+                    }
                 // ІНДЕКС ПРАВИЛЬНОЇ ВІДПОВІДІ ТУТ
                 DisplayBoldFunc(bold => bold == T_questions[index].Correctanswer - 1);
             }
@@ -467,5 +473,50 @@ namespace QuizHolder
                 fullSizeForm.ShowDialog();
             });
         }
+
+        private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Readtext(sender);
+        }
+
+        private void InitializeToolTips()
+        {
+            toolTip = new ToolTip();
+            toolTip.AutoPopDelay = 5000;
+            toolTip.InitialDelay = 1000;
+            toolTip.ReshowDelay = 500;
+            toolTip.ShowAlways = true;
+        }
+
+        private void lbAnswers_MouseMove(object? sender, MouseEventArgs e)
+        {
+            int index = lbAnswers.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                string toolTipText = $"{lbAnswers.Items[index]}";
+                toolTip.SetToolTip(lbAnswers, toolTipText);
+            }
+            else
+            {
+                toolTip.SetToolTip(lbAnswers, string.Empty);
+            }
+        }
+
+        private void lbQuestions_MouseMove(object? sender, MouseEventArgs e)
+        {
+            int index = lbQuestions.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                string toolTipText = $"{lbQuestions.Items[index]}";
+                toolTip.SetToolTip(lbQuestions, toolTipText);
+            }
+            else
+            {
+                toolTip.SetToolTip(lbQuestions, string.Empty);
+            }
+        }
+
+        
     }
+
 }
