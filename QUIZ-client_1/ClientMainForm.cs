@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using Models;
+using QuizHolder;
 using static Utilities.Serializers;
 //using Utilities;
 /*
@@ -19,6 +20,8 @@ namespace QUIZ_client_1
     public partial class ClientMainForm : Form
     {
         public Subject subj { get; set; }
+
+
         private int port;
         private IPAddress ip;
         private Q_Client client;
@@ -28,10 +31,11 @@ namespace QUIZ_client_1
         private int? selectedanswer;
         private Quiz? current_t_question;
         private SQuiz? current_s_question;
-        private List<Quiz>? t_quiz;
+        private List<TQuiz>? t_quiz;
         private List<SQuiz>? s_quiz;
         private int t_index;
         private int s_index;
+
 
 
         public ClientMainForm()
@@ -41,15 +45,11 @@ namespace QUIZ_client_1
             tbIp.Text = ip.ToString();
             port = 1234;
             tbPort.Text = port.ToString();
-            Ifconnected = false;
-            btnQuiz.Enabled = false;
-            btnProfile.Enabled = false;
-            rb_hm.Checked = true;
-            num.Value = 1;
-            num.Enabled = false;
-            btnPlay.Enabled = false;
             s_index = 0;
             t_index = 0;
+            Ifconnected = false;
+            pictureBox.BringToFront();
+
         }
 
         private void tbPort_TextChanged(object sender, EventArgs e)
@@ -67,6 +67,7 @@ namespace QUIZ_client_1
             await Connect();
             client.Connected += OnClient_Connected;
             client.LoggedIn += OnClient_LoggedIn;
+            client.QuizLoaded += OnQuizLoaded;
             if (Ifconnected == true)
             {
                 //btnQuiz.Enabled = true;//прибрати потім
@@ -76,6 +77,18 @@ namespace QUIZ_client_1
                 else
                     lbStatus.Text = $"connected anonymously";
             }
+        }
+
+        private void OnQuizLoaded(object? sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                if (subj == Subject.Theory && current_t_question is not null)
+                    SetQuizInterface(current_t_question);
+                else if (subj == Subject.Solfegio && current_s_question is not null)
+                    SetQuizInterface(current_s_question);
+
+            });
         }
 
         private void rb_hm_CheckedChanged(object sender, EventArgs e)
@@ -122,11 +135,13 @@ namespace QUIZ_client_1
 
         private void btnQuiz_Click(object sender, EventArgs e)
         {
-
+            lbQ.Text = string.Empty;
             byte[] msg = Encoding.UTF8.GetBytes(subj.ToString());
             client.SendMessage(msg, subj.ToString());
             selectedanswer = null;
-            lbQ.Text = string.Empty;
+            //MessageBox.Show($"current position: t_index={t_index}, s_index={s_index}, t.count={t_quiz?.Count ?? null}, s.count ={s_quiz?.Count ?? null}");
+
+
         }
 
         private void lbAnswers_SelectedIndexChanged(object sender, EventArgs e)
@@ -134,8 +149,8 @@ namespace QUIZ_client_1
             var index = lbAnswers.SelectedIndex;
             selectedanswer = index + 1; // номер відповіді більше за індекс на 1
             try { num.Value = (int)selectedanswer; }
-            catch { MessageBox.Show("Error with Numbering questions"); }
-            lblAnswer.Text = (string)lbAnswers.Items[index];
+            catch { MessageBox.Show($"Error with Numbering questions: selectedanswer = {selectedanswer}"); }
+            Invoke(() => lblAnswer.Text = (string)lbAnswers.Items[index]);
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -149,11 +164,13 @@ namespace QUIZ_client_1
             if (num.Value > 0 && num.Value <= lbAnswers.Items.Count)
             {
                 selectedanswer = (int)num.Value;
-
                 try
                 {
-                    lblAnswer.Text = (string)lbAnswers.Items[(int)num.Value - 1];
-                    lbAnswers.SelectedIndex = (int)num.Value - 1;//індекс менше за номер відповіді
+                    Invoke(() =>
+                    {
+                        lblAnswer.Text = lbAnswers.Items[(int)num.Value - 1].ToString();
+                        lbAnswers.SelectedIndex = (int)num.Value - 1;//індекс менше за номер відповіді
+                    });
                 }
                 catch { MessageBox.Show("index is out of range"); }
             }
@@ -185,7 +202,7 @@ namespace QUIZ_client_1
             }
         }
 
-        private void On_T_questions_Received(object? sender, List<Quiz> e)
+        private void On_T_questions_Received(object? sender, List<TQuiz> e)
         {
             btnPlay.Enabled = false;
             t_quiz = e;
@@ -220,16 +237,21 @@ namespace QUIZ_client_1
 
         private void OnClient_LoggedIn(object? sender, Student e)
         {
+            //MessageBox.Show("OnClient_LoggedIn");
             // ПРИ ЛОГУВАННІ КОРИСТУВАЧА
             try
             {
                 student = e;
-                lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
-                lbStatus.Text = $"Logged as {student.Name} {student.SurName}";
-                btnQuiz.Enabled = true;
                 t_index = e.T_answered;
                 s_index = e.S_answered;
-                lbMessages.Items.Add($"t={t_index}, s={s_index}");
+                Invoke(() =>
+                {
+                    lbMessages.Items.Add($"Logged as {student.Name} {student.SurName}");
+                    lbStatus.Text = $"Logged as {student.Name} {student.SurName}";
+                    btnQuiz.Enabled = true;
+                    lbMessages.Items.Add($"t={t_index}, s={s_index}");
+                    ;
+                });
             }
             catch (Exception ex)
             {
@@ -255,8 +277,9 @@ namespace QUIZ_client_1
             try
             {
                 var msg = SerializeObject(st);
+                client.Relogin += (sender, e) => OnRelogin(sender, st);
                 client.SendMessage(msg);
-                //student = st;
+
             }
             catch (Exception ex)
             {
@@ -264,6 +287,14 @@ namespace QUIZ_client_1
             }
         }
 
+        private void OnRelogin(object? sender, StudentLogin e)
+        {
+            e.Ifnew = false;
+            Login(e);
+            Invoke(() => lbMessages.Items.Add("try to relogin"));
+        }
+
+        // ПРИ ОТРИМАННІ ПИТАНЬ
         private void GetCurrentTQuestions()
         {
             if (t_quiz is null) return;
@@ -288,9 +319,9 @@ namespace QUIZ_client_1
             if (s_quiz.Count > 0 && s_index < s_quiz.Count)
             {
                 current_s_question = s_quiz[s_index];
-                lblQuestion.Text = current_s_question.Question;
                 SetQuizInterface(current_s_question);
-                btnPlay.Enabled = true;
+                Invoke(() => lblQuestion.Text = current_s_question.Question);
+                Invoke(() => btnPlay.Enabled = true);
             }
 
             else if (s_index >= s_quiz.Count)
@@ -303,40 +334,48 @@ namespace QUIZ_client_1
 
         private void SetQuizInterface<T>(T question) where T : Quiz
         {
-
-            num.Enabled = true;
-            num.Minimum = 1;
-            num.Maximum = question.Answers.Count;
-            lblQuestion.Text = question.Question;
-            lblAnswer.Text = string.Empty;
-            //pictureBox.Image = quiestion.Bitmap;
-            lbAnswers.Items.Clear();
-            foreach (var answer in question.Answers)
-                lbAnswers.Items.Add(answer);
-            if (subj == Subject.Theory && t_quiz is not null)
-                lbQ.Text = $"{t_index + 1} question from {t_quiz.Count}";
-            else if (subj == Subject.Solfegio && s_quiz is not null)
-                lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
-            btnSend.Enabled = true;
-            num.Enabled = true;
+            Invoke(() =>
+            {
+                num.Enabled = true;
+                num.Minimum = 1;
+                num.Maximum = question.Answers.Count;
+                lblQuestion.Text = question.Question;
+                lblAnswer.Text = string.Empty;
+                pictureBox.Image = question.Picture;
+                lbAnswers.Items.Clear();
+                foreach (var answer in question.Answers)
+                    lbAnswers.Items.Add(answer);
+                if (subj == Subject.Theory && t_quiz is not null)
+                    lbQ.Text = $"{t_index + 1} question from {t_quiz.Count}";
+                else if (subj == Subject.Solfegio && s_quiz is not null)
+                    lbQ.Text = $"{s_index + 1} question from {s_quiz.Count}";
+                btnSend.Enabled = true;
+                num.Enabled = true;
+            });
 
         }
 
         private void EmptyQuizInterface(string msg)
         {
             EmptyQuizInterface();
-            lblAnswer.Text = msg;
+            Invoke(() => lblAnswer.Text = msg);
         }
 
         private void EmptyQuizInterface()
         {
-            num.Enabled = false;
-            lblAnswer.Text = string.Empty;
-            lbAnswers.Items.Clear();
-            lblQuestion.Text = string.Empty;
-            btnPlay.Enabled = false;
-            btnSend.Enabled = false;
-            lbQ.Text = "No questions are loaded";
+            if (this.IsHandleCreated)//інакше глюк на старті
+            {
+                Invoke(() =>
+            {
+                num.Enabled = false;
+                lblAnswer.Text = string.Empty;
+                lbAnswers.Items.Clear();
+                lblQuestion.Text = string.Empty;
+                btnPlay.Enabled = false;
+                btnSend.Enabled = false;
+                lbQ.Text = "No questions are loaded";
+            });
+            }
         }
 
 
@@ -344,7 +383,7 @@ namespace QUIZ_client_1
         {
             if (student is null || selectedanswer is null)
             {
-                MessageBox.Show("Not ready to send answer");
+                MessageBox.Show($"Not ready to send answer:\n student: {student?.Email ?? null}  answer: {selectedanswer?? null}");
                 return false;
             }
 
@@ -386,33 +425,63 @@ namespace QUIZ_client_1
         }
         private void RefreshQuiz()
         {
-
-            if (subj == Subject.Solfegio && s_quiz is not null
-                && s_quiz.Count > s_index + 1)
+            //MessageBox.Show($"previous position: t={t_index}, s={s_index}, t.count={t_quiz?.Count ?? 0}, s.count ={s_quiz?.Count ?? 0}");
+            if (subj == Subject.Solfegio && s_quiz is not null)
             {
                 s_index++;
-                current_s_question = s_quiz[s_index];
-                SetQuizInterface(current_s_question);
+                if (s_quiz.Count > s_index)
+                {
+                    current_s_question = s_quiz[s_index];
+                    SetQuizInterface(current_s_question);
+                }
+                else
+                {
+                    EmptyQuizInterface();
+                    lbQ.Text = "Congratulations! Quiz is done!";
+                }
             }
-            else if (subj == Subject.Theory && t_quiz is not null
-                && t_quiz.Count > t_index + 1)
+            else if (subj == Subject.Theory && t_quiz is not null)
             {
                 t_index++;
-                current_t_question = t_quiz[t_index];
-                SetQuizInterface(current_t_question);
+                if (t_quiz.Count > t_index)
+                {
+                    current_t_question = t_quiz[t_index];
+                    SetQuizInterface(current_t_question);
+                }
+                else
+                {
+                    EmptyQuizInterface();
+                    lbQ.Text = "Congratulations! Quiz is done!";
+                }
             }
-            else if ((t_quiz is not null && t_quiz.Count <= t_index + 1) || (s_quiz is not null && s_quiz.Count <= s_index + 1))
+            else
             {
-                EmptyQuizInterface();
-                lbQ.Text = "Congratulations! Quiz is done!";
+                MessageBox.Show($"Results Error\n: subj = {subj}, t_index = {t_index}, s_index = {s_index}, t_count={t_quiz?.Count ?? null}, s_count={s_quiz?.Count ?? null}  ");
             }
+
 
             selectedanswer = null;
         }
 
-        private void lblAnswer_Click(object sender, EventArgs e)
+        private void lblAnswer_Click(object sender, EventArgs e)        
         {
+            if (string.IsNullOrEmpty(lblAnswer.Text)) return;
+            Task.Run(() =>
+            {
+                string fullAnswer = lblAnswer.Text;                
+                Form answerForm = new Form();
+                answerForm.Text = "Повний текст";
+                answerForm.Size = new Size(800, 600);              
 
+                Label lblFullAnswer = new Label();
+                lblFullAnswer.Dock = DockStyle.Fill;
+                lblFullAnswer.Font = new Font("Segoe UI", 12F);
+                lblFullAnswer.Text = fullAnswer;
+                lblFullAnswer.TextAlign = ContentAlignment.MiddleCenter;
+                lblFullAnswer.AutoSize = false;                                
+                answerForm.Controls.Add(lblFullAnswer);
+                answerForm.ShowDialog();
+            });
         }
 
 
@@ -451,6 +520,36 @@ namespace QUIZ_client_1
                 fullSizeForm.Controls.Add(fullSizePictureBox);
                 fullSizeForm.ShowDialog();
             });
+        
+         
+
+        
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            lbMessages.Visible = !checkBox1.Checked;            
+            if (lbMessages.Visible)
+            {              
+                
+                pictureBox.Parent = panelQuiz;                
+                pictureBox.Size = picpointer.Size;
+                pictureBox.Location = picpointer.Location;
+                picpointer.SendToBack();
+                pictureBox.BringToFront();                
+                lblAnswer.MaximumSize = new Size(lbAnswers.Width, 48);
+                lblQuestion.MaximumSize = new Size(lbAnswers.Width, 48);
+            }
+            else
+            {                
+                pictureBox.Parent = panelPicture;                
+                pictureBox.Size = panelPicture.Size;
+                pictureBox.Location = new Point(0, 0);
+                lblAnswer.MaximumSize = new Size(panel1.Width, 48);
+                lblQuestion.MaximumSize = new Size(lbAnswers.Width, 48);
+                //lbAnswers.Size = new Size(804, 184);
+
+            }
+        }
+    }
 }

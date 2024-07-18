@@ -1,4 +1,5 @@
-﻿
+﻿using Utilities;
+
 namespace QuizHolder
 {
     partial class EditQuestionForm
@@ -57,7 +58,9 @@ namespace QuizHolder
             // 
             // tbQuestion
             // 
+            tbQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbQuestion.Location = new Point(54, 19);
+            tbQuestion.Multiline = true;
             tbQuestion.Name = "tbQuestion";
             tbQuestion.PlaceholderText = "Question";
             tbQuestion.Size = new Size(507, 27);
@@ -66,14 +69,18 @@ namespace QuizHolder
             // 
             // tbCorrectAnswer
             // 
+            tbCorrectAnswer.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tbCorrectAnswer.Location = new Point(54, 384);
+            tbCorrectAnswer.MaximumSize = new Size(629, 81);
+            tbCorrectAnswer.MinimumSize = new Size(629, 27);
             tbCorrectAnswer.Name = "tbCorrectAnswer";
             tbCorrectAnswer.PlaceholderText = "Correct Answer";
             tbCorrectAnswer.Size = new Size(629, 27);
-            tbCorrectAnswer.TabIndex = 1;
+            tbCorrectAnswer.TabIndex = 11;
             // 
             // lbAnswers
             // 
+            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbAnswers.FormattingEnabled = true;
             lbAnswers.Location = new Point(54, 124);
             lbAnswers.Name = "lbAnswers";
@@ -83,6 +90,7 @@ namespace QuizHolder
             // 
             // btnAdd
             // 
+            btnAdd.Anchor = AnchorStyles.Bottom;
             btnAdd.Font = new Font("Segoe UI", 11F);
             btnAdd.Location = new Point(164, 284);
             btnAdd.Name = "btnAdd";
@@ -94,6 +102,7 @@ namespace QuizHolder
             // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.Bottom;
             btnDelete.Font = new Font("Segoe UI", 11F);
             btnDelete.Location = new Point(390, 284);
             btnDelete.Name = "btnDelete";
@@ -105,6 +114,7 @@ namespace QuizHolder
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.BackColor = Color.FromArgb(202, 255, 212);
             panel1.Controls.Add(btnPlay);
             panel1.Controls.Add(cb5);
@@ -174,8 +184,9 @@ namespace QuizHolder
             // 
             // btnSave
             // 
+            btnSave.Anchor = AnchorStyles.Bottom;
             btnSave.Font = new Font("Segoe UI", 12F);
-            btnSave.Location = new Point(164, 421);
+            btnSave.Location = new Point(164, 477);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(150, 45);
             btnSave.TabIndex = 6;
@@ -185,8 +196,9 @@ namespace QuizHolder
             // 
             // btnCancel
             // 
+            btnCancel.Anchor = AnchorStyles.Bottom;
             btnCancel.Font = new Font("Segoe UI", 12F);
-            btnCancel.Location = new Point(390, 422);
+            btnCancel.Location = new Point(390, 478);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(150, 45);
             btnCancel.TabIndex = 7;
@@ -196,14 +208,16 @@ namespace QuizHolder
             // 
             // num
             // 
+            num.Anchor = AnchorStyles.Bottom;
             num.Location = new Point(390, 339);
             num.Name = "num";
             num.Size = new Size(94, 27);
-            num.TabIndex = 8;
+            num.TabIndex = 5;
             num.ValueChanged += numericUpDown1_ValueChanged;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Location = new Point(181, 346);
@@ -220,23 +234,25 @@ namespace QuizHolder
             image.TabIndex = 0;
             image.TabStop = false;
             // 
-            // pictureBox1
+            // pictureBox
             // 
+            pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.Location = new Point(582, 124);
             pictureBox.Name = "pictureBox";
             pictureBox.Size = new Size(101, 144);
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 10;
             pictureBox.TabStop = false;
-            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.Click += pictureBox1_Click;
             // 
             // btnImage
             // 
+            btnImage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnImage.Location = new Point(574, 17);
             btnImage.Name = "btnImage";
             btnImage.Size = new Size(94, 29);
-            btnImage.TabIndex = 11;
+            btnImage.TabIndex = 1;
             btnImage.Text = "Image";
             btnImage.UseVisualStyleBackColor = true;
             btnImage.Click += btnImage_Click;
@@ -247,7 +263,7 @@ namespace QuizHolder
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(755, 534);
+            ClientSize = new Size(755, 529);
             Controls.Add(btnImage);
             Controls.Add(pictureBox);
             Controls.Add(label1);

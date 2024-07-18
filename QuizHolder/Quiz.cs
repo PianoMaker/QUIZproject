@@ -1,14 +1,21 @@
-﻿namespace QuizHolder
-{    
+﻿using System.Runtime.Serialization;
+
+namespace QuizHolder
+{
+    [DataContract]
     public class Quiz
     {
-        private string question;
+        [DataMember]
+        public string Question { get; set; }
 
+        [DataMember]
         private List<string> answers;
-
+        
+        [DataMember]
         public int? Studentanswer { get; set; }
- 
-        public Image? Picture { get; set; }
+        
+        [DataMember]        
+        public Bitmap Picture { get; set; }
         public Quiz() { }
 
         public Quiz(string question, List<string> answers)
@@ -17,14 +24,14 @@
             Answers = answers;            
         }
 
-        public Quiz(string question, List<string> answers, Image image)
+        public Quiz(string question, List<string> answers, Bitmap image)
         {
             Question = question;
             Answers = answers;            
             Picture = image;
         }
 
-        public string Question { get => question; set => question = value; }
+        
         public List<string> Answers { get => answers; set => answers = value; }        
 
 

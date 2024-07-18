@@ -22,9 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QUIZ_server", "QUIZproject-server\QUIZ_server.csproj", "{62A02E04-17CC-4189-AA83-3E6996304EF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilitiies", "Utilities\Utilitiies\Utilitiies.csproj", "{85D56F16-EA86-4EB7-AB7A-01DDBFD205BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilitiies\Utilities.csproj", "{85D56F16-EA86-4EB7-AB7A-01DDBFD205BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizHolder", "QuizHolder\QuizHolder.csproj", "{E316D18B-4F9C-44CF-8084-A6905C112CC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizHolder", "QuizHolder\QuizHolder.csproj", "{E316D18B-4F9C-44CF-8084-A6905C112CC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

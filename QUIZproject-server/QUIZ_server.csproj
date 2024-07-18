@@ -9,6 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EditQuestionForm.cs" />
+    <Compile Remove="EditQuestionForm.Designer.cs" />
+    <Compile Remove="QuizForm.cs" />
+    <Compile Remove="QuizForm.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="EditQuestionForm.resx" />
+    <EmbeddedResource Remove="QuizForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
   </ItemGroup>
 
@@ -16,7 +28,8 @@
     <ProjectReference Include="..\DataBase\DataBase.csproj" />
     <ProjectReference Include="..\DbLayer\DbLayer.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Utilities\Utilitiies\Utilitiies.csproj" />
+    <ProjectReference Include="..\QuizHolder\QuizHolder.csproj" />
+    <ProjectReference Include="..\Utilities\Utilitiies\Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

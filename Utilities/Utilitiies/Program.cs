@@ -1,4 +1,4 @@
-namespace Utilitiies
+namespace Utilities
 {
     internal static class Program
     {

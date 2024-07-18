@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using System.Runtime.Serialization;
 
 namespace QuizHolder
 {
@@ -7,6 +8,8 @@ namespace QuizHolder
     public class SQuiz : TQuiz
     {
         readonly int camerton = 220; // hz
+        
+    [DataMember]
     public List<int> Pitches { get; set; }
     private List<WaveOutEvent> woe = new();
     private List<SignalGenerator> sg = new();

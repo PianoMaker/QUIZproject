@@ -7,6 +7,8 @@ namespace Models
     {
         [DataMember]
         public bool Ifnew { get; set; }
+
+        public StudentLogin() { }
         public StudentLogin(Student student, bool ifnew)  
         {
             Ifnew = ifnew;            

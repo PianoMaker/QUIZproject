@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-
+using System;
 namespace QuizHolder
 {
     partial class QuizForm
@@ -52,23 +52,26 @@ namespace QuizHolder
             // 
             // lbQuestions
             // 
+            lbQuestions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             lbQuestions.FormattingEnabled = true;
             lbQuestions.Location = new Point(46, 106);
             lbQuestions.Name = "lbQuestions";
             lbQuestions.Size = new Size(485, 324);
-            lbQuestions.TabIndex = 0;
+            lbQuestions.TabIndex = 6;
             lbQuestions.SelectedIndexChanged += lbQuestions_SelectedIndexChanged;
             // 
             // lbAnswers
             // 
+            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             lbAnswers.FormattingEnabled = true;
             lbAnswers.Location = new Point(710, 106);
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(275, 144);
-            lbAnswers.TabIndex = 1;
+            lbAnswers.TabIndex = 9;
             // 
             // btnAdd
             // 
+            btnAdd.Anchor = AnchorStyles.Bottom;
             btnAdd.Font = new Font("Segoe UI", 11F);
             btnAdd.Location = new Point(574, 289);
             btnAdd.Name = "btnAdd";
@@ -80,6 +83,7 @@ namespace QuizHolder
             // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.Bottom;
             btnDelete.Font = new Font("Segoe UI", 11F);
             btnDelete.Location = new Point(572, 345);
             btnDelete.Name = "btnDelete";
@@ -91,6 +95,7 @@ namespace QuizHolder
             // 
             // btnEdit
             // 
+            btnEdit.Anchor = AnchorStyles.Bottom;
             btnEdit.Font = new Font("Segoe UI", 11F);
             btnEdit.Location = new Point(739, 288);
             btnEdit.Name = "btnEdit";
@@ -112,13 +117,14 @@ namespace QuizHolder
             // 
             // rbT
             // 
+            rbT.Anchor = AnchorStyles.Top;
             rbT.AutoSize = true;
             rbT.BackColor = Color.Transparent;
             rbT.Font = new Font("Segoe UI", 12F);
             rbT.Location = new Point(330, 23);
             rbT.Name = "rbT";
             rbT.Size = new Size(92, 32);
-            rbT.TabIndex = 6;
+            rbT.TabIndex = 0;
             rbT.TabStop = true;
             rbT.Text = "Теорія";
             rbT.UseVisualStyleBackColor = false;
@@ -126,13 +132,14 @@ namespace QuizHolder
             // 
             // rbS
             // 
+            rbS.Anchor = AnchorStyles.Top;
             rbS.AutoSize = true;
             rbS.BackColor = Color.Transparent;
             rbS.Font = new Font("Segoe UI", 12F);
             rbS.Location = new Point(506, 23);
             rbS.Name = "rbS";
             rbS.Size = new Size(145, 32);
-            rbS.TabIndex = 7;
+            rbS.TabIndex = 1;
             rbS.TabStop = true;
             rbS.Text = "Сольфеджіо";
             rbS.UseVisualStyleBackColor = false;
@@ -172,28 +179,31 @@ namespace QuizHolder
             btnSave.Location = new Point(739, 345);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(94, 40);
-            btnSave.TabIndex = 9;
+            btnSave.TabIndex = 5;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Click += btnSave_Click;
             // 
             // btnPlay
             // 
+            btnPlay.Anchor = AnchorStyles.Top;
             btnPlay.Font = new Font("Segoe UI", 12F);
             btnPlay.Location = new Point(574, 106);
             btnPlay.Name = "btnPlay";
             btnPlay.Size = new Size(94, 40);
-            btnPlay.TabIndex = 11;
+            btnPlay.TabIndex = 7;
             btnPlay.Text = "PLAY";
             btnPlay.UseVisualStyleBackColor = true;
             btnPlay.Click += btnPlay_Click;
             // 
             // pictureBox
             // 
+            pictureBox.Anchor = AnchorStyles.None;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.Location = new Point(574, 170);
             pictureBox.Name = "pictureBox";
             pictureBox.Size = new Size(94, 80);
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 12;
             pictureBox.TabStop = false;
             pictureBox.Click += pictureBox_Click;

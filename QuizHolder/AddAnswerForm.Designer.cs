@@ -37,6 +37,7 @@
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Font = new Font("Times New Roman", 11F);
             textBox1.Location = new Point(61, 84);
             textBox1.Name = "textBox1";

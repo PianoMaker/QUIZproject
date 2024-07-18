@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
-
-namespace QUIZproject_server
+using System;
+namespace QuizHolder
 {
     partial class QuizForm
     {
@@ -46,6 +46,8 @@ namespace QUIZproject_server
             closeToolStripMenuItem = new ToolStripMenuItem();
             btnSave = new Button();
             btnPlay = new Button();
+            pictureBox = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // lbQuestions
@@ -60,9 +62,9 @@ namespace QUIZproject_server
             // lbAnswers
             // 
             lbAnswers.FormattingEnabled = true;
-            lbAnswers.Location = new Point(675, 106);
+            lbAnswers.Location = new Point(710, 106);
             lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(295, 144);
+            lbAnswers.Size = new Size(275, 144);
             lbAnswers.TabIndex = 1;
             // 
             // btnAdd
@@ -108,9 +110,10 @@ namespace QUIZproject_server
             lblQ.Size = new Size(0, 25);
             lblQ.TabIndex = 5;
             // 
-            // rbMH
+            // rbT
             // 
             rbT.AutoSize = true;
+            rbT.BackColor = Color.Transparent;
             rbT.Font = new Font("Segoe UI", 12F);
             rbT.Location = new Point(330, 23);
             rbT.Name = "rbT";
@@ -118,12 +121,13 @@ namespace QUIZproject_server
             rbT.TabIndex = 6;
             rbT.TabStop = true;
             rbT.Text = "Теорія";
-            rbT.UseVisualStyleBackColor = true;
+            rbT.UseVisualStyleBackColor = false;
             rbT.CheckedChanged += rbT_CheckedChanged;
             // 
             // rbS
             // 
             rbS.AutoSize = true;
+            rbS.BackColor = Color.Transparent;
             rbS.Font = new Font("Segoe UI", 12F);
             rbS.Location = new Point(506, 23);
             rbS.Name = "rbS";
@@ -131,7 +135,7 @@ namespace QUIZproject_server
             rbS.TabIndex = 7;
             rbS.TabStop = true;
             rbS.Text = "Сольфеджіо";
-            rbS.UseVisualStyleBackColor = true;
+            rbS.UseVisualStyleBackColor = false;
             rbS.CheckedChanged += rbS_CheckedChanged;
             // 
             // menuStrip1
@@ -139,7 +143,7 @@ namespace QUIZproject_server
             menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1014, 24);
+            menuStrip1.Size = new Size(1043, 24);
             menuStrip1.TabIndex = 10;
             // 
             // fileToolStripMenuItem
@@ -176,20 +180,31 @@ namespace QUIZproject_server
             // btnPlay
             // 
             btnPlay.Font = new Font("Segoe UI", 12F);
-            btnPlay.Location = new Point(572, 125);
+            btnPlay.Location = new Point(574, 106);
             btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(79, 58);
+            btnPlay.Size = new Size(94, 40);
             btnPlay.TabIndex = 11;
             btnPlay.Text = "PLAY";
             btnPlay.UseVisualStyleBackColor = true;
             btnPlay.Click += btnPlay_Click;
+            // 
+            // pictureBox
+            // 
+            pictureBox.BackColor = Color.Transparent;
+            pictureBox.Location = new Point(574, 170);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(94, 80);
+            pictureBox.TabIndex = 12;
+            pictureBox.TabStop = false;
+            pictureBox.Click += pictureBox_Click;
             // 
             // QuizForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(1014, 450);
+            ClientSize = new Size(1043, 450);
+            Controls.Add(pictureBox);
             Controls.Add(btnPlay);
             Controls.Add(btnSave);
             Controls.Add(rbS);
@@ -204,6 +219,7 @@ namespace QUIZproject_server
             MainMenuStrip = menuStrip1;
             Name = "QuizForm";
             Text = "QuizForm";
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -227,5 +243,6 @@ namespace QUIZproject_server
         private ToolStripMenuItem closeToolStripMenuItem;
         private Button btnSave;
         private Button btnPlay;
+        private PictureBox pictureBox;
     }
 }

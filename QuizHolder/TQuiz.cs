@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace QuizHolder
 {
     public class TQuiz : Quiz
     {
+        [DataMember]
         public int Correctanswer { get; set; }
 
         public TQuiz() { }
@@ -19,7 +21,7 @@ namespace QuizHolder
             Answers = answers;
             Correctanswer = correctanswer;
         }
-        public TQuiz(string question, List<string> answers, int correctanswer, Image image) :
+        public TQuiz(string question, List<string> answers, int correctanswer, Bitmap image) :
             base(question, answers, image)
         {
             Question = question;

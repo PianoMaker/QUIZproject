@@ -35,23 +35,29 @@ namespace QUIZ_client_1
             btnConnect = new Button();
             btnSend = new Button();
             lbStatus = new Label();
-            lbMessages = new ListBox();
             rb_hm = new RadioButton();
             rb_s = new RadioButton();
             panel1 = new Panel();
             label1 = new Label();
             btnProfile = new Button();
             btnQuiz = new Button();
-            lblQuestion = new Label();
-            lbAnswers = new ListBox();
-            lblAnswer = new Label();
-            num = new NumericUpDown();
-            btnPlay = new Button();
             lbQ = new Label();
+            panelQuiz = new Panel();
+            picpointer = new Label();
             pictureBox = new PictureBox();
+            btnPlay = new Button();
+            num = new NumericUpDown();
+            lblAnswer = new Label();
+            lbAnswers = new ListBox();
+            lblQuestion = new Label();
+            panelPicture = new Panel();
+            checkBox1 = new CheckBox();
+            lbMessages = new ListBox();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)num).BeginInit();
+            panelQuiz.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)num).BeginInit();
+            panelPicture.SuspendLayout();
             SuspendLayout();
             // 
             // tbIp
@@ -76,10 +82,11 @@ namespace QUIZ_client_1
             // 
             // btnConnect
             // 
+            btnConnect.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnConnect.Font = new Font("Segoe UI", 12F);
-            btnConnect.Location = new Point(742, 18);
+            btnConnect.Location = new Point(973, 18);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(150, 48);
+            btnConnect.Size = new Size(208, 48);
             btnConnect.TabIndex = 2;
             btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
@@ -87,8 +94,9 @@ namespace QUIZ_client_1
             // 
             // btnSend
             // 
+            btnSend.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnSend.Font = new Font("Segoe UI", 14F);
-            btnSend.Location = new Point(358, 506);
+            btnSend.Location = new Point(554, 586);
             btnSend.Name = "btnSend";
             btnSend.Size = new Size(333, 48);
             btnSend.TabIndex = 8;
@@ -106,22 +114,15 @@ namespace QUIZ_client_1
             lbStatus.TabIndex = 9;
             lbStatus.Text = "not connected";
             // 
-            // lbMessages
-            // 
-            lbMessages.FormattingEnabled = true;
-            lbMessages.HorizontalScrollbar = true;
-            lbMessages.Location = new Point(742, 184);
-            lbMessages.Name = "lbMessages";
-            lbMessages.Size = new Size(208, 364);
-            lbMessages.TabIndex = 10;
-            // 
             // rb_hm
             // 
+            rb_hm.Anchor = AnchorStyles.Top;
             rb_hm.BackColor = Color.Transparent;
+            rb_hm.Checked = true;
             rb_hm.Font = new Font("Times New Roman", 12F);
-            rb_hm.Location = new Point(226, 10);
+            rb_hm.Location = new Point(246, 10);
             rb_hm.Name = "rb_hm";
-            rb_hm.Size = new Size(166, 32);
+            rb_hm.Size = new Size(89, 32);
             rb_hm.TabIndex = 12;
             rb_hm.TabStop = true;
             rb_hm.Text = "Теорія";
@@ -130,11 +131,12 @@ namespace QUIZ_client_1
             // 
             // rb_s
             // 
+            rb_s.Anchor = AnchorStyles.Top;
             rb_s.BackColor = Color.Transparent;
             rb_s.Font = new Font("Times New Roman", 12F);
-            rb_s.Location = new Point(392, 13);
+            rb_s.Location = new Point(427, 13);
             rb_s.Name = "rb_s";
-            rb_s.Size = new Size(210, 26);
+            rb_s.Size = new Size(144, 26);
             rb_s.TabIndex = 13;
             rb_s.TabStop = true;
             rb_s.Text = "Сольфеджіо";
@@ -142,6 +144,7 @@ namespace QUIZ_client_1
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.BackColor = Color.LemonChiffon;
             panel1.Controls.Add(label1);
             panel1.Controls.Add(rb_hm);
@@ -149,11 +152,12 @@ namespace QUIZ_client_1
             panel1.Location = new Point(83, 119);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(5);
-            panel1.Size = new Size(608, 61);
+            panel1.Size = new Size(804, 61);
             panel1.TabIndex = 14;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI", 12F);
@@ -165,8 +169,10 @@ namespace QUIZ_client_1
             // 
             // btnProfile
             // 
+            btnProfile.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnProfile.Enabled = false;
             btnProfile.Font = new Font("Segoe UI", 12F);
-            btnProfile.Location = new Point(487, 18);
+            btnProfile.Location = new Point(719, 18);
             btnProfile.Name = "btnProfile";
             btnProfile.Size = new Size(168, 48);
             btnProfile.TabIndex = 15;
@@ -176,8 +182,10 @@ namespace QUIZ_client_1
             // 
             // btnQuiz
             // 
+            btnQuiz.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnQuiz.Enabled = false;
             btnQuiz.Font = new Font("Segoe UI", 12F);
-            btnQuiz.Location = new Point(742, 119);
+            btnQuiz.Location = new Point(973, 113);
             btnQuiz.Name = "btnQuiz";
             btnQuiz.Size = new Size(208, 48);
             btnQuiz.TabIndex = 16;
@@ -185,75 +193,156 @@ namespace QUIZ_client_1
             btnQuiz.UseVisualStyleBackColor = true;
             btnQuiz.Click += btnQuiz_Click;
             // 
-            // lblQuestion
-            // 
-            lblQuestion.BackColor = Color.Ivory;
-            lblQuestion.Font = new Font("Times New Roman", 12F);
-            lblQuestion.Location = new Point(83, 198);
-            lblQuestion.Name = "lblQuestion";
-            lblQuestion.Size = new Size(508, 40);
-            lblQuestion.TabIndex = 17;
-            // 
-            // lbAnswers
-            // 
-            lbAnswers.Font = new Font("Times New Roman", 11F);
-            lbAnswers.FormattingEnabled = true;
-            lbAnswers.Location = new Point(83, 260);
-            lbAnswers.Name = "lbAnswers";
-            lbAnswers.Size = new Size(484, 164);
-            lbAnswers.TabIndex = 18;
-            lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
-            // 
-            // lblAnswer
-            // 
-            lblAnswer.BackColor = Color.Ivory;
-            lblAnswer.Font = new Font("Times New Roman", 12F);
-            lblAnswer.Location = new Point(83, 447);
-            lblAnswer.Name = "lblAnswer";
-            lblAnswer.Size = new Size(484, 40);
-            lblAnswer.TabIndex = 19;
-            lblAnswer.Click += lblAnswer_Click;
-            // 
-            // num
-            // 
-            num.Font = new Font("Segoe UI", 12F);
-            num.Location = new Point(598, 453);
-            num.Name = "num";
-            num.Size = new Size(93, 34);
-            num.TabIndex = 20;
-            num.ValueChanged += num_ValueChanged;
-            // 
-            // btnPlay
-            // 
-            btnPlay.Font = new Font("Segoe UI", 12F);
-            btnPlay.Location = new Point(575, 198);
-            btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(116, 40);
-            btnPlay.TabIndex = 21;
-            btnPlay.Text = "Play";
-            btnPlay.UseVisualStyleBackColor = true;
-            btnPlay.Click += btnPlay_Click;
-            // 
             // lbQ
             // 
+            lbQ.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lbQ.AutoSize = true;
             lbQ.BackColor = Color.Transparent;
             lbQ.Font = new Font("Segoe UI", 11F);
-            lbQ.Location = new Point(88, 510);
+            lbQ.Location = new Point(83, 609);
             lbQ.Name = "lbQ";
             lbQ.Size = new Size(218, 25);
             lbQ.TabIndex = 22;
             lbQ.Text = "No questions are loaded";
             // 
+            // panelQuiz
+            // 
+            panelQuiz.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelQuiz.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panelQuiz.BackColor = Color.Transparent;
+            panelQuiz.Controls.Add(picpointer);
+            panelQuiz.Controls.Add(pictureBox);
+            panelQuiz.Controls.Add(btnPlay);
+            panelQuiz.Controls.Add(num);
+            panelQuiz.Controls.Add(lblAnswer);
+            panelQuiz.Controls.Add(lbAnswers);
+            panelQuiz.Controls.Add(lblQuestion);
+            panelQuiz.Location = new Point(85, 202);
+            panelQuiz.MaximumSize = new Size(900, 1000);
+            panelQuiz.Name = "panelQuiz";
+            panelQuiz.Size = new Size(870, 387);
+            panelQuiz.TabIndex = 25;
+            // 
+            // picpointer
+            // 
+            picpointer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            picpointer.BackColor = Color.Transparent;
+            picpointer.Location = new Point(730, 72);
+            picpointer.Name = "picpointer";
+            picpointer.Size = new Size(200, 178);
+            picpointer.TabIndex = 27;
+            // 
             // pictureBox
             // 
+            pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox.BackColor = Color.Transparent;
-            pictureBox.Location = new Point(584, 260);
+            pictureBox.BackgroundImageLayout = ImageLayout.None;
+            pictureBox.Location = new Point(730, 72);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(107, 164);
-            pictureBox.TabIndex = 23;
+            pictureBox.Size = new Size(145, 184);
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox.TabIndex = 26;
             pictureBox.TabStop = false;
             pictureBox.Click += pictureBox_Click;
+            
+            // 
+            // btnPlay
+            // 
+            btnPlay.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnPlay.Enabled = false;
+            btnPlay.Font = new Font("Segoe UI", 12F);
+            btnPlay.Location = new Point(754, 0);
+            btnPlay.Name = "btnPlay";
+            btnPlay.Size = new Size(116, 40);
+            btnPlay.TabIndex = 25;
+            btnPlay.Text = "Play";
+            btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.Click += btnPlay_Click;
+            // 
+            // num
+            // 
+            num.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            num.Enabled = false;
+            num.Font = new Font("Segoe UI", 12F);
+            num.Location = new Point(751, 277);
+            num.Name = "num";
+            num.Size = new Size(93, 34);
+            num.TabIndex = 24;
+            num.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            num.ValueChanged += num_ValueChanged;
+            // 
+            // lblAnswer
+            // 
+            lblAnswer.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lblAnswer.AutoSize = true;
+            lblAnswer.BackColor = Color.Ivory;
+            lblAnswer.Font = new Font("Times New Roman", 12F);
+            lblAnswer.Location = new Point(0, 277);
+            lblAnswer.MaximumSize = new Size(635, 48);
+            lblAnswer.MinimumSize = new Size(635, 34);
+            lblAnswer.Name = "lblAnswer";
+            lblAnswer.Size = new Size(635, 34);
+            lblAnswer.TabIndex = 22;
+            lblAnswer.Click += lblAnswer_Click;
+            // 
+            // lbAnswers
+            // 
+            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbAnswers.Font = new Font("Times New Roman", 11F);
+            lbAnswers.FormattingEnabled = true;
+            lbAnswers.Location = new Point(8, 72);
+            lbAnswers.MinimumSize = new Size(500, 184);
+            lbAnswers.Name = "lbAnswers";
+            lbAnswers.Size = new Size(721, 184);
+            lbAnswers.TabIndex = 21;
+            lbAnswers.SelectedIndexChanged += lbAnswers_SelectedIndexChanged;
+            // 
+            // lblQuestion
+            // 
+            lblQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblQuestion.BackColor = Color.Ivory;
+            lblQuestion.Font = new Font("Times New Roman", 12F);
+            lblQuestion.Location = new Point(0, 0);
+            lblQuestion.MinimumSize = new Size(635, 30);
+            lblQuestion.Name = "lblQuestion";
+            lblQuestion.Size = new Size(771, 30);
+            lblQuestion.TabIndex = 20;
+            // 
+            // panelPicture
+            // 
+            panelPicture.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelPicture.BackColor = Color.LemonChiffon;
+            panelPicture.Controls.Add(checkBox1);
+            panelPicture.Controls.Add(lbMessages);
+            panelPicture.Location = new Point(973, 191);
+            panelPicture.MaximumSize = new Size(580, 800);
+            panelPicture.Name = "panelPicture";
+            panelPicture.Size = new Size(259, 443);
+            panelPicture.TabIndex = 26;
+            // 
+            // checkBox1
+            // 
+            checkBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            checkBox1.BackColor = Color.LemonChiffon;
+            checkBox1.Location = new Point(0, 390);
+            checkBox1.MaximumSize = new Size(0, 40);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(259, 40);
+            checkBox1.TabIndex = 26;
+            checkBox1.Text = "BigPicture mode";
+            checkBox1.UseVisualStyleBackColor = false;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
+            // lbMessages
+            // 
+            lbMessages.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbMessages.FormattingEnabled = true;
+            lbMessages.HorizontalScrollbar = true;
+            lbMessages.Location = new Point(0, 0);
+            lbMessages.MaximumSize = new Size(1000, 600);
+            lbMessages.Name = "lbMessages";
+            lbMessages.Size = new Size(259, 384);
+            lbMessages.TabIndex = 25;
             // 
             // ClientMainForm
             // 
@@ -261,17 +350,12 @@ namespace QUIZ_client_1
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(997, 650);
-            Controls.Add(pictureBox);
+            ClientSize = new Size(1262, 673);
+            Controls.Add(panelPicture);
+            Controls.Add(panelQuiz);
             Controls.Add(lbQ);
-            Controls.Add(btnPlay);
-            Controls.Add(num);
-            Controls.Add(lblAnswer);
-            Controls.Add(lbAnswers);
-            Controls.Add(lblQuestion);
             Controls.Add(btnQuiz);
             Controls.Add(btnProfile);
-            Controls.Add(lbMessages);
             Controls.Add(lbStatus);
             Controls.Add(btnSend);
             Controls.Add(btnConnect);
@@ -282,11 +366,15 @@ namespace QUIZ_client_1
             Text = "ClientForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)num).EndInit();
+            panelQuiz.ResumeLayout(false);
+            panelQuiz.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)num).EndInit();
+            panelPicture.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
+
 
 
 
@@ -297,19 +385,23 @@ namespace QUIZ_client_1
         private Button btnConnect;
         private Button btnSend;
         private Label lbStatus;
-        private ListBox lbMessages;
         private RadioButton rb_hm;
         private RadioButton rb_s;
         private Panel panel1;
         private Label label1;
         private Button btnProfile;
         private Button btnQuiz;
-        private Label lblQuestion;
-        private ListBox lbAnswers;
-        private Label lblAnswer;
-        private NumericUpDown num;
-        private Button btnPlay;
         private Label lbQ;
+        private Panel panelQuiz;
+        private Label lblAnswer;
+        private ListBox lbAnswers;
+        private Label lblQuestion;
+        private Panel panelPicture;
+        private CheckBox checkBox1;
+        private ListBox lbMessages;
         private PictureBox pictureBox;
+        private Button btnPlay;
+        private NumericUpDown num;
+        private Label picpointer;
     }
 }

@@ -6,7 +6,7 @@ namespace QuizHolder
 
     public partial class EditQuestionForm : Form
     {
-        public Image? Picture { get; set; }
+        public Bitmap Picture { get; set; }
         public string Question { get; set; }
 
         public List<string> Answers { get; set; }
@@ -271,18 +271,27 @@ namespace QuizHolder
             });
         }
 
+        
         private void btnImage_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            
+            Thread thread = new Thread(() =>
             {
-                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    Picture = Image.FromFile(openFileDialog.FileName);
-                    pictureBox.Image = Picture;
+                    openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        Picture = (Bitmap)Image.FromFile(openFileDialog.FileName);
+                        pictureBox.Image = Picture;
+                    }
                 }
-            }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
         }
     }
 }

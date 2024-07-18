@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using System;
+using Models;
 using System.Windows.Forms;
 using static Utilities.Serializers;
 
@@ -9,7 +10,7 @@ namespace QuizHolder
     {
         //дисципліна
         private Subject subj;
-        //public Bitmap bitmap;
+        
         // колекції питань
         private List<TQuiz> t_questions = new();
         private List<SQuiz> s_questions = new();
@@ -19,7 +20,7 @@ namespace QuizHolder
 
         public List<TQuiz> T_questions
         {
-            get => t_questions;
+            get { return t_questions; }
             set
             {
                 t_questions = value;
@@ -63,28 +64,24 @@ namespace QuizHolder
             Load_t_questions();
             lbAnswers.DrawMode = DrawMode.OwnerDrawFixed;
             lbAnswers.DrawItem += lbAnswers_DrawItem;
-
-
-
-
         }
 
         private void Load_t_questions()
         {
             lbQuestions.Items.Clear();
-            if (t_questions is not null)
+            if (T_questions is not null)
                 foreach (var q in T_questions)
                     lbQuestions.Items.Add(q.Question);
-            else t_questions = new();
+            else T_questions = new();
         }
 
         private void Load_s_questions()
         {
             lbQuestions.Items.Clear();
-            if (s_questions is not null)
+            if (S_questions is not null)
                 foreach (var q in S_questions)
                     lbQuestions.Items.Add(q.Question);
-            else s_questions = new();
+            else S_questions = new();
         }
 
         private void rbS_CheckedChanged(object sender, EventArgs e)
@@ -300,7 +297,11 @@ namespace QuizHolder
                 File.WriteAllBytes(path, SerializeQuizBase());
                 btnSave.Text = "Save";
             }
-            catch { MessageBox.Show("Error saving file"); }
+            catch (Exception ex)
+            { 
+                MessageBox.Show("Error saving file\n" + ex.Message);
+            
+            }
 
         }
 
@@ -377,6 +378,7 @@ namespace QuizHolder
                 
                 var index = lbQuestions.SelectedIndex;
                 pictureBox.Image = T_questions[index].Picture;
+                if(T_questions[index].Answers is not null)
                 foreach (var item in T_questions[index].Answers)
                 {
                     lbAnswers.Items.Add($"{i}. {item}");

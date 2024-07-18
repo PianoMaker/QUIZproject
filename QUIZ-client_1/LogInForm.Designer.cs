@@ -85,6 +85,8 @@
             Controls.Add(tbEmail);
             Controls.Add(btnRegister);
             Controls.Add(btnLogIn);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "LogInForm";
             Text = "LogIn";
             ResumeLayout(false);

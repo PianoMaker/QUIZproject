@@ -49,6 +49,7 @@ namespace QUIZproject_server
             // 
             // tbIp
             // 
+            tbIp.Anchor = AnchorStyles.Top;
             tbIp.Font = new Font("Segoe UI", 12F);
             tbIp.Location = new Point(213, 22);
             tbIp.Name = "tbIp";
@@ -70,6 +71,7 @@ namespace QUIZproject_server
             // 
             // tbPort
             // 
+            tbPort.Anchor = AnchorStyles.Top;
             tbPort.Font = new Font("Segoe UI", 12F);
             tbPort.Location = new Point(409, 22);
             tbPort.Name = "tbPort";
@@ -80,6 +82,7 @@ namespace QUIZproject_server
             // 
             // btnEdit
             // 
+            btnEdit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnEdit.Font = new Font("Segoe UI", 12F);
             btnEdit.Location = new Point(621, 20);
             btnEdit.Name = "btnEdit";
@@ -91,6 +94,7 @@ namespace QUIZproject_server
             // 
             // lbClients
             // 
+            lbClients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbClients.FormattingEnabled = true;
             lbClients.Location = new Point(49, 103);
             lbClients.Name = "lbClients";
@@ -99,6 +103,7 @@ namespace QUIZproject_server
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Right;
             button1.Font = new Font("Segoe UI", 12F);
             button1.Location = new Point(621, 103);
             button1.Name = "button1";
@@ -122,6 +127,7 @@ namespace QUIZproject_server
             // 
             // btnAdm
             // 
+            btnAdm.Anchor = AnchorStyles.Right;
             btnAdm.Font = new Font("Segoe UI", 12F);
             btnAdm.Location = new Point(621, 210);
             btnAdm.Name = "btnAdm";
@@ -133,6 +139,7 @@ namespace QUIZproject_server
             // 
             // lbQ
             // 
+            lbQ.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lbQ.AutoSize = true;
             lbQ.BackColor = Color.Transparent;
             lbQ.Font = new Font("Segoe UI", 11F);
@@ -162,21 +169,21 @@ namespace QUIZproject_server
             // exportQuizToolStripMenuItem
             // 
             exportQuizToolStripMenuItem.Name = "exportQuizToolStripMenuItem";
-            exportQuizToolStripMenuItem.Size = new Size(224, 26);
+            exportQuizToolStripMenuItem.Size = new Size(196, 26);
             exportQuizToolStripMenuItem.Text = "Export Quiz";
             exportQuizToolStripMenuItem.Click += exportQuizToolStripMenuItem_Click;
             // 
             // importQuizToolStripMenuItem
             // 
             importQuizToolStripMenuItem.Name = "importQuizToolStripMenuItem";
-            importQuizToolStripMenuItem.Size = new Size(224, 26);
+            importQuizToolStripMenuItem.Size = new Size(196, 26);
             importQuizToolStripMenuItem.Text = "Import Quiz";
             importQuizToolStripMenuItem.Click += importQuizToolStripMenuItem_Click;
             // 
             // exportStudentsToolStripMenuItem
             // 
             exportStudentsToolStripMenuItem.Name = "exportStudentsToolStripMenuItem";
-            exportStudentsToolStripMenuItem.Size = new Size(224, 26);
+            exportStudentsToolStripMenuItem.Size = new Size(196, 26);
             exportStudentsToolStripMenuItem.Text = "Export Students";
             exportStudentsToolStripMenuItem.Click += exportStudentsToolStripMenuItem_Click;
             // 
