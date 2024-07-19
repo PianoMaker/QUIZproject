@@ -267,7 +267,7 @@ namespace QUIZproject_server
                 }
                 catch
                 {
-                    Message = $"Unsuccesful atempt to register {st.Name} {st.SurName}";
+                    Message = $"Unsuccesful attempt to register {st.Name} {st.SurName}";
                     return "RegisterUnSuccess";                    
                 }
             }

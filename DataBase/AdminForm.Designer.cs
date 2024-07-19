@@ -139,7 +139,7 @@ namespace DataBase
             lbMark.Name = "lbMark";
             lbMark.Size = new Size(88, 20);
             lbMark.TabIndex = 9;
-            lbMark.Text = "Max makr is";
+            lbMark.Text = "Max mark is";
             // 
             // AdminForm
             // 

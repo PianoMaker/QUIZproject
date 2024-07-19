@@ -25,12 +25,12 @@ namespace DataBase
             dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
         }
 
-        public AdminForm(StudentsDbContextFactory factory, int mh_question_count, int s_questions_count)
+        public AdminForm(StudentsDbContextFactory factory, int t_question_count, int s_questions_count)
         {
             InitializeComponent();
             this.factory = factory;
             args = new string[] { };
-            Tquestions = mh_question_count;
+            Tquestions = t_question_count;
             Squestions = s_questions_count;
             MaxMark = 12;
             CheckDataBase();
@@ -55,7 +55,7 @@ namespace DataBase
 
         public void UpdateMarks()
         {
-            MessageBox.Show($"Upd marks, {Tquestions} : {Squestions}");
+            //MessageBox.Show($"Upd marks, {Tquestions} : {Squestions}");
             
             
             using (var db = factory.CreateDbContext(args))
@@ -120,7 +120,7 @@ namespace DataBase
 
 
 
-        private void AddStudent(string name, string surname, string email, string password, int s, int mh)
+        private void AddStudent(string name, string surname, string email, string password, int s, int t)
         {
             using (var db = factory.CreateDbContext(args))
             {
@@ -141,7 +141,7 @@ namespace DataBase
                         Email = email,
                         Password = password,
                         S_mark = s,
-                        T_mark = mh
+                        T_mark = t
                     };
 
                     db.Students.Add(student);
@@ -185,12 +185,12 @@ namespace DataBase
 
                     db.Students.Remove(studentToRemove);
                     db.SaveChanges();
-                    MessageBox.Show("Student removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Student has been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ShowDatabase();
                 }
                 else
                 {
-                    MessageBox.Show("Selected student not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Selected student is not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

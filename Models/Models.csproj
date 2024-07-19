@@ -8,7 +8,10 @@
 
   <ItemGroup>
     <Compile Remove="Quiz.cs" />
+    <Compile Remove="Serializers.cs" />
+    <Compile Remove="ShortAnswer.cs" />
     <Compile Remove="SQuiz.cs" />
+    <Compile Remove="Subject.cs" />
   </ItemGroup>
 
   <ItemGroup>
