@@ -10,7 +10,7 @@ namespace DataBase
 
         private StudentsDbContextFactory factory;
         private string[] args;
-        private int Mhquestions { get; set; }
+        private int Tquestions { get; set; }
         private int Squestions { get; set; }
 
         private int MaxMark {  get; set; }
@@ -30,7 +30,7 @@ namespace DataBase
             InitializeComponent();
             this.factory = factory;
             args = new string[] { };
-            Mhquestions = mh_question_count;
+            Tquestions = mh_question_count;
             Squestions = s_questions_count;
             MaxMark = 12;
             CheckDataBase();
@@ -55,15 +55,19 @@ namespace DataBase
 
         public void UpdateMarks()
         {
-            //MessageBox.Show($"Upd marks, {Mhquestions} : {Squestions}");
+            MessageBox.Show($"Upd marks, {Tquestions} : {Squestions}");
+            
+            
             using (var db = factory.CreateDbContext(args))
             {
                 foreach (var st in db.Students)
                 {
-                    if (st.T_answered == Mhquestions && Mhquestions > 0)
-                        st.T_mark = st.T_correctAnswers * MaxMark / Mhquestions;
+                    if (st.T_answered == Tquestions && Tquestions > 0)
+                        st.T_mark = st.T_correctAnswers * MaxMark / Tquestions;
+                    else st .T_mark = null;
                     if (st.S_answered == Squestions && Squestions > 0)
-                        st.S_mark = st.S_correctAnswers * MaxMark / Squestions;                   
+                        st.S_mark = st.S_correctAnswers * MaxMark / Squestions;
+                    else st.S_mark = null;
                 }
                 db.SaveChanges();
             }

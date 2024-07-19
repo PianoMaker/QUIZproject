@@ -55,8 +55,8 @@ namespace DataBase
             // 
             // dgv
             // 
+            dgv.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgv.Dock = DockStyle.Bottom;
             dgv.Location = new Point(0, 152);
             dgv.Name = "dgv";
             dgv.RowHeadersWidth = 51;
@@ -141,7 +141,7 @@ namespace DataBase
             lbMark.TabIndex = 9;
             lbMark.Text = "Max makr is";
             // 
-            // ENFCodeForm
+            // AdminForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -156,7 +156,7 @@ namespace DataBase
             Controls.Add(btnAdd);
             Controls.Add(dgv);
             Controls.Add(btnCreate);
-            Name = "ENFCodeForm";
+            Name = "AdminForm";
             Text = "ENFcodeForm";
             ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
