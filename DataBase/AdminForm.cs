@@ -10,7 +10,7 @@ namespace DataBase
 
         private StudentsDbContextFactory factory;
         private string[] args;
-        private int Mhquestions { get; set; }
+        private int Tquestions { get; set; }
         private int Squestions { get; set; }
 
         private int MaxMark {  get; set; }
@@ -25,12 +25,12 @@ namespace DataBase
             dgv.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
         }
 
-        public AdminForm(StudentsDbContextFactory factory, int mh_question_count, int s_questions_count)
+        public AdminForm(StudentsDbContextFactory factory, int t_question_count, int s_questions_count)
         {
             InitializeComponent();
             this.factory = factory;
             args = new string[] { };
-            Mhquestions = mh_question_count;
+            Tquestions = t_question_count;
             Squestions = s_questions_count;
             MaxMark = 12;
             CheckDataBase();
@@ -55,15 +55,19 @@ namespace DataBase
 
         public void UpdateMarks()
         {
-            //MessageBox.Show($"Upd marks, {Mhquestions} : {Squestions}");
+            //MessageBox.Show($"Upd marks, {Tquestions} : {Squestions}");
+            
+            
             using (var db = factory.CreateDbContext(args))
             {
                 foreach (var st in db.Students)
                 {
-                    if (st.T_answered == Mhquestions && Mhquestions > 0)
-                        st.T_mark = st.T_correctAnswers * MaxMark / Mhquestions;
+                    if (st.T_answered == Tquestions && Tquestions > 0)
+                        st.T_mark = st.T_correctAnswers * MaxMark / Tquestions;
+                    else st .T_mark = null;
                     if (st.S_answered == Squestions && Squestions > 0)
-                        st.S_mark = st.S_correctAnswers * MaxMark / Squestions;                   
+                        st.S_mark = st.S_correctAnswers * MaxMark / Squestions;
+                    else st.S_mark = null;
                 }
                 db.SaveChanges();
             }
@@ -116,7 +120,7 @@ namespace DataBase
 
 
 
-        private void AddStudent(string name, string surname, string email, string password, int s, int mh)
+        private void AddStudent(string name, string surname, string email, string password, int s, int t)
         {
             using (var db = factory.CreateDbContext(args))
             {
@@ -137,7 +141,7 @@ namespace DataBase
                         Email = email,
                         Password = password,
                         S_mark = s,
-                        T_mark = mh
+                        T_mark = t
                     };
 
                     db.Students.Add(student);
@@ -181,12 +185,12 @@ namespace DataBase
 
                     db.Students.Remove(studentToRemove);
                     db.SaveChanges();
-                    MessageBox.Show("Student removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Student has been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ShowDatabase();
                 }
                 else
                 {
-                    MessageBox.Show("Selected student not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Selected student is not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

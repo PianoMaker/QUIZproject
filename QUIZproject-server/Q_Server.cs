@@ -106,7 +106,7 @@ namespace QUIZproject_server
                         {
                             Message = $"{st.Name} {st.SurName} connected";                            
                             bool ifregistered = CheckIfRegistered(st);
-                            if (ifregistered && st.Ifnew)
+                            if (ifregistered && st.Ifnew) 
                             {
                                 //MessageBox.Show($"registered new {st.Password} : {st.Email} : {st.Ifnew}");
                                 byte[] msg = Encoding.UTF8.GetBytes("AlreadyRegistered");
@@ -116,11 +116,12 @@ namespace QUIZproject_server
                             {
                                 //MessageBox.Show($"registered !new {st.Password} : {st.Email} : {st.Ifnew}");
                                 string loginsuccess = TryLogin(st, clientSocket, out Student? student);
-                                
+                                // student на виході порожній, якщо 
+
                                 byte[] msg = Encoding.UTF8.GetBytes(loginsuccess);
 
                                 SendTextMessage(clientSocket, msg);
-                                Thread.Sleep(1000);
+                                Thread.Sleep(500);
                                 if(student is not null)
                                     SendLogin(student, clientSocket);
                                 
@@ -233,7 +234,7 @@ namespace QUIZproject_server
             {
                 
                 var correctanswer = T_questions[questionid].Correctanswer;
-                Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
+                //Task.Run(()=> MessageBox.Show($"received {studentanswer} vs correct: {correctanswer}"));
                 if (correctanswer == studentanswer) return true;
                 else return false;
             }
@@ -266,7 +267,7 @@ namespace QUIZproject_server
                 }
                 catch
                 {
-                    Message = $"Unsuccesful atempt to register {st.Name} {st.SurName}";
+                    Message = $"Unsuccesful attempt to register {st.Name} {st.SurName}";
                     return "RegisterUnSuccess";                    
                 }
             }
@@ -300,6 +301,7 @@ namespace QUIZproject_server
                     }
                 }
             student = null;
+            //якщо логін і пароль не співпадають - на виході порожній студент
             return "LoginUnSuccess";
         }
 
@@ -320,8 +322,7 @@ namespace QUIZproject_server
                     if (st.Email == student.Email
                         && st.Password == student.Password)
                     {
-                        SendLogin(student, clientSocket);
-                        
+                        SendLogin(student, clientSocket);                        
                     }
                 }
         }
@@ -341,6 +342,7 @@ namespace QUIZproject_server
 
         }
 
+        // Вилучення правильних відповідей перед відправкою клієнту
         private List<TQuiz> RejectCorrectAnswers(List<TQuiz> questions) 
         {
             List<TQuiz> edited = new();

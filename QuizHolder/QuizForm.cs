@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using static Utilities.Serializers;
 using static Utilities.Tools;
 
+//quizholder -> quizform
 
 namespace QuizHolder
 {
@@ -448,6 +449,7 @@ namespace QuizHolder
 
         private async void pictureBox_Click(object sender, EventArgs e)
         {
+            if(pictureBox.Image is not null)
             await OpenImageInNewWindowAsync(pictureBox.Image);
         }
 

@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AddAnswerForm.cs" />
+    <Compile Remove="AddAnswerForm.Designer.cs" />
     <Compile Remove="EditQuestionForm.cs" />
     <Compile Remove="EditQuestionForm.Designer.cs" />
     <Compile Remove="QuizForm.cs" />
@@ -16,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="AddAnswerForm.resx" />
     <EmbeddedResource Remove="EditQuestionForm.resx" />
     <EmbeddedResource Remove="QuizForm.resx" />
   </ItemGroup>

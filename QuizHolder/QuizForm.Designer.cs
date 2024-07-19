@@ -52,11 +52,11 @@ namespace QuizHolder
             // 
             // lbQuestions
             // 
-            lbQuestions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
-            lbQuestions.Enabled = false;
+            lbQuestions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbQuestions.FormattingEnabled = true;
             lbQuestions.HorizontalScrollbar = true;
             lbQuestions.Location = new Point(46, 106);
+            lbQuestions.MaximumSize = new Size(750, 800);
             lbQuestions.Name = "lbQuestions";
             lbQuestions.Size = new Size(485, 324);
             lbQuestions.TabIndex = 6;
@@ -64,9 +64,10 @@ namespace QuizHolder
             // 
             // lbAnswers
             // 
-            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbAnswers.FormattingEnabled = true;
             lbAnswers.Location = new Point(710, 106);
+            lbAnswers.MaximumSize = new Size(1000, 600);
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(275, 144);
             lbAnswers.TabIndex = 9;
@@ -178,6 +179,7 @@ namespace QuizHolder
             // 
             // btnSave
             // 
+            btnSave.Anchor = AnchorStyles.Bottom;
             btnSave.Font = new Font("Segoe UI", 11F);
             btnSave.Location = new Point(739, 345);
             btnSave.Name = "btnSave";
@@ -230,6 +232,7 @@ namespace QuizHolder
             Controls.Add(lbQuestions);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
+            MaximizeBox = false;
             Name = "QuizForm";
             Text = "QuizForm";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
