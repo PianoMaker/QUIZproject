@@ -53,11 +53,10 @@ namespace QuizHolder
             // lbQuestions
             // 
             lbQuestions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lbQuestions.Enabled = true;
             lbQuestions.FormattingEnabled = true;
             lbQuestions.HorizontalScrollbar = true;
             lbQuestions.Location = new Point(46, 106);
-            lbQuestions.MaximumSize = new Size(800, 800);
+            lbQuestions.MaximumSize = new Size(750, 800);
             lbQuestions.Name = "lbQuestions";
             lbQuestions.Size = new Size(485, 324);
             lbQuestions.TabIndex = 6;
@@ -65,10 +64,10 @@ namespace QuizHolder
             // 
             // lbAnswers
             // 
-            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            lbAnswers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbAnswers.FormattingEnabled = true;
             lbAnswers.Location = new Point(710, 106);
-            lbAnswers.MaximumSize = new Size(800, 600);
+            lbAnswers.MaximumSize = new Size(1000, 600);
             lbAnswers.Name = "lbAnswers";
             lbAnswers.Size = new Size(275, 144);
             lbAnswers.TabIndex = 9;
@@ -233,6 +232,7 @@ namespace QuizHolder
             Controls.Add(lbQuestions);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
+            MaximizeBox = false;
             Name = "QuizForm";
             Text = "QuizForm";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
