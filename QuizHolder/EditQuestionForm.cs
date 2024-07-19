@@ -1,5 +1,7 @@
 ﻿using Models;
 
+//EQF
+
 namespace QuizHolder
 {
     // DISCLAMER! Індекси відповідей від 0, але номери відповідей від 1!
@@ -55,6 +57,7 @@ namespace QuizHolder
             Correctanswer = quiz.Correctanswer;
             num.Value = quiz.Correctanswer;
             tbQuestion.Text = Question;
+            IfSolfegio(subj);
             RenewAnswerList();
 
 
@@ -79,7 +82,7 @@ namespace QuizHolder
             }
             catch (Exception Ex)
             {
-                MessageBox.Show("Impossible to proceed voicing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Impossible to proceed voicing\n{Ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             Correctanswer = quiz.Correctanswer;
             num.Maximum = Answers.Count;
@@ -93,6 +96,7 @@ namespace QuizHolder
 
         private void IfSolfegio(Subject subj)
         {
+            
             if (subj == Subject.Theory) panel1.Visible = false;
             else
             {
