@@ -153,7 +153,6 @@ namespace DataBase
                 txt += "\nEmail is too long";
                 ok = false;
             }
-
             if (Email.Any(c => c < 32 || c > 126 || !char.IsLetterOrDigit(c) && c != '@' && c != '.' && c != '_'))
             {
                 txt += "\nEmail contains invalid characters";
@@ -163,6 +162,11 @@ namespace DataBase
             if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 txt += "\nEmail format is invalid";
+                ok = false;
+            }
+            if (Regex.IsMatch(Email, @"\.ru$"))
+            {
+                txt += "\nWe don't work with this country";
                 ok = false;
             }
 
